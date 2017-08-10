@@ -10,26 +10,91 @@
 
   set rtp+=~/.fzf
 
-  set encoding=utf-8
-  scriptencoding utf-8
-  set nobomb
-  set fileformats=unix,mac,dos
-  if has('langmap') && exists('+langremap') | set nolangremap | endif
-  set ttimeout
-  set ttimeoutlen=10  " This must be a low value for <esc>-key not to be confused with an <a-…> mapping
-  set ttyfast
-  set mouse=a
-  set updatetime=1000 " Trigger CursorHold event after one second
+  " vim-sensible {{
+    if has('autocmd')
+      filetype plugin indent on
+    endif
+    if has('syntax') && !exists('g:syntax_on')
+      syntax enable
+    endif
 
-  syntax enable
-  filetype on " Enable file type detection
-  filetype plugin on " Enable loading the plugin files for specific file types
-  filetype indent on " Load indent files for specific file types
+    set autoindent
+    set backspace=indent,eol,start
+    set complete-=i
+    set smarttab
 
-  set sessionoptions-=options " See FAQ at https://github.com/tpope/vim-pathogen
-  set autoread " Re-read file if it is changed by an external program
+    set nrformats-=octal
+
+    if !has('nvim') && &ttimeoutlen == -1
+      set ttimeout
+      set ttimeoutlen=100
+    endif
+
+    set incsearch
+    " Use <C-L> to clear the highlighting of :set hlsearch.
+    if maparg('<C-L>', 'n') ==# ''
+      nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+    endif
+
+    set laststatus=2
+    set ruler
+    set wildmenu
+
+    if !&scrolloff
+      set scrolloff=1
+    endif
+    if !&sidescrolloff
+      set sidescrolloff=5
+    endif
+    set display+=lastline
+
+    if &encoding ==# 'latin1' && has('gui_running')
+      set encoding=utf-8
+    endif
+
+    if &listchars ==# 'eol:$'
+      set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+    endif
+
+    if v:version > 703 || v:version == 703 && has("patch541")
+      set formatoptions+=j " Delete comment character when joining commented lines
+    endif
+
+    if has('path_extra')
+      setglobal tags-=./tags tags-=./tags; tags^=./tags;
+    endif
+
+    if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
+      set shell=/bin/bash
+    endif
+
+    set autoread " Re-read file if it is changed by an external program
+
+    if &history < 1000
+      set history=1000
+    endif
+    if &tabpagemax < 50
+      set tabpagemax=50
+    endif
+    if !empty(&viminfo)
+      set viminfo^=!
+    endif
+    set sessionoptions-=options
+
+    " Allow color schemes to do bright colors without forcing bold.
+    if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+      set t_Co=16
+    endif
+
+    " Load matchit.vim, but only if the user hasn't installed a newer version.
+    if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+      runtime! macros/matchit.vim
+    endif
+
+    inoremap <C-U> <C-G>u<C-U>
+  " }}
+
   set hidden " Allow buffer switching without saving
-  set history=10000 " Keep a longer history (10000 is the maximum)
 
   " Consolidate temporary files in a central spot
   set backupdir=~/.vim/tmp/backup
@@ -38,6 +103,37 @@
   set undodir=~/.vim/tmp/undo
   set undolevels=1000 " Maximum number of changes that can be undone
   set undoreload=10000 " Maximum number of lines to save for undo on a buffer reload
+" }}
+" Editing {{
+  set expandtab " Use soft tabs by default
+  set tabstop=2
+  set shiftwidth=2
+  set softtabstop=2
+" }}
+" Find, replace, and completion {{
+  set nohlsearch " Do not highlight search results
+  set incsearch " Search as you type
+  set ignorecase " Case-insensitive search by default
+  set infercase " Smart case when doing keyword completion
+  set smartcase " Use case-sensitive search if there is a capital letter in the search expression
+  if executable('rg')
+    set grepprg=rg\ -i\ --vimgrep
+  endif
+  set grepformat^=%f:%l:%c:%m
+  set keywordprg=:help " Get help for word under cursor by pressing K
+  set complete+=i      " Use included files for completion
+  set complete+=kspell " Use spell dictionary for completion, if available
+  set completeopt+=menuone,noselect
+  set completeopt-=preview
+  set tags=./tags;,tags " Search upwards for tags by default
+  " Files and directories to ignore
+  set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
+  set wildmenu " Show possible matches when autocompleting
+  set wildignorecase " Ignore case when completing file names and directories
+  " Cscope
+  set cscoperelative
+  set cscopequickfix=s-,c-,d-,i-,t-,e-
+  if has('patch-7.4.2033') | set cscopequickfix+=a- | endif
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
