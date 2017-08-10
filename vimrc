@@ -142,16 +142,100 @@
   if has('patch-7.4.2033') | set cscopequickfix+=a- | endif
 " }}
 " Appearance {{
-  set showtabline=2 " Always show the tab bar
+  " set showtabline=2 " Always show the tab bar
   set notitle " Do not set the terminal title
   set number " Turn line numbering on
   set relativenumber " Display line numbers relative to the line with the cursor
   set laststatus=2 " Always show status line
   set showcmd " Show (partial) command in the last line of the screen
-  set listchars=tab:>\ ,trail:·,eol:¬,nbsp:•,precedes:←,extends:→  " Symbols to use for invisible characters
 " }}
 " Status line {{
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+" }}
+" Tab line {{
+  if !exists('g:config_vim_gui_label')
+    let g:config_vim_tab_style = 0
+  endif
+
+  " make tabline in terminal mode
+  function! Vim_NeatTabLine()
+    let s = ''
+    for i in range(tabpagenr('$'))
+      " select the highlighting
+      if i + 1 == tabpagenr()
+        let s .= '%#TabLineSel#'
+      else
+        let s .= '%#TabLine#'
+      endif
+
+      " set the tab page number (for mouse clicks)
+      let s .= '%' . (i + 1) . 'T'
+
+      " the label is made by MyTabLabel()
+      let s .= ' %{Vim_NeatTabLabel(' . (i + 1) . ')} '
+    endfor
+
+    " after the last tab fill with TabLineFill and reset tab page nr
+    let s .= '%#TabLineFill#%T'
+
+    " right-align the label to close the current tab page
+    if tabpagenr('$') > 1
+      let s .= '%=%#TabLine#%999XX'
+    endif
+
+    return s
+  endfunc
+
+  " get a single tab name
+  function! Vim_NeatBuffer(bufnr, fullname)
+    let l:name = bufname(a:bufnr)
+    if getbufvar(a:bufnr, '&modifiable')
+      if l:name == ''
+        return '[No Name]'
+      else
+        if a:fullname
+          return fnamemodify(l:name, ':p')
+        else
+          return fnamemodify(l:name, ':t')
+        endif
+      endif
+    else
+      let l:buftype = getbufvar(a:bufnr, '&buftype')
+      if l:buftype == 'quickfix'
+        return '[Quickfix]'
+      elseif l:name != ''
+        if a:fullname
+          return '-'.fnamemodify(l:name, ':p')
+        else
+          return '-'.fnamemodify(l:name, ':t')
+        endif
+      else
+      endif
+      return '[No Name]'
+    endif
+  endfunc
+
+  " get a single tab label
+  function! Vim_NeatTabLabel(n)
+    let l:buflist = tabpagebuflist(a:n)
+    let l:winnr = tabpagewinnr(a:n)
+    let l:bufnr = l:buflist[l:winnr - 1]
+    let l:fname = Vim_NeatBuffer(l:bufnr, 0)
+    let l:num = a:n
+    if g:config_vim_tab_style == 0
+      return l:fname
+    elseif g:config_vim_tab_style == 1
+      return "[".l:num."] ".l:fname
+    elseif g:config_vim_tab_style == 2
+      return "".l:num." - ".l:fname
+    endif
+    if getbufvar(l:bufnr, '&modified')
+      return "[".l:num."] ".l:fname." +"
+    endif
+    return "[".l:num."] ".l:fname
+  endfunc
+
+  set tabline=%!Vim_NeatTabLine()
 " }}
 " Helper functions {{
   function! NilStripTrailingWhitespaces()
@@ -195,6 +279,8 @@
   let mapleader = ","
   let maplocalleader = "\\"
   nnoremap ; :
+
+  call xcc_terminal#meta_mode(0)
   set pastetoggle=<f9>
 
   " Let's vim
@@ -216,7 +302,16 @@
   Shortcut change to the directory of the current file
     \ nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
 
+  " Inser pairs
+  inoremap <c-x>( ()<esc>i
+  inoremap <c-x>[ []<esc>i
+  inoremap <c-x>' ''<esc>i
+  inoremap <c-x>" ""<esc>i
+  inoremap <c-x>< <><esc>i
+  inoremap <c-x>{ {<esc>o}<esc>ko
+
   " Tabs
+  call xcc_terminal#alt_map_tab()
   Shortcut go to next tab
     \ nnoremap <silent> <Space>tn :tabn<CR>
   Shortcut go to prev tab
@@ -275,6 +370,18 @@
     \ nnoremap <silent> <Space>or :<C-u>setlocal relativenumber!<CR>
   Shortcut toggle option expandtab
     \ nnoremap <silent> <Space>ot :<C-u>setlocal expandtab!<CR>
+
+  " xcc_snip
+  Shortcut (xcc_snip) comment block -
+    \ noremap <Space>s- :call xcc_snip#comment_block('-')<CR>
+  Shortcut (xcc_snip) comment block =
+    \ noremap <Space>s= :call xcc_snip#comment_block('=')<CR>
+  Shortcut (xcc_snip) copyright
+    \ noremap <Space>sc :call xcc_snip#copyright('Larry Xu')<CR>
+  Shortcut (xcc_snip) main
+    \ noremap <Space>sm :call xcc_snip#main()<CR>
+  Shortcut (xcc_snip) current datetime
+    \ noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
