@@ -49,6 +49,6 @@
   if filereadable(s:vimrc_local)
     execute 'source' s:vimrc_local
   else
-    colorscheme wwdc16
+    colorscheme seoul256
   endif
 " }}
