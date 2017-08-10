@@ -148,13 +148,13 @@
   set relativenumber " Display line numbers relative to the line with the cursor
   set laststatus=2 " Always show status line
   set showcmd " Show (partial) command in the last line of the screen
-  set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:•,precedes:←,extends:→  " Symbols to use for invisible characters
+  set listchars=tab:>\ ,trail:·,eol:¬,nbsp:•,precedes:←,extends:→  " Symbols to use for invisible characters
 " }}
 " Status line {{
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 " }}
 " Helper functions {{
-  function! s:stripTrailingWhitespaces()
+  function! NilStripTrailingWhitespaces()
     let _s=@/
     let l = line('.')
     let c = col('.')
@@ -163,7 +163,7 @@
     call cursor(l, c)
   endfunction
 
-  function! s:togglePaste()
+  function! NilTogglePaste()
     if (&paste == 1)
       set nopaste
       echo "Paste: nopaste"
@@ -172,16 +172,11 @@
       echo "Paste: paste"
     endif
   endfunction
-
-  function! s:toggleBackground()
-    if &background == 'light'
-      set background=dark
-    else
-      set background=light
-    endif
-  endfunction
 " }}
 " Commands (plugins excluded) {{
+  " Load vim-shortcut
+  runtime pack/bundle/opt/vim-shortcut/plugin/shortcut.vim " Load vim-shortcut
+
   " Execute a Vim command and send the output to a new scratch buffer
   command! -complete=command -nargs=+ CmdBuffer call xcc_buffer#cmd(<q-args>)
 
@@ -201,6 +196,7 @@
   let maplocalleader = "\\"
   nnoremap ; :
   set pastetoggle=<f9>
+
   " Let's vim
   nnoremap <up> <nop>
   nnoremap <down> <nop>
@@ -213,38 +209,72 @@
   inoremap <F1> <ESC>
   nnoremap <F1> <ESC>
   vnoremap <F1> <ESC>
-  " Change to the directory of the current file
-  nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
+ 
+  Shortcut show shortcut menu and run chosen shortcut
+    \ noremap <silent> <Leader><Leader> :Shortcuts<CR>
+
+  Shortcut change to the directory of the current file
+    \ nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
+
   " Tabs
-  nnoremap <space>tn :tabn<CR>
-  nnoremap <space>tp :tabp<CR>
-  nnoremap <space>tm :tabm
-  nnoremap <space>tt :tabnew
-  nnoremap <space>ts :tab split<CR>
+  Shortcut go to next tab
+    \ nnoremap <silent> <Space>tn :tabn<CR>
+  Shortcut go to prev tab
+    \ nnoremap <silent> <Space>tp :tabp<CR>
+  Shortcut new tab
+    \ nnoremap <Space>tt :tabnew
+  Shortcut close current tab
+    \ nnoremap <silent> <Space>tc :tabclose<CR>
+  for i in range(1, 9)
+    execute 'Shortcut go to tab number '. i .' '
+      \ 'nnoremap <silent> <Leader>'. i .' :tabn '. i .'<CR>'
+  endfor
+
   " Windows
-  nnoremap <C-h> <C-w>h
-  nnoremap <C-j> <C-w>j
-  nnoremap <C-k> <C-w>k
-  nnoremap <C-l> <C-w>l
+  Shortcut switch to left window
+    \ nnoremap <C-h> <C-w>h
+  Shortcut switch to down window
+    \ nnoremap <C-j> <C-w>j
+  Shortcut switch to up window
+    \ nnoremap <C-k> <C-w>k
+  Shortcut switch to right window
+    \ nnoremap <C-l> <C-w>l
+
   " Buffers
-  nnoremap <space>bp :bprevious<CR>
-  nnoremap <space>bn :bnext<CR>
-  nnoremap <space>bf :bfirst<CR>
-  nnoremap <space>bl :blast<CR>
-  nnoremap <space>bd :bd<CR>
+  Shortcut go to next buffer
+    \ nnoremap <Space>bn :bnext<CR>
+  Shortcut go to prev buffer
+    \ nnoremap <Space>bp :bprevious<CR>
+  Shortcut go to first buffer
+    \ nnoremap <Space>bf :bfirst<CR>
+  Shortcut go to last buffer
+    \ nnoremap <Space>bl :blast<CR>
+  Shortcut delete current buffer
+    \ nnoremap <space>bd :bd<CR>
   nnoremap <space>bk :bw<CR>
   noremap <silent> <Left> :bp<CR>
   noremap <silent> <Right> :bn<CR>
   noremap <silent> <Up> :bdelete<CR>
+
   " Files
-  nnoremap <space>fW :<c-u>w !sudo tee % >/dev/null<cr>
+  Shortcut Sudo save current buffer
+    \ nnoremap <Space>fW :<C-u>w !sudo tee % >/dev/null<CR>
+
   " Options
-  nnoremap <silent> <space>oh :<c-u>set hlsearch! \| set hlsearch?<cr>
-  nnoremap <silent> <space>oi :<c-u>set ignorecase! \| set ignorecase?<cr>
-  nnoremap <silent> <space>ol :<c-u>setlocal list!<cr>
-  nnoremap <silent> <space>on :<c-u>setlocal number!<cr>
-  nnoremap <silent> <space>or :<c-u>setlocal relativenumber!<cr>
-  nnoremap <silent> <space>ot :<c-u>setlocal expandtab!<cr>
+  Shortcut toggle option paste
+    \ nnoremap <silent> <Space>op :<C-u>call NilTogglePaste()<CR>
+  Shortcut toggle option hlsearch
+    \ nnoremap <silent> <Space>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
+  Shortcut toggle option ignorecase
+    \ nnoremap <silent> <Space>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
+  Shortcut toggle option list
+    \ nnoremap <silent> <Space>ol :<C-u>setlocal list!<CR>
+  Shortcut toggle option number
+    \ nnoremap <silent> <Space>on :<C-u>setlocal number!<CR>
+  Shortcut toggle option relativenumber
+    \ nnoremap <silent> <Space>or :<C-u>setlocal relativenumber!<CR>
+  Shortcut toggle option expandtab
+    \ nnoremap <silent> <Space>ot :<C-u>setlocal expandtab!<CR>
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
@@ -254,22 +284,51 @@
     let g:loaded_netrwPlugin = 1
     let g:loaded_rrhelper = 1
     let g:loaded_tarPlugin = 1
-    " let g:loaded_vimballPlugin = 1
+    let g:loaded_vimballPlugin = 1
     let g:loaded_zipPlugin = 1
   " }}
   " FZF {{
     set rtp+=~/.fzf
-    nnoremap <space>ff :FZF!<cr>
-    nnoremap <space>fg :GFiles<cr>
-    nnoremap <space>fb :Buffers<cr>
-    nnoremap <space>fa :Ag<space>
+    Shortcut (fzf) open file in/under working directory
+      \ nnoremap <silent> <Space>ff :Files<CR>
+    Shortcut (fzf) open file relative to current file
+      \ nnoremap <silent> <Space>fc :execute 'Files' expand('%:h')<CR>
+    Shortcut (fzf) open file in git repository
+      \ nnoremap <silent> <Space>fg :GFiles<CR>
+    Shortcut (fzf) open file in git status
+      \ nnoremap <silent> <Space>fG :GFiles?<CR>
+    Shortcut (fzf) open buffer
+      \ nnoremap <silent> <Space>fb :Buffers<CR>
+    Shortcut (fzf) search in files under working directory
+      \ nnoremap <silent> <Space>fa :Ag<Space>
+    Shortcut (fzf) go to line in any buffer
+      \ nnoremap <silent> <Space>'L :Lines<CR>
+    Shortcut (fzf) go to line in buffer
+      \ nnoremap <silent> <Space>'l :BLines<CR>
+    Shortcut (fzf) go to ctag in any buffer
+      \ nnoremap <silent> <Space>'] :Tags<CR>
+    Shortcut (fzf) go to ctags in buffer
+      \ nnoremap <silent> <Space>'[ :Tags<CR>
+    Shortcut (fzf) go to mark in buffer
+      \ nnoremap <silent> <Space>'m :Marks<CR>
+    Shortcut (fzf) go to window
+      \ nnoremap <silent> <Space>'w :Windows<CR>
+    Shortcut (fzf) run command
+      \ nnoremap <silent> <Space>:: :Commands<CR>
+    Shortcut (fzf) run mapping
+      \ nnoremap <silent> <Space>eM :Maps<CR>
+    Shortcut (fzf) open help topic
+      \ nnoremap <silent> <Space>oh :Helptags<CR>
+    Shortcut (fzf) apply filetype
+      \ nnoremap <silent> <Space>:f :Filetypes<CR>
   " }}
   " Dirvish {{
-    nmap <leader>d <plug>(dirvish_up)
+    Shortcut (dirvish) open dirvish
+      \ nmap <Space>dd <plug>(dirvish_up)
   " }}
   " Easy Align {{
-    xmap <leader>ea <plug>(EasyAlign)
-    nmap <leader>ea <plug>(EasyAlign)
+    xmap <Leader>ea <plug>(EasyAlign)
+    nmap <Leader>ea <plug>(EasyAlign)
   " }}
   " Markdown (Vim) {{
     let g:markdown_folding = 1
@@ -278,17 +337,18 @@
     inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     inoremap <expr> <cr> mucomplete#popup_exit("\<cr>")
-    nnoremap <silent> <leader>oa :<c-u>MUcompleteAutoToggle<cr>
+    nnoremap <silent> <Space>oa :<C-u>MUcompleteAutoToggle<CR>
   " }}
   " Show Marks {{
-    fun! s:toggleShowMarks()
+    function! NilToggleShowMarks()
       if exists('b:showmarks')
         NoShowMarks
       else
         DoShowMarks
       endif
-    endf
-    nnoremap <silent> <leader>vm :<c-u>call <sid>toggleShowMarks()<cr>
+    endfunction
+    Shortcut (showmarks) toggle show marks
+      \ nnoremap <silent> <Space>vm :<C-u>call NilToggleShowMarks()<CR>
   " }}
   " Sneak {{
     let g:sneak#streak = 1
