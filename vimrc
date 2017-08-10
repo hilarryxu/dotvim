@@ -8,7 +8,7 @@
 " Environment {{
   set nocompatible " Must be first line
 
-  set rtp+=~/.fzf
+  let s:is_windows = has('win32') || has('win64')
 
   " vim-sensible {{
     if has('autocmd')
@@ -96,6 +96,13 @@
 
   set hidden " Allow buffer switching without saving
 
+  " Encoding and FileFormat
+  set encoding=utf-8
+  set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
+  set fileencoding=utf-8
+  set ffs=unix,dos,mac
+  set ff=unix
+
   " Consolidate temporary files in a central spot
   set backupdir=~/.vim/tmp/backup
   set directory=~/.vim/tmp/swap
@@ -113,11 +120,11 @@
 " Find, replace, and completion {{
   set nohlsearch " Do not highlight search results
   set incsearch " Search as you type
-  set ignorecase " Case-insensitive search by default
+  set noignorecase " Case-sensitive search by default
   set infercase " Smart case when doing keyword completion
   set smartcase " Use case-sensitive search if there is a capital letter in the search expression
   if executable('rg')
-    set grepprg=rg\ -i\ --vimgrep
+    set grepprg=rg\ --no-heading\ --vimgrep
   endif
   set grepformat^=%f:%l:%c:%m
   set keywordprg=:help " Get help for word under cursor by pressing K
@@ -125,7 +132,6 @@
   set complete+=kspell " Use spell dictionary for completion, if available
   set completeopt+=menuone,noselect
   set completeopt-=preview
-  set tags=./tags;,tags " Search upwards for tags by default
   " Files and directories to ignore
   set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
   set wildmenu " Show possible matches when autocompleting
@@ -134,6 +140,111 @@
   set cscoperelative
   set cscopequickfix=s-,c-,d-,i-,t-,e-
   if has('patch-7.4.2033') | set cscopequickfix+=a- | endif
+" }}
+" Appearance {{
+  set showtabline=2 " Always show the tab bar
+  set notitle " Do not set the terminal title
+  set number " Turn line numbering on
+  set relativenumber " Display line numbers relative to the line with the cursor
+  set laststatus=2 " Always show status line
+  set showcmd " Show (partial) command in the last line of the screen
+  set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:•,precedes:←,extends:→  " Symbols to use for invisible characters
+" }}
+" Status line {{
+  set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+" }}
+" Helper functions {{
+  function! s:stripTrailingWhitespaces()
+    let _s=@/
+    let l = line('.')
+    let c = col('.')
+    %s/\s\+$//e
+    let @/=_s
+    call cursor(l, c)
+  endfunction
+
+  function! s:togglePaste()
+    if (&paste == 1)
+      set nopaste
+      echo "Paste: nopaste"
+    else
+      set paste
+      echo "Paste: paste"
+    endif
+  endfunction
+
+  function! s:toggleBackground()
+    if &background == 'light'
+      set background=dark
+    else
+      set background=light
+    endif
+  endfunction
+" }}
+" Commands (plugins excluded) {{
+  " Execute a Vim command and send the output to a new scratch buffer
+  command! -complete=command -nargs=+ CmdBuffer call xcc_buffer#cmd(<q-args>)
+
+  " Sudo write
+  if !(has('win32') || has('win64'))
+    command! W w !sudo tee % > /dev/null
+  endif
+
+  " Find out to which highlight-group a particular keyword/symbol belongs
+  command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
+      \ "> trans<" . synIDattr(synID(line("."),col("."),0),"name") .
+      \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
+      \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
+" }}
+" Key mappings (plugins excluded) {{
+  let mapleader = ","
+  let maplocalleader = "\\"
+  nnoremap ; :
+  set pastetoggle=<f9>
+  " Let's vim
+  nnoremap <up> <nop>
+  nnoremap <down> <nop>
+  nnoremap <left> <nop>
+  nnoremap <right> <nop>
+  inoremap <up> <nop>
+  inoremap <down> <nop>
+  inoremap <left> <nop>
+  inoremap <right> <nop>
+  inoremap <F1> <ESC>
+  nnoremap <F1> <ESC>
+  vnoremap <F1> <ESC>
+  " Change to the directory of the current file
+  nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
+  " Tabs
+  nnoremap <space>tn :tabn<CR>
+  nnoremap <space>tp :tabp<CR>
+  nnoremap <space>tm :tabm
+  nnoremap <space>tt :tabnew
+  nnoremap <space>ts :tab split<CR>
+  " Windows
+  nnoremap <C-h> <C-w>h
+  nnoremap <C-j> <C-w>j
+  nnoremap <C-k> <C-w>k
+  nnoremap <C-l> <C-w>l
+  " Buffers
+  nnoremap <space>bp :bprevious<CR>
+  nnoremap <space>bn :bnext<CR>
+  nnoremap <space>bf :bfirst<CR>
+  nnoremap <space>bl :blast<CR>
+  nnoremap <space>bd :bd<CR>
+  nnoremap <space>bk :bw<CR>
+  noremap <silent> <Left> :bp<CR>
+  noremap <silent> <Right> :bn<CR>
+  noremap <silent> <Up> :bdelete<CR>
+  " Files
+  nnoremap <space>fW :<c-u>w !sudo tee % >/dev/null<cr>
+  " Options
+  nnoremap <silent> <space>oh :<c-u>set hlsearch! \| set hlsearch?<cr>
+  nnoremap <silent> <space>oi :<c-u>set ignorecase! \| set ignorecase?<cr>
+  nnoremap <silent> <space>ol :<c-u>setlocal list!<cr>
+  nnoremap <silent> <space>on :<c-u>setlocal number!<cr>
+  nnoremap <silent> <space>or :<c-u>setlocal relativenumber!<cr>
+  nnoremap <silent> <space>ot :<c-u>setlocal expandtab!<cr>
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
@@ -146,16 +257,21 @@
     " let g:loaded_vimballPlugin = 1
     let g:loaded_zipPlugin = 1
   " }}
+  " FZF {{
+    set rtp+=~/.fzf
+    nnoremap <space>ff :FZF!<cr>
+    nnoremap <space>fg :GFiles<cr>
+    nnoremap <space>fb :Buffers<cr>
+    nnoremap <space>fa :Ag<space>
+  " }}
   " Dirvish {{
     nmap <leader>d <plug>(dirvish_up)
-    nnoremap gx :call netrw#BrowseX(expand((exists("g:netrw_gx")? g:netrw_gx : '<cfile>')),netrw#CheckIfRemote())<cr>
   " }}
   " Easy Align {{
     xmap <leader>ea <plug>(EasyAlign)
     nmap <leader>ea <plug>(EasyAlign)
   " }}
   " Markdown (Vim) {{
-    let g:markdown_fenced_languages = ['pgsql', 'sql']
     let g:markdown_folding = 1
   " }}
   " MUcomplete {{
@@ -192,24 +308,9 @@
   " }}
 " }}
 " Themes {{
-  " Gruvbox {{
-    let g:gruvbox_invert_selection = 0
-    let g:gruvbox_italic = 1
-  " }}
   " Seoul256 {{
     let g:seoul256_background = 236
     let g:seoul256_light_background = 255
-  " }}
-  " Solarized 8 {{
-    let g:solarized_statusline = 'low'
-    let g:solarized_term_italics = 1
-  " }}
-  " WWDC16 {{
-    let g:wwdc16_term_italics = 1
-    let g:wwdc16_term_trans_bg = 1
-  " }}
-  " WWDC17 {{
-    let g:wwdc17_term_italics = 1
   " }}
 " }}
 " Init {{
@@ -217,6 +318,13 @@
     runtime pack/bundle/opt/pathogen/autoload/pathogen.vim " Load Pathogen
     let g:pathogen_blacklist = ['tagbar', 'undotree']
     execute pathogen#infect('pack/bundle/start/{}', 'pack/my/start/{}', 'pack/my/opt/{}', 'pack/bundle/opt/{}', 'pack/themes/opt/{}')
+  endif
+
+  if &term =~ '256color'
+    " disable Background Color Erase (BCE) so that color schemes
+    " render properly when inside 256-color tmux and GNU screen.
+    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+    set t_ut=
   endif
 
   " Local settings
