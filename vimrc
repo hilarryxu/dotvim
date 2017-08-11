@@ -8,8 +8,6 @@
 " Environment {{
   set nocompatible " Must be first line
 
-  let s:is_windows = has('win32') || has('win64')
-
   " vim-sensible {{
     if has('autocmd')
       filetype plugin indent on
@@ -94,6 +92,11 @@
     inoremap <C-U> <C-G>u<C-U>
   " }}
 
+  " The vim is from https://github.com/koron/vim-kaoriya
+  let s:is_windows = has('win32') || has('win64')
+  let $DOTVIM = expand('~/.vim')
+
+
   set hidden " Allow buffer switching without saving
 
   " Encoding and FileFormat
@@ -104,32 +107,44 @@
   set ff=unix
 
   " Consolidate temporary files in a central spot
-  set backupdir=~/.vim/tmp/backup
-  set directory=~/.vim/tmp/swap
-  set undofile " Enable persistent undo
-  set undodir=~/.vim/tmp/undo
-  set undolevels=1000 " Maximum number of changes that can be undone
-  set undoreload=10000 " Maximum number of lines to save for undo on a buffer reload
+  set backup
+  set writebackup
+  set backupdir=~/.vim/tmp
+  set backupext=.bak
+  set noswapfile
+  set noundofile
+  try
+    silent call mkdir(expand('~/.vim/tmp'), 'p', 0755)
+  catch /^Vim\%((\a\+)\)\=:E/
+  finally
+  endtry
 " }}
 " Editing {{
+  set splitright " When splitting vertically, focus goes to the right window
+  set splitbelow " When splitting horizontally, focus goes to the bottom window
+  " Tab
   set expandtab " Use soft tabs by default
   set tabstop=2
   set shiftwidth=2
   set softtabstop=2
 " }}
 " Find, replace, and completion {{
-  set nohlsearch " Do not highlight search results
+  set hlsearch " Highlight search results
   set incsearch " Search as you type
   set noignorecase " Case-sensitive search by default
   set infercase " Smart case when doing keyword completion
   set smartcase " Use case-sensitive search if there is a capital letter in the search expression
+  set keywordprg=:help " Get help for word under cursor by pressing K
+  " Grep
   if executable('rg')
     set grepprg=rg\ --no-heading\ --vimgrep
+  elseif executable('ag')
+    set grepprg=ag\ --vimgrep
   endif
   set grepformat^=%f:%l:%c:%m
-  set keywordprg=:help " Get help for word under cursor by pressing K
-  set complete+=i      " Use included files for completion
-  set complete+=kspell " Use spell dictionary for completion, if available
+  " Complete
+  " set complete+=i      " Use included files for completion
+  " set complete+=kspell " Use spell dictionary for completion, if available
   set completeopt+=menuone,noselect
   set completeopt-=preview
   " Files and directories to ignore
@@ -142,12 +157,35 @@
   if has('patch-7.4.2033') | set cscopequickfix+=a- | endif
 " }}
 " Appearance {{
-  " set showtabline=2 " Always show the tab bar
   set notitle " Do not set the terminal title
   set number " Turn line numbering on
   set relativenumber " Display line numbers relative to the line with the cursor
   set laststatus=2 " Always show status line
   set showcmd " Show (partial) command in the last line of the screen
+  " Wrap
+  set nowrap " Don't wrap lines by default
+  " Fold
+  set foldmethod=marker
+  " GUI
+  if has('gui_running')
+    set guioptions-=T
+    set guioptions-=m
+    set guioptions-=L
+    set guioptions-=r
+    set guioptions-=b
+    set showtabline=2 " Always show the tab bar
+    set cursorline
+    " set cursorcolumn
+    if s:is_windows
+      set guifont=Consolas_for_Powerline_FixedD:h10:cANSI
+      if has('packages')
+        set packpath^=~/.vim
+        set packpath+=~/.vim/after
+      endif
+      set rtp^=~/.vim
+      set rtp+=~/.vim/after
+    endif
+  endif
 " }}
 " Status line {{
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
@@ -280,7 +318,7 @@
   let maplocalleader = "\\"
   nnoremap ; :
 
-  call xcc_terminal#meta_mode(0)
+  " call xcc_terminal#meta_mode(0)
   set pastetoggle=<f9>
 
   " Let's vim
@@ -311,7 +349,7 @@
   inoremap <c-x>{ {<esc>o}<esc>ko
 
   " Tabs
-  call xcc_terminal#alt_map_tab()
+  " call xcc_terminal#alt_map_tab()
   Shortcut go to next tab
     \ nnoremap <silent> <Space>tn :tabn<CR>
   Shortcut go to prev tab
@@ -326,14 +364,6 @@
   endfor
 
   " Windows
-  Shortcut switch to left window
-    \ nnoremap <C-h> <C-w>h
-  Shortcut switch to down window
-    \ nnoremap <C-j> <C-w>j
-  Shortcut switch to up window
-    \ nnoremap <C-k> <C-w>k
-  Shortcut switch to right window
-    \ nnoremap <C-l> <C-w>l
 
   " Buffers
   Shortcut go to next buffer
@@ -424,8 +454,6 @@
       \ nnoremap <silent> <Space>:: :Commands<CR>
     Shortcut (fzf) run mapping
       \ nnoremap <silent> <Space>eM :Maps<CR>
-    Shortcut (fzf) open help topic
-      \ nnoremap <silent> <Space>oh :Helptags<CR>
     Shortcut (fzf) apply filetype
       \ nnoremap <silent> <Space>:f :Filetypes<CR>
   " }}
@@ -466,7 +494,7 @@
     let g:undotree_SplitWidth = 40
     let g:undotree_SetFocusWhenToggle = 1
     let g:undotree_TreeNodeShape = '◦'
-    nnoremap <silent> <leader>vu :<c-u>if !exists("g:loaded_undotree")<bar>packadd undotree<bar>endif<cr>:UndotreeToggle<cr>
+    nnoremap <silent> <Space>vu :<C-u>if !exists("g:loaded_undotree")<bar>packadd undotree<bar>endif<CR>:UndotreeToggle<CR>
   " }}
   " 2HTML (Vim) {{
     let g:html_pre_wrap = 1
@@ -495,10 +523,26 @@
   endif
 
   " Local settings
-  let s:vimrc_local = fnamemodify(resolve(expand('<sfile>:p')), ':h').'/vimrc_local'
-  if filereadable(s:vimrc_local)
-    execute 'source' s:vimrc_local
+  if filereadable($DOTVIM . '/init.vim')
+    source $DOTVIM/init.vim
   else
-    colorscheme seoul256
+    colorscheme xoria256
+  endif
+
+  augroup vimrcEx
+    au!
+    autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
+  augroup END
+
+  " Reload menu
+  if has('gui_running')
+    let $LANG = 'en'  "set message language  
+    set langmenu=en   "set menu's language of gvim. no spaces beside '='
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
   endif
 " }}
