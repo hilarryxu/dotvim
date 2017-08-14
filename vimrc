@@ -526,7 +526,7 @@
   if filereadable($DOTVIM . '/init.vim')
     source $DOTVIM/init.vim
   else
-    colorscheme zenburn
+    colorscheme xoria256mod
   endif
 
   augroup vimrcEx
