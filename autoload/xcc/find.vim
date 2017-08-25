@@ -90,10 +90,12 @@ function! xcc#find#arglist(input_cmd)
 endfunction
 
 function! xcc#find#file(...) " ... is an optional directory
-  if has('gui_running') || !executable('ag')
+  if has('gui_running') || (!executable('ag') && !executable('rg'))
     execute 'CtrlP' (a:0 > 0 ? a:1 : '')
-  else
-    call xcc#find#arglist('ag' . (a:0 > 0 ? ' '.a:1 : ''))
+  elseif executable('ag')
+    call xcc#find#arglist('ag -g ""' . (a:0 > 0 ? ' '.a:1 : ''))
+  elseif executable('rg')
+    call xcc#find#arglist('rg --files')
   endif
 endfunction
 
