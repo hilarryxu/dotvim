@@ -96,7 +96,6 @@
   let s:is_windows = has('win32') || has('win64')
   let $DOTVIM = expand('~/.vim')
 
-
   set hidden " Allow buffer switching without saving
 
   " Encoding and FileFormat
@@ -120,8 +119,8 @@
   endtry
 " }}
 " Editing {{
-  set splitright " When splitting vertically, focus goes to the right window
-  set splitbelow " When splitting horizontally, focus goes to the bottom window
+  " set splitright " When splitting vertically, focus goes to the right window
+  " set splitbelow " When splitting horizontally, focus goes to the bottom window
   " Tab
   set expandtab " Use soft tabs by default
   set tabstop=2
@@ -169,15 +168,17 @@
   " GUI
   if has('gui_running')
     set guioptions-=T
-    set guioptions-=m
+    " set guioptions-=m
     set guioptions-=L
-    set guioptions-=r
+    " set guioptions-=r
     set guioptions-=b
+    set mouse=a
     set showtabline=2 " Always show the tab bar
     set cursorline
     " set cursorcolumn
+    let g:config_vim_tab_style = 3
     if s:is_windows
-      set guifont=Consolas_for_Powerline_FixedD:h10:cANSI
+      set guifont=Consolas_for_Powerline_FixedD:h11:cANSI
       if has('packages')
         set packpath^=~/.vim
         set packpath+=~/.vim/after
@@ -191,7 +192,7 @@
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 " }}
 " Tab line {{
-  if !exists('g:config_vim_gui_label')
+  if !exists('g:config_vim_tab_style')
     let g:config_vim_tab_style = 0
   endif
 
@@ -224,14 +225,14 @@
     return s
   endfunc
 
-  " get a single tab name
+  " get a single tab name 
   function! Vim_NeatBuffer(bufnr, fullname)
     let l:name = bufname(a:bufnr)
     if getbufvar(a:bufnr, '&modifiable')
       if l:name == ''
         return '[No Name]'
       else
-        if a:fullname
+        if a:fullname 
           return fnamemodify(l:name, ':p')
         else
           return fnamemodify(l:name, ':t')
@@ -242,7 +243,7 @@
       if l:buftype == 'quickfix'
         return '[Quickfix]'
       elseif l:name != ''
-        if a:fullname
+        if a:fullname 
           return '-'.fnamemodify(l:name, ':p')
         else
           return '-'.fnamemodify(l:name, ':t')
@@ -273,7 +274,53 @@
     return "[".l:num."] ".l:fname
   endfunc
 
+  " get a single tab label in gui
+  function! Vim_NeatGuiTabLabel()
+    let l:num = v:lnum
+    let l:buflist = tabpagebuflist(l:num)
+    let l:winnr = tabpagewinnr(l:num)
+    let l:bufnr = l:buflist[l:winnr - 1]
+    let l:fname = Vim_NeatBuffer(l:bufnr, 0)
+    if g:config_vim_tab_style == 0
+      return l:fname
+    elseif g:config_vim_tab_style == 1
+      return "[".l:num."] ".l:fname
+    elseif g:config_vim_tab_style == 2
+      return "".l:num." - ".l:fname
+    endif
+    if getbufvar(l:bufnr, '&modified')
+      return "[".l:num."] ".l:fname." +"
+    endif
+    return "[".l:num."] ".l:fname
+  endfunc
+
+  " get a label tips
+  function! Vim_NeatGuiTabTip()
+    let tip = ''
+    let bufnrlist = tabpagebuflist(v:lnum)
+    for bufnr in bufnrlist
+      " separate buffer entries
+      if tip != ''
+        let tip .= " \n"
+      endif
+      " Add name of buffer
+      let name = Vim_NeatBuffer(bufnr, 1)
+      let tip .= name
+      " add modified/modifiable flags
+      if getbufvar(bufnr, "&modified")
+        let tip .= ' [+]'
+      endif
+      if getbufvar(bufnr, "&modifiable")==0
+        let tip .= ' [-]'
+      endif
+    endfor
+    return tip
+  endfunc
+
+  " setup new tabline, just %M%t in macvim
   set tabline=%!Vim_NeatTabLine()
+  set guitablabel=%{Vim_NeatGuiTabLabel()}
+  set guitabtooltip=%{Vim_NeatGuiTabTip()}
 " }}
 " Helper functions {{
   function! NilStripTrailingWhitespaces()
@@ -296,11 +343,26 @@
   endfunction
 " }}
 " Commands (plugins excluded) {{
-  " Load vim-shortcut
-  runtime pack/bundle/opt/vim-shortcut/plugin/shortcut.vim " Load vim-shortcut
+  " Grep search
+  command! -nargs=* -complete=file Grep call xcc#find#grep(<q-args>)
+
+  " Grep code in working dir
+  command! -nargs=* -complete=file GrepCode call xcc#find#grep_code(<q-args>)
+
+  " Find all occurrences of a pattern in the current buffer
+  command! -nargs=1 Search call xcc#find#buffer(<q-args>)
+
+  " Find all occurrences of a pattern in all open buffers
+  command! -nargs=1 SearchAll call xcc#find#all_buffers(<q-args>)
+
+  " Fuzzy search for files inside a directory (default: working dir).
+  command! -nargs=? -complete=dir FindFile call xcc#find#file(<q-args>)
+
+  " Execute an external command and show the output in a new buffer
+  command! -complete=shellcmd -nargs=+ Shell call xcc#job#to_buffer(<q-args>, 'B')
 
   " Execute a Vim command and send the output to a new scratch buffer
-  command! -complete=command -nargs=+ CmdBuffer call xcc_buffer#cmd(<q-args>)
+  command! -complete=command -nargs=+ CmdBuffer call xcc#buffer#cmd(<q-args>)
 
   " Sudo write
   if !(has('win32') || has('win64'))
@@ -318,8 +380,7 @@
   let maplocalleader = "\\"
   nnoremap ; :
 
-  " call xcc_terminal#meta_mode(0)
-  set pastetoggle=<f9>
+  set pastetoggle=<F9>
 
   " Let's vim
   nnoremap <up> <nop>
@@ -333,12 +394,9 @@
   inoremap <F1> <ESC>
   nnoremap <F1> <ESC>
   vnoremap <F1> <ESC>
- 
-  Shortcut show shortcut menu and run chosen shortcut
-    \ noremap <silent> <Leader><Leader> :Shortcuts<CR>
 
-  Shortcut change to the directory of the current file
-    \ nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
+  " Some usefull maps
+  nnoremap <silent> cd :<C-U>cd %:h \| pwd<CR>
 
   " Inser pairs
   inoremap <c-x>( ()<esc>i
@@ -349,69 +407,50 @@
   inoremap <c-x>{ {<esc>o}<esc>ko
 
   " Tabs
-  " call xcc_terminal#alt_map_tab()
-  Shortcut go to next tab
-    \ nnoremap <silent> <Space>tn :tabn<CR>
-  Shortcut go to prev tab
-    \ nnoremap <silent> <Space>tp :tabp<CR>
-  Shortcut new tab
-    \ nnoremap <Space>tt :tabnew
-  Shortcut close current tab
-    \ nnoremap <silent> <Space>tc :tabclose<CR>
+  nnoremap <silent> <Space>tn :tabn<CR>
+  nnoremap <silent> <Space>tp :tabp<CR>
+  nnoremap <Space>tt :tabnew
+  nnoremap <silent> <Space>tc :tabclose<CR>
   for i in range(1, 9)
-    execute 'Shortcut go to tab number '. i .' '
-      \ 'nnoremap <silent> <Leader>'. i .' :tabn '. i .'<CR>'
+    execute 'nnoremap <silent> <Space>'.i.' :tabn '.i.'<CR>'
   endfor
 
   " Windows
 
   " Buffers
-  Shortcut go to next buffer
-    \ nnoremap <Space>bn :bnext<CR>
-  Shortcut go to prev buffer
-    \ nnoremap <Space>bp :bprevious<CR>
-  Shortcut go to first buffer
-    \ nnoremap <Space>bf :bfirst<CR>
-  Shortcut go to last buffer
-    \ nnoremap <Space>bl :blast<CR>
-  Shortcut delete current buffer
-    \ nnoremap <space>bd :bd<CR>
-  nnoremap <space>bk :bw<CR>
-  noremap <silent> <Left> :bp<CR>
-  noremap <silent> <Right> :bn<CR>
+  nnoremap <Space>bn :bnext<CR>
+  nnoremap <Space>bp :bprevious<CR>
+  nnoremap <Space>bf :bfirst<CR>
+  nnoremap <Space>bl :blast<CR>
+  nnoremap <space>bd :bdelete<CR>
+  noremap <silent> <Left> :bprevious<CR>
+  noremap <silent> <Right> :bnext<CR>
   noremap <silent> <Up> :bdelete<CR>
 
   " Files
-  Shortcut Sudo save current buffer
-    \ nnoremap <Space>fW :<C-u>w !sudo tee % >/dev/null<CR>
+  nnoremap <Space>ff :<C-U>FindFile<CR>
+  nnoremap <Space>fb :<C-U>CtrlPBuffer<CR>
+  nnoremap <Space>fr :<C-U>CtrlPMRUFiles<CR>
+  nnoremap <Space>ft :<C-U>CtrlPTag<CR>
+
+  " Goto
+  nnoremap g1 :GrepCode <C-R>=expand("<cword>")<CR><CR>
 
   " Options
-  Shortcut toggle option paste
-    \ nnoremap <silent> <Space>op :<C-u>call NilTogglePaste()<CR>
-  Shortcut toggle option hlsearch
-    \ nnoremap <silent> <Space>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
-  Shortcut toggle option ignorecase
-    \ nnoremap <silent> <Space>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
-  Shortcut toggle option list
-    \ nnoremap <silent> <Space>ol :<C-u>setlocal list!<CR>
-  Shortcut toggle option number
-    \ nnoremap <silent> <Space>on :<C-u>setlocal number!<CR>
-  Shortcut toggle option relativenumber
-    \ nnoremap <silent> <Space>or :<C-u>setlocal relativenumber!<CR>
-  Shortcut toggle option expandtab
-    \ nnoremap <silent> <Space>ot :<C-u>setlocal expandtab!<CR>
+  nnoremap <silent> <Space>op :<C-U>call NilTogglePaste()<CR>
+  nnoremap <silent> <Space>oh :<C-U>set hlsearch! \| set hlsearch?<CR>
+  nnoremap <silent> <Space>oi :<C-U>set ignorecase! \| set ignorecase?<CR>
+  nnoremap <silent> <Space>ol :<C-U>setlocal list!<CR>
+  nnoremap <silent> <Space>on :<C-U>setlocal number!<CR>
+  nnoremap <silent> <Space>or :<C-U>setlocal relativenumber!<CR>
+  nnoremap <silent> <Space>ot :<C-U>setlocal expandtab!<CR>
 
   " xcc_snip
-  Shortcut (xcc_snip) comment block -
-    \ noremap <Space>s- :call xcc_snip#comment_block('-')<CR>
-  Shortcut (xcc_snip) comment block =
-    \ noremap <Space>s= :call xcc_snip#comment_block('=')<CR>
-  Shortcut (xcc_snip) copyright
-    \ noremap <Space>sc :call xcc_snip#copyright('Larry Xu')<CR>
-  Shortcut (xcc_snip) main
-    \ noremap <Space>sm :call xcc_snip#main()<CR>
-  Shortcut (xcc_snip) current datetime
-    \ noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
+  noremap <Space>s- :call xcc_snip#comment_block('-')<CR>
+  noremap <Space>s= :call xcc_snip#comment_block('=')<CR>
+  noremap <Space>sc :call xcc_snip#copyright('Larry Xu')<CR>
+  noremap <Space>sm :call xcc_snip#main()<CR>
+  noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
@@ -424,42 +463,17 @@
     let g:loaded_vimballPlugin = 1
     let g:loaded_zipPlugin = 1
   " }}
-  " FZF {{
-    set rtp+=~/.fzf
-    Shortcut (fzf) open file in/under working directory
-      \ nnoremap <silent> <Space>ff :Files<CR>
-    Shortcut (fzf) open file relative to current file
-      \ nnoremap <silent> <Space>fc :execute 'Files' expand('%:h')<CR>
-    Shortcut (fzf) open file in git repository
-      \ nnoremap <silent> <Space>fg :GFiles<CR>
-    Shortcut (fzf) open file in git status
-      \ nnoremap <silent> <Space>fG :GFiles?<CR>
-    Shortcut (fzf) open buffer
-      \ nnoremap <silent> <Space>fb :Buffers<CR>
-    Shortcut (fzf) search in files under working directory
-      \ nnoremap <silent> <Space>fa :Ag<Space>
-    Shortcut (fzf) go to line in any buffer
-      \ nnoremap <silent> <Space>'L :Lines<CR>
-    Shortcut (fzf) go to line in buffer
-      \ nnoremap <silent> <Space>'l :BLines<CR>
-    Shortcut (fzf) go to ctag in any buffer
-      \ nnoremap <silent> <Space>'] :Tags<CR>
-    Shortcut (fzf) go to ctags in buffer
-      \ nnoremap <silent> <Space>'[ :Tags<CR>
-    Shortcut (fzf) go to mark in buffer
-      \ nnoremap <silent> <Space>'m :Marks<CR>
-    Shortcut (fzf) go to window
-      \ nnoremap <silent> <Space>'w :Windows<CR>
-    Shortcut (fzf) run command
-      \ nnoremap <silent> <Space>:: :Commands<CR>
-    Shortcut (fzf) run mapping
-      \ nnoremap <silent> <Space>eM :Maps<CR>
-    Shortcut (fzf) apply filetype
-      \ nnoremap <silent> <Space>:f :Filetypes<CR>
+  " CtrlP {{
+    let g:ctrlp_map = '<C-P>'
+    let g:ctrlp_cmd = 'CtrlPMixed'
+    let g:ctrlp_working_path_mode = 'ra'
+    if executable('ag')
+      let g:ctrlp_user_command = 'ag -g "" %s'
+    endif
+    let g:user_command_async = 1
   " }}
   " Dirvish {{
-    Shortcut (dirvish) open dirvish
-      \ nmap <Space>dd <plug>(dirvish_up)
+    nmap <Space>dd <plug>(dirvish_up)
   " }}
   " Easy Align {{
     xmap <Leader>ea <plug>(EasyAlign)
@@ -482,8 +496,7 @@
         DoShowMarks
       endif
     endfunction
-    Shortcut (showmarks) toggle show marks
-      \ nnoremap <silent> <Space>vm :<C-u>call NilToggleShowMarks()<CR>
+    nnoremap <silent> <Space>vm :<C-u>call NilToggleShowMarks()<CR>
   " }}
   " Sneak {{
     let g:sneak#streak = 1
@@ -526,7 +539,7 @@
   if filereadable($DOTVIM . '/init.vim')
     source $DOTVIM/init.vim
   else
-    colorscheme xoria256mod
+    colorscheme seoul256
   endif
 
   augroup vimrcEx
