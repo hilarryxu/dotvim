@@ -173,10 +173,8 @@
     " set guioptions-=r
     set guioptions-=b
     set mouse=a
-    set showtabline=2 " Always show the tab bar
     set cursorline
     " set cursorcolumn
-    let g:config_vim_tab_style = 3
     if s:is_windows
       set guifont=Consolas_for_Powerline_FixedD:h11:cANSI
       if has('packages')
@@ -191,139 +189,8 @@
 " Status line {{
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 " }}
-" Tab line {{
-  if !exists('g:config_vim_tab_style')
-    let g:config_vim_tab_style = 0
-  endif
-
-  " make tabline in terminal mode
-  function! Vim_NeatTabLine()
-    let s = ''
-    for i in range(tabpagenr('$'))
-      " select the highlighting
-      if i + 1 == tabpagenr()
-        let s .= '%#TabLineSel#'
-      else
-        let s .= '%#TabLine#'
-      endif
-
-      " set the tab page number (for mouse clicks)
-      let s .= '%' . (i + 1) . 'T'
-
-      " the label is made by MyTabLabel()
-      let s .= ' %{Vim_NeatTabLabel(' . (i + 1) . ')} '
-    endfor
-
-    " after the last tab fill with TabLineFill and reset tab page nr
-    let s .= '%#TabLineFill#%T'
-
-    " right-align the label to close the current tab page
-    if tabpagenr('$') > 1
-      let s .= '%=%#TabLine#%999XX'
-    endif
-
-    return s
-  endfunc
-
-  " get a single tab name 
-  function! Vim_NeatBuffer(bufnr, fullname)
-    let l:name = bufname(a:bufnr)
-    if getbufvar(a:bufnr, '&modifiable')
-      if l:name == ''
-        return '[No Name]'
-      else
-        if a:fullname 
-          return fnamemodify(l:name, ':p')
-        else
-          return fnamemodify(l:name, ':t')
-        endif
-      endif
-    else
-      let l:buftype = getbufvar(a:bufnr, '&buftype')
-      if l:buftype == 'quickfix'
-        return '[Quickfix]'
-      elseif l:name != ''
-        if a:fullname 
-          return '-'.fnamemodify(l:name, ':p')
-        else
-          return '-'.fnamemodify(l:name, ':t')
-        endif
-      else
-      endif
-      return '[No Name]'
-    endif
-  endfunc
-
-  " get a single tab label
-  function! Vim_NeatTabLabel(n)
-    let l:buflist = tabpagebuflist(a:n)
-    let l:winnr = tabpagewinnr(a:n)
-    let l:bufnr = l:buflist[l:winnr - 1]
-    let l:fname = Vim_NeatBuffer(l:bufnr, 0)
-    let l:num = a:n
-    if g:config_vim_tab_style == 0
-      return l:fname
-    elseif g:config_vim_tab_style == 1
-      return "[".l:num."] ".l:fname
-    elseif g:config_vim_tab_style == 2
-      return "".l:num." - ".l:fname
-    endif
-    if getbufvar(l:bufnr, '&modified')
-      return "[".l:num."] ".l:fname." +"
-    endif
-    return "[".l:num."] ".l:fname
-  endfunc
-
-  " get a single tab label in gui
-  function! Vim_NeatGuiTabLabel()
-    let l:num = v:lnum
-    let l:buflist = tabpagebuflist(l:num)
-    let l:winnr = tabpagewinnr(l:num)
-    let l:bufnr = l:buflist[l:winnr - 1]
-    let l:fname = Vim_NeatBuffer(l:bufnr, 0)
-    if g:config_vim_tab_style == 0
-      return l:fname
-    elseif g:config_vim_tab_style == 1
-      return "[".l:num."] ".l:fname
-    elseif g:config_vim_tab_style == 2
-      return "".l:num." - ".l:fname
-    endif
-    if getbufvar(l:bufnr, '&modified')
-      return "[".l:num."] ".l:fname." +"
-    endif
-    return "[".l:num."] ".l:fname
-  endfunc
-
-  " get a label tips
-  function! Vim_NeatGuiTabTip()
-    let tip = ''
-    let bufnrlist = tabpagebuflist(v:lnum)
-    for bufnr in bufnrlist
-      " separate buffer entries
-      if tip != ''
-        let tip .= " \n"
-      endif
-      " Add name of buffer
-      let name = Vim_NeatBuffer(bufnr, 1)
-      let tip .= name
-      " add modified/modifiable flags
-      if getbufvar(bufnr, "&modified")
-        let tip .= ' [+]'
-      endif
-      if getbufvar(bufnr, "&modifiable")==0
-        let tip .= ' [-]'
-      endif
-    endfor
-    return tip
-  endfunc
-
-  " setup new tabline, just %M%t in macvim
-  set tabline=%!Vim_NeatTabLine()
-  set guitablabel=%{Vim_NeatGuiTabLabel()}
-  set guitabtooltip=%{Vim_NeatGuiTabTip()}
-" }}
 " Helper functions {{
-  function! NilStripTrailingWhitespaces()
+  function! Xcc_StripTrailingWhitespaces()
     let _s=@/
     let l = line('.')
     let c = col('.')
@@ -332,7 +199,7 @@
     call cursor(l, c)
   endfunction
 
-  function! NilTogglePaste()
+  function! Xcc_TogglePaste()
     if (&paste == 1)
       set nopaste
       echo "Paste: nopaste"
@@ -343,9 +210,6 @@
   endfunction
 " }}
 " Commands (plugins excluded) {{
-  " Grep search
-  command! -nargs=* -complete=file Grep call xcc#find#grep(<q-args>)
-
   " Grep code in working dir
   command! -nargs=* -complete=file GrepCode call xcc#find#grep_code(<q-args>)
 
@@ -380,17 +244,15 @@
   let maplocalleader = "\\"
   nnoremap ; :
 
-  set pastetoggle=<F9>
-
   " Let's vim
-  nnoremap <up> <nop>
-  nnoremap <down> <nop>
-  nnoremap <left> <nop>
-  nnoremap <right> <nop>
-  inoremap <up> <nop>
-  inoremap <down> <nop>
-  inoremap <left> <nop>
-  inoremap <right> <nop>
+  nnoremap <Up> <nop>
+  nnoremap <Down> <nop>
+  nnoremap <Left> <nop>
+  nnoremap <Right> <nop>
+  inoremap <Up> <nop>
+  inoremap <Down> <nop>
+  inoremap <Left> <nop>
+  inoremap <Right> <nop>
   inoremap <F1> <ESC>
   nnoremap <F1> <ESC>
   vnoremap <F1> <ESC>
@@ -399,21 +261,12 @@
   nnoremap <silent> cd :<C-U>cd %:h \| pwd<CR>
 
   " Inser pairs
-  inoremap <c-x>( ()<esc>i
-  inoremap <c-x>[ []<esc>i
-  inoremap <c-x>' ''<esc>i
-  inoremap <c-x>" ""<esc>i
-  inoremap <c-x>< <><esc>i
-  inoremap <c-x>{ {<esc>o}<esc>ko
-
-  " Tabs
-  nnoremap <silent> <Space>tn :tabn<CR>
-  nnoremap <silent> <Space>tp :tabp<CR>
-  nnoremap <Space>tt :tabnew
-  nnoremap <silent> <Space>tc :tabclose<CR>
-  for i in range(1, 9)
-    execute 'nnoremap <silent> <Space>'.i.' :tabn '.i.'<CR>'
-  endfor
+  inoremap <C-x>( ()<Esc>i
+  inoremap <C-x>[ []<Esc>i
+  inoremap <C-x>' ''<Esc>i
+  inoremap <C-x>" ""<Esc>i
+  inoremap <C-x>< <><Esc>i
+  inoremap <C-x>{ {<Esc>o}<Esc>ko
 
   " Windows
 
@@ -426,24 +279,27 @@
   noremap <silent> <Left> :bprevious<CR>
   noremap <silent> <Right> :bnext<CR>
   noremap <silent> <Up> :bdelete<CR>
+  for i in range(1, 9)
+    execute 'nnoremap <silent> <Space>' . i . ' :b ' . i . '<CR>'
+  endfor
 
   " Files
-  nnoremap <Space>ff :<C-U>FindFile<CR>
-  nnoremap <Space>fb :<C-U>CtrlPBuffer<CR>
-  nnoremap <Space>fr :<C-U>CtrlPMRUFiles<CR>
-  nnoremap <Space>ft :<C-U>CtrlPTag<CR>
+  nnoremap <Space>ff :<C-u>FindFile<CR>
+  nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
+  nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
+  nnoremap <Space>ft :<C-u>CtrlPTag<CR>
 
   " Goto
   nnoremap g1 :GrepCode <C-R>=expand("<cword>")<CR><CR>
 
   " Options
-  nnoremap <silent> <Space>op :<C-U>call NilTogglePaste()<CR>
-  nnoremap <silent> <Space>oh :<C-U>set hlsearch! \| set hlsearch?<CR>
-  nnoremap <silent> <Space>oi :<C-U>set ignorecase! \| set ignorecase?<CR>
-  nnoremap <silent> <Space>ol :<C-U>setlocal list!<CR>
-  nnoremap <silent> <Space>on :<C-U>setlocal number!<CR>
-  nnoremap <silent> <Space>or :<C-U>setlocal relativenumber!<CR>
-  nnoremap <silent> <Space>ot :<C-U>setlocal expandtab!<CR>
+  nnoremap <silent> <Space>op :<C-u>call Xcc_TogglePaste()<CR>
+  nnoremap <silent> <Space>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
+  nnoremap <silent> <Space>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
+  nnoremap <silent> <Space>ol :<C-u>setlocal list!<CR>
+  nnoremap <silent> <Space>on :<C-u>setlocal number!<CR>
+  nnoremap <silent> <Space>or :<C-u>setlocal relativenumber!<CR>
+  nnoremap <silent> <Space>ot :<C-u>setlocal expandtab!<CR>
 
   " xcc_snip
   noremap <Space>s- :call xcc_snip#comment_block('-')<CR>
@@ -479,9 +335,6 @@
     xmap <Leader>ea <plug>(EasyAlign)
     nmap <Leader>ea <plug>(EasyAlign)
   " }}
-  " Markdown (Vim) {{
-    let g:markdown_folding = 1
-  " }}
   " MUcomplete {{
     inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
@@ -489,18 +342,19 @@
     nnoremap <silent> <Space>oa :<C-u>MUcompleteAutoToggle<CR>
   " }}
   " Show Marks {{
-    function! NilToggleShowMarks()
+    function! Xcc_ToggleShowMarks()
       if exists('b:showmarks')
         NoShowMarks
       else
         DoShowMarks
       endif
     endfunction
-    nnoremap <silent> <Space>vm :<C-u>call NilToggleShowMarks()<CR>
+    nnoremap <silent> <Space>vm :<C-u>call Xcc_ToggleShowMarks()<CR>
   " }}
   " Sneak {{
     let g:sneak#streak = 1
-    let g:sneak#use_ic_scs = 1 " Match according to ignorecase and smartcase
+    " Match according to ignorecase and smartcase
+    let g:sneak#use_ic_scs = 1
   " }}
   " Undotree {{
     let g:undotree_WindowLayout = 2
@@ -513,6 +367,13 @@
     let g:html_pre_wrap = 1
     let g:html_use_encoding = 'UTF-8'
     let g:html_font = ['Consolas', 'Menlo']
+  " }}
+  " Markdown (Vim) {{
+    let g:markdown_folding = 1
+  " }}
+  " Python (Vim) {{
+    let g:python_version_2 = 1
+    let g:python_highlight_all = 1
   " }}
 " }}
 " Themes {{
