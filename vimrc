@@ -319,11 +319,14 @@
     let g:loaded_zipPlugin = 1
   " }}
   " CtrlP {{
-    let g:ctrlp_map = '<C-P>'
-    let g:ctrlp_cmd = 'CtrlPMixed'
+    let g:ctrlp_cmd = 'CtrlPBuffer'
     let g:ctrlp_working_path_mode = 'ra'
-    if executable('ag')
+    if executable('rg')
+      let g:ctrlp_user_command = 'rg %s --files --maxdepth=10 --color=never'
+      let g:ctrlp_use_caching = 0
+    elseif executable('ag')
       let g:ctrlp_user_command = 'ag -g "" %s'
+      let g:ctrlp_use_caching = 0
     endif
     let g:user_command_async = 1
 
@@ -359,6 +362,16 @@
     let g:sneak#streak = 1
     " Match according to ignorecase and smartcase
     let g:sneak#use_ic_scs = 1
+  " }}
+  " Tagbar {{
+    function! TagbarStatusLine(current, sort, fname, flags, ...) abort
+      return (a:current ? '%#NormalMode# Tagbar %* ' : '%#StatusLineNC# Tagbar ') . a:fname
+    endfunction
+
+    nnoremap <silent> <Space>vt :<C-u>if !exists("g:loaded_tagbar")<bar>packadd tagbar<bar>endif<CR>:TagbarToggle<CR>
+    let g:tagbar_autofocus = 1
+    let g:tagbar_iconchars = ['▸', '▾']
+    let g:tagbar_status_func = 'TagbarStatusLine'
   " }}
   " Undotree {{
     let g:undotree_WindowLayout = 2
