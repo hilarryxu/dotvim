@@ -258,6 +258,8 @@
   vnoremap <F1> <ESC>
 
   " Some usefull maps
+  vnoremap < <gv
+  vnoremap > >gv
   nnoremap <silent> cd :<C-U>cd %:h \| pwd<CR>
 
   " Inser pairs
@@ -285,9 +287,6 @@
 
   " Files
   nnoremap <Space>ff :<C-u>FindFile<CR>
-  nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
-  nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
-  nnoremap <Space>ft :<C-u>CtrlPTag<CR>
 
   " Goto
   nnoremap g1 :GrepCode <C-R>=expand("<cword>")<CR><CR>
@@ -327,6 +326,11 @@
       let g:ctrlp_user_command = 'ag -g "" %s'
     endif
     let g:user_command_async = 1
+
+    nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
+    nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
+    nnoremap <Space>ft :<C-u>CtrlPTag<CR>
+    nnoremap <Space>fu :<C-u>if !exists("g:loaded_ctrlp_funky")<bar>packadd ctrlp-funky<bar>endif<CR>:CtrlPFunky<CR>
   " }}
   " Dirvish {{
     nmap <Space>dd <plug>(dirvish_up)
