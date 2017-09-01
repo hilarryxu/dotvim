@@ -208,6 +208,66 @@
       echo "Paste: paste"
     endif
   endfunction
+
+  function! Xcc_PrevWindowCursor(mode)
+    if winnr('$') <= 1
+      return
+    endif
+    noautocmd silent! wincmd p
+    if a:mode == 0
+      exec "normal! \<c-y>"
+    elseif a:mode == 1
+      exec "normal! \<c-e>"
+    elseif a:mode == 2
+      exec "normal! " . winheight('.') . "\<c-y>"
+    elseif a:mode == 3
+      exec "normal! " . winheight('.') . "\<c-e>"
+    elseif a:mode == 4
+      normal! gg
+    elseif a:mode == 5
+      normal! G
+    elseif a:mode == 6
+      exec "normal! \<c-u>"
+    elseif a:mode == 7
+      exec "normal! \<c-d>"
+    elseif a:mode == 8
+      exec "normal! k"
+    elseif a:mode == 9
+      exec "normal! j"
+    endif
+    noautocmd silent! wincmd p
+  endfunction
+
+  function! Xcc_QuickfixCursor(mode)
+    function! s:quickfix_cursor(mode)
+      if &buftype == 'quickfix'
+        if a:mode == 0
+          exec "normal! \<c-y>"
+        elseif a:mode == 1
+          exec "normal! \<c-e>"
+        elseif a:mode == 2
+          exec "normal! " . winheight('.') . "\<c-y>"
+        elseif a:mode == 3
+          exec "normal! " . winheight('.') . "\<c-e>"
+        elseif a:mode == 4
+          normal! gg
+        elseif a:mode == 5
+          normal! G
+        elseif a:mode == 6
+          exec "normal! \<c-u>"
+        elseif a:mode == 7
+          exec "normal! \<c-d>"
+        elseif a:mode == 8
+          exec "normal! k"
+        elseif a:mode == 9
+          exec "normal! j"
+        endif
+      endif
+    endfunc
+    let l:winnr = winnr()
+    noautocmd silent! windo call s:quickfix_cursor(a:mode)
+    noautocmd silent! execute '' . l:winnr . 'wincmd w'
+  endfunction
 " }}
 " Commands (plugins excluded) {{
   " Grep code in working dir
@@ -228,6 +288,10 @@
   " Execute a Vim command and send the output to a new scratch buffer
   command! -complete=command -nargs=+ CmdBuffer call xcc#buffer#cmd(<q-args>)
 
+  " Send text to a terminal
+  command! BindTerminal call xcc#terminal#open()
+  command! REPLSendLine call xcc#terminal#send([getline('.')])
+
   " Sudo write
   if !(has('win32') || has('win64'))
     command! W w !sudo tee % > /dev/null
@@ -240,6 +304,8 @@
       \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 " }}
 " Key mappings (plugins excluded) {{
+  call xcc#terminal#meta_mode(0)
+
   let mapleader = ","
   let maplocalleader = "\\"
   nnoremap ; :
@@ -257,13 +323,26 @@
   nnoremap <F1> <ESC>
   vnoremap <F1> <ESC>
 
+  " Faster command mode
+  cnoremap <C-h> <Left>
+  cnoremap <C-j> <Down>
+  cnoremap <C-k> <Up>
+  cnoremap <C-l> <Right>
+  cnoremap <C-a> <Home>
+  cnoremap <C-e> <End>
+  cnoremap <C-f> <C-d>
+  cnoremap <C-b> <Left>
+  cnoremap <C-d> <Del>
+  cnoremap <C-_> <C-k>
+
   " Some usefull maps
   vnoremap < <gv
   vnoremap > >gv
-  nnoremap <silent> cd :<C-U>cd %:h \| pwd<CR>
+  nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
 
   " Inser pairs
   inoremap <C-x>( ()<Esc>i
+  inoremap <C-x>9 ()<Esc>i
   inoremap <C-x>[ []<Esc>i
   inoremap <C-x>' ''<Esc>i
   inoremap <C-x>" ""<Esc>i
@@ -271,6 +350,35 @@
   inoremap <C-x>{ {<Esc>o}<Esc>ko
 
   " Windows
+  if $TERM =~# '^\%(tmux\|screen\)'
+    nnoremap <silent> <M-h> :<C-u>call xcc#tmux#navigate('h')<CR>
+    nnoremap <silent> <M-j> :<C-u>call xcc#tmux#navigate('j')<CR>
+    nnoremap <silent> <M-k> :<C-u>call xcc#tmux#navigate('k')<CR>
+    nnoremap <silent> <M-l> :<C-u>call xcc#tmux#navigate('l')<CR>
+  else
+    nnoremap <M-l> <C-w>l
+    nnoremap <M-h> <C-w>h
+    nnoremap <M-j> <C-w>j
+    nnoremap <M-k> <C-w>k
+  endif
+
+  " Cursor
+  nnoremap <silent> <M-u> :call Xcc_PrevWindowCursor(6)<CR>
+  nnoremap <silent> <M-d> :call Xcc_PrevWindowCursor(7)<CR>
+
+  nnoremap <silent> <M-[> :call Xcc_QuickfixCursor(2)<CR>
+  nnoremap <silent> <M-]> :call Xcc_QuickfixCursor(3)<CR>
+  nnoremap <silent> <M-{> :call Xcc_QuickfixCursor(4)<CR>
+  nnoremap <silent> <M-}> :call Xcc_QuickfixCursor(5)<CR>
+  nnoremap <silent> <M-u> :call Xcc_PrevWindowCursor(6)<CR>
+  nnoremap <silent> <M-d> :call Xcc_PrevWindowCursor(7)<CR>
+
+  inoremap <silent> <M-[> <C-\><C-o>:call Xcc_QuickfixCursor(2)<CR>
+  inoremap <silent> <M-]> <C-\><C-o>:call Xcc_QuickfixCursor(3)<CR>
+  inoremap <silent> <M-{> <C-\><C-o>:call Xcc_QuickfixCursor(4)<CR>
+  inoremap <silent> <M-}> <C-\><C-o>:call Xcc_QuickfixCursor(5)<CR>
+  inoremap <silent> <M-u> <C-\><C-o>:call Xcc_PrevWindowCursor(6)<CR>
+  inoremap <silent> <M-d> <C-\><C-o>:call Xcc_PrevWindowCursor(7)<CR>
 
   " Buffers
   nnoremap <Space>bn :bnext<CR>
@@ -290,6 +398,9 @@
 
   " Goto
   nnoremap g1 :GrepCode <C-R>=expand("<cword>")<CR><CR>
+
+  " Toggle
+  nnoremap <silent> <Space>vq :call xcc#quickfix#toggle(6)<CR>
 
   " Options
   nnoremap <silent> <Space>op :<C-u>call Xcc_TogglePaste()<CR>
