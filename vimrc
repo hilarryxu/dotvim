@@ -119,8 +119,8 @@
   endtry
 " }}
 " Editing {{
-  " set splitright " When splitting vertically, focus goes to the right window
-  " set splitbelow " When splitting horizontally, focus goes to the bottom window
+  set splitright " When splitting vertically, focus goes to the right window
+  set splitbelow " When splitting horizontally, focus goes to the bottom window
   " Tab
   set expandtab " Use soft tabs by default
   set tabstop=2
