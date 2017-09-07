@@ -9,12 +9,21 @@ hi default xccConfirmLine gui=none guibg=#ffe4b3 term=none cterm=none ctermbg=da
 hi default xccTargetLine gui=none guibg=#ffe4b3 term=none cterm=none ctermbg=darkyellow
 
 " commands {{{1
-command! XccPlugins call xcc#plugin#dump()
+command! XCCbn call xcc#buffer#navigate('bn')
+command! XCCbp call xcc#buffer#navigate('bp')
+command! XCCbalt call xcc#buffer#to_alternate_edit_buf()
+command! XCCbd call xcc#buffer#keep_window_bd()
+
+command! XCCsw call xcc#window#switch_window()
+command! XCCgp call xcc#window#goto_plugin_window()
+
+command! XCCplugins call xcc#plugin#dump()
 
 " autocmd {{{1
 augroup xcc_record
   au!
   au VimEnter,WinLeave * call xcc#window#record()
+  au BufLeave * call xcc#buffer#record()
 augroup END
 
 " register plugins {{{1

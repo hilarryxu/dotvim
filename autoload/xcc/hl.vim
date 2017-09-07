@@ -7,7 +7,7 @@ function xcc#hl#clear_target()
 endfunction
 
 function xcc#hl#confirm_line(linenr)
-  " clear previous highlight result 
+  " clear previous highlight result
   match none
 
   " highlight the line pattern
@@ -16,7 +16,7 @@ function xcc#hl#confirm_line(linenr)
 endfunction
 
 function xcc#hl#target_line(linenr)
-  " clear previous highlight result 
+  " clear previous highlight result
   2match none
 
   " highlight the line pattern

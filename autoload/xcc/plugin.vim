@@ -1,8 +1,8 @@
-" Location:     autoload/xcc/plugin.vim
-
+" Section: vars
 let s:registered_plugin = {}
 let s:empty_filetype = '__EMPTY__'
 
+" xcc#plugin#dump {{{1
 function xcc#plugin#dump()
   silent echohl Statement
   echo 'List of registered plugins:'
@@ -19,6 +19,7 @@ function xcc#plugin#dump()
   endfor
 endfunction
 
+" xcc#plugin#register {{{1
 function xcc#plugin#register(filetype, options)
   let filetype = a:filetype
   if filetype == ''
@@ -37,6 +38,7 @@ function xcc#plugin#register(filetype, options)
   endif
 endfunction
 
+" xcc#plugin#is_registered {{{1
 function xcc#plugin#is_registered(bufnr, ...)
   if !bufexists(a:bufnr)
     return 0

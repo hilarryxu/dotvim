@@ -1,3 +1,4 @@
+" helpers {{{1
 function! s:sort_mappings(i1, i2)
   if a:i1.priority != a:i2.priority
     return a:i1.priority > a:i2.priority ? 1 : -1
@@ -7,7 +8,7 @@ function! s:sort_mappings(i1, i2)
     return a:i1.key ># a:i2.key ? 1 : -1
   endif
 
-  return 0 
+  return 0
 endfunction
 
 " xcc#keymap#register {{{1
@@ -18,7 +19,7 @@ endfunction
 " desc: description
 function xcc#keymap#register(keymap, priority, local, key, action, desc)
   " pre-check
-  if type(a:keymap) != type({}) 
+  if type(a:keymap) != type({})
     call xcc#msg#err("Wrong a:keymap type, please send a Dictionary")
     return
   endif
@@ -35,7 +36,7 @@ function xcc#keymap#register(keymap, priority, local, key, action, desc)
   " immediately map non-local mappings
   if a:local == 0
     silent execute 'nnoremap <unique> '
-          \ . a:key . ' ' 
+          \ . a:key . ' '
           \ . a:action
   endif
 endfunction
@@ -54,7 +55,7 @@ function xcc#keymap#bind(keymap)
   for m in mappings
     if m.local 
       silent execute 'nnoremap <silent> <buffer> '
-            \ . m.key . ' ' 
+            \ . m.key . ' '
             \ . m.action
     endif
   endfor
@@ -64,7 +65,7 @@ endfunction
 " return a list of help texts
 function xcc#keymap#helptext(keymap)
   " pre-check
-  if type(a:keymap) != type({}) 
+  if type(a:keymap) != type({})
     call xcc#msg#err("Wrong a:keymap type, please send a Dictionary")
     return []
   endif
