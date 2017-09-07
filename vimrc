@@ -474,6 +474,31 @@
     " Match according to ignorecase and smartcase
     let g:sneak#use_ic_scs = 1
   " }}
+  " Lightline {{
+    function! Xcc_LightlineFilename()
+      let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+      let modified = &modified ? ' +' : ''
+      return filename . modified
+    endfunction
+
+    let g:lightline = {
+          \ 'colorscheme': 'seoul256',
+          \ 'active': {
+          \   'left': [ [ 'mode', 'paste' ],
+          \             [ 'gitbranch', 'readonly', 'filename' ] ],
+          \   'right': [ [ 'lineinfo' ],
+          \              [ 'percent' ],
+          \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ],
+          \ },
+          \ 'component': {
+          \   'charvaluehex': '[%b][0x%B]',
+          \ },
+          \ 'component_function': {
+          \   'gitbranch': 'fugitive#head',
+          \   'filename': 'Xcc_LightlineFilename',
+          \ },
+          \ }
+  " }}
   " Tagbar {{
     function! TagbarStatusLine(current, sort, fname, flags, ...) abort
       return (a:current ? '%#NormalMode# Tagbar %* ' : '%#StatusLineNC# Tagbar ') . a:fname

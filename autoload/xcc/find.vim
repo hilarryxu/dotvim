@@ -54,24 +54,32 @@ endfunction
 " Filter a list and return a List of selected items.
 " 'input' is any shell command that sends its output, one item per line, to
 " stdout, or a List of items to be filtered.
-function! xcc#find#fuzzy(input, ...)  " ... optional prompt
+" ... optional prompt
+function! xcc#find#fuzzy(input, ...)
   if type(a:input) == v:t_string
     let l:cmd = a:input
-  else " Assume List
-      let l:input = tempname()
-      call writefile(a:input, l:input)
-      let l:cmd  = 'cat '.fnameescape(l:input)
+    echom l:cmd
+  else
+    " Assume List
+    let l:input = tempname()
+    call writefile(a:input, l:input)
+    let l:cmd  = 'cat '.fnameescape(l:input)
   endif
-  PP l:cmd
-  let l:prompt = (a:0 > 0 ? "--prompt '".a:1. "> '" : '')
+
+  let l:prompt = (a:0 > 0 ? "-p '" . a:1 . "> '" : '')
   let l:output = tempname()
   if executable('tput') && filereadable('/dev/tty')
     " Cool idea adapted from fzf.vim coming with fzf (not the Vim plugin):
-    call system(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; '.l:cmd.'|fzf -m --height 20 '.l:prompt.' >'.fnameescape(l:output).' 2>/dev/tty', &lines))
+    call system(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; '
+          \ . l:cmd . '|fzy -l 20 ' . l:prompt
+          \ . ' >' . fnameescape(l:output)
+          \ . ' 2>/dev/tty',
+          \ &lines))
   else
-    silent execute '!'.l:cmd.'|fzf -m >'.fnameescape(l:output)
+    silent execute '!' . l:cmd . '|fzy>' . fnameescape(l:output)
   endif
   redraw!
+
   try
     return filereadable(l:output) ? readfile(l:output) : []
   finally
@@ -86,16 +94,18 @@ endfunction
 function! xcc#find#arglist(input_cmd)
   let l:arglist = xcc#find#fuzzy(a:input_cmd, 'Choose files')
   if empty(l:arglist) | return | endif
-  execute "args" join(map(l:arglist, { i,v -> fnameescape(v) }))
+  execute 'args' join(map(l:arglist, { i,v -> fnameescape(v) }))
 endfunction
 
-function! xcc#find#file(...) " ... is an optional directory
-  if has('gui_running') || (!executable('ag') && !executable('rg'))
+" Fuzzy find files.
+" ... is an optional directory
+function! xcc#find#file(...)
+  if has('gui_running') || (!executable('rg') && !executable('rg'))
     execute 'CtrlP' (a:0 > 0 ? a:1 : '')
-  elseif executable('ag')
-    call xcc#find#arglist('ag -g ""' . (a:0 > 0 ? ' '.a:1 : ''))
   elseif executable('rg')
-    call xcc#find#arglist('rg --files')
+    call xcc#find#arglist('rg' . (a:0 > 0 ? ' ' . a:1 : '') . ' --files --maxdepth=10 --color=never')
+  elseif executable('ag')
+    call xcc#find#arglist('ag -g ""' . (a:0 > 0 ? ' ' . a:1 : ''))
   endif
 endfunction
 
@@ -104,6 +114,6 @@ function! xcc#find#colorscheme()
   let l:colors += map(globpath(&packpath, "pack/*/{opt,start}/*/colors/*.vim", v:false, v:true) , { i,v -> fnamemodify(v, ":t:r") })
   let l:colorscheme = xcc#find#fuzzy(l:colors, 'Theme')
   if !empty(l:colorscheme)
-    execute "colorscheme" l:colorscheme[0]
+    execute 'colorscheme' l:colorscheme[0]
   endif
 endfunction
