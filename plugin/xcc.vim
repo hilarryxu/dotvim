@@ -18,6 +18,8 @@ command! XCCsw call xcc#window#switch_window()
 command! XCCgp call xcc#window#goto_plugin_window()
 
 command! XCCplugins call xcc#plugin#dump()
+command! XCCdumpBuffer call xcc#buffer#dump()
+command! XCCdumpWindow call xcc#window#dump()
 
 " autocmd {{{1
 augroup xcc_record

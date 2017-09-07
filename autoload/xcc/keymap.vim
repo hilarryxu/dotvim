@@ -17,7 +17,7 @@ endfunction
 " key: the key in Vim's key format string
 " action: the action function name
 " desc: description
-function xcc#keymap#register(keymap, priority, local, key, action, desc)
+function! xcc#keymap#register(keymap, priority, local, key, action, desc)
   " pre-check
   if type(a:keymap) != type({})
     call xcc#msg#err("Wrong a:keymap type, please send a Dictionary")
@@ -42,9 +42,9 @@ function xcc#keymap#register(keymap, priority, local, key, action, desc)
 endfunction
 
 " xcc#keymap#bind {{{1
-function xcc#keymap#bind(keymap)
+function! xcc#keymap#bind(keymap)
   " pre-check
-  if type(a:keymap) != type({}) 
+  if type(a:keymap) != type({})
     call xcc#msg#err("Wrong a:keymap type, please send a Dictionary")
     return
   endif
@@ -53,7 +53,7 @@ function xcc#keymap#bind(keymap)
   call sort(mappings, function('s:sort_mappings'))
 
   for m in mappings
-    if m.local 
+    if m.local
       silent execute 'nnoremap <silent> <buffer> '
             \ . m.key . ' '
             \ . m.action
@@ -63,7 +63,7 @@ endfunction
 
 " xcc#keymap#helptext {{{1
 " return a list of help texts
-function xcc#keymap#helptext(keymap)
+function! xcc#keymap#helptext(keymap)
   " pre-check
   if type(a:keymap) != type({})
     call xcc#msg#err("Wrong a:keymap type, please send a Dictionary")

@@ -2,7 +2,7 @@
 " bufname: the buffer you wish to open a window edit it
 " size: the initial size of the window
 " pos: 'left', 'right', 'top', 'bottom'
-" nested: 0 or 1. if nested, the window will be created besides current window 
+" nested: 0 or 1. if nested, the window will be created besides current window
 function xcc#window#new(bufname, size, pos, nested, callback)
   let winpos = ''
   if a:nested == 1
@@ -17,7 +17,7 @@ function xcc#window#new(bufname, size, pos, nested, callback)
     elseif a:pos == 'right' || a:pos == 'bottom'
       let winpos = 'botright'
     endif
-  end
+  endif
 
   let vcmd = ''
   if a:pos == 'left' || a:pos == 'right'
@@ -32,14 +32,14 @@ function xcc#window#new(bufname, size, pos, nested, callback)
     let bufcmd = fnameescape(a:bufname)
   else
     " edit exists buffer
-    " NOTE: '+' here is to make it work with other command 
+    " NOTE: '+' here is to make it work with other command
     let bufcmd = '+b' . bufnum
   endif
 
   " create window
   silent execute winpos . ' ' . vcmd . ' ' . a:size . ' split ' .  bufcmd
 
-  " init window 
+  " init window
   silent setlocal winfixheight
   silent setlocal winfixwidth
 
@@ -50,7 +50,7 @@ endfunction
 " bufname: the buffer you wish to open a window edit it
 " size: the initial size of the window
 " pos: 'left', 'right', 'top', 'bottom'
-" nested: 0 or 1. if nested, the window will be created besides current window 
+" nested: 0 or 1. if nested, the window will be created besides current window
 " focus: 0 or 1. if focus, we will move cursor to opened window
 " callback: init callback when window created
 
@@ -77,7 +77,7 @@ function xcc#window#close(winnr)
     call xcc#msg#warn("Can not close last window")
   endtry
 
-  " this will help BufEnter event correctly happend when we enter the edit window 
+  " this will help BufEnter event correctly happend when we enter the edit window
   doautocmd BufEnter
 endfunction
 
@@ -100,7 +100,7 @@ let s:last_editplugin_bufnr = -1
 function xcc#window#record()
   let winnr = winnr()
   let bufopts = []
-  " if this is plugin window and do not have {action: norecord} 
+  " if this is plugin window and do not have {action: norecord}
   if xcc#plugin#is_registered(winbufnr(winnr), bufopts)
     if index(bufopts, 'norecord') == -1
       let s:last_editplugin_bufnr = bufnr('%')
@@ -111,7 +111,7 @@ function xcc#window#record()
 endfunction
 
 " xcc#window#dump {{{1
-function xcc#window#dump() 
+function xcc#window#dump()
   echomsg "last edit window id = " . s:last_editbuf_winid
   echomsg "last edit buffer = " . bufname(xcc#window#last_edit_bufnr())
   echomsg "last edit plugin = " . bufname(s:last_editplugin_bufnr)
@@ -152,9 +152,9 @@ function xcc#window#goto_edit_window()
 
   " if we have edit window opened, jump to it
   " if something wrong make you delete the edit window (such as :q)
-  " we will try to search another edit window, 
+  " we will try to search another edit window,
   " if no edit window exists, we will split a new one and go to it.
-  if winnr != -1 
+  if winnr != -1
     " no need to jump if we already here
     if winnr() != winnr
       exe winnr . 'wincmd w'
@@ -171,15 +171,15 @@ function xcc#window#goto_edit_window()
       let i = i + 1
     endwhile
 
-    " split a new one and go to it 
-    exec 'rightbelow vsplit' 
-    exec 'enew' 
-    let newBuf = bufnr('%') 
-    set buflisted 
-    set bufhidden=delete 
-    set buftype=nofile 
-    setlocal noswapfile 
-    normal athis is the scratch buffer 
+    " split a new one and go to it
+    exec 'rightbelow vsplit'
+    exec 'enew'
+    let newBuf = bufnr('%')
+    set buflisted
+    set bufhidden=delete
+    set buftype=nofile
+    setlocal noswapfile
+    normal athis is the scratch buffer
   endif
 endfunction
 

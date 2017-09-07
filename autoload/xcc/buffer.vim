@@ -31,6 +31,12 @@ function! xcc#buffer#record()
   endif
 endfunction
 
+" xcc#buffer#dump {{{1
+function! xcc#buffer#dump()
+  echomsg "last alt edit buffer = " . bufname(s:alt_edit_bufnr)
+  echomsg "last alt edit buffer pos = " . string(s:alt_edit_bufpos)
+endfunction
+
 " xcc#buffer#to_alternate_edit_buf {{{1
 function! xcc#buffer#to_alternate_edit_buf()
   if xcc#window#is_plugin_window(winnr())
@@ -40,8 +46,8 @@ function! xcc#buffer#to_alternate_edit_buf()
 
   let alt_bufnr = bufnr('#')
 
-  if bufexists(bufnr) && buflisted(bufnr) && bufloaded(bufnr)
-        \ && !xcc#plugin#is_registered(bufnr(alt_bfnr))
+  if bufexists(alt_bufnr) && buflisted(alt_bufnr) && bufloaded(alt_bufnr)
+        \ && !xcc#plugin#is_registered(bufnr(alt_bufnr))
     " NOTE: because s:alt_edit_bufnr.'b!' will invoke BufLeave event
     " and that will overwrite s:alt_edit_bufpos
     let record_alt_bufpos = deepcopy(s:alt_edit_bufpos)
