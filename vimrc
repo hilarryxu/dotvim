@@ -499,6 +499,32 @@
           \ },
           \ }
   " }}
+  " Goyo and Limelight {{
+    function! s:goyo_enter()
+      silent !tmux set status off
+      silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+      set noshowmode
+      set noshowcmd
+      set scrolloff=999
+      Limelight
+    endfunction
+
+    function! s:goyo_leave()
+      silent !tmux set status on
+      silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+      set showmode
+      set showcmd
+      set scrolloff=5
+      Limelight!
+    endfunction
+
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested call <SID>goyo_leave()
+  " }}
+  " ChooseWin {{
+    let g:choosewin_overlay_enable = 1
+    nmap - <Plug>(choosewin)
+  " }}
   " Tagbar {{
     function! TagbarStatusLine(current, sort, fname, flags, ...) abort
       return (a:current ? '%#NormalMode# Tagbar %* ' : '%#StatusLineNC# Tagbar ') . a:fname
