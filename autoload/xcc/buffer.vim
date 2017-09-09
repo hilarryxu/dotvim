@@ -1,12 +1,12 @@
 " xcc#buffer#cmd {{{1
 " Send the output of a Vim command to a new scratch buffer
-function! xcc#buffer#cmd(excmd)
+function! xcc#buffer#cmd(excmd) abort
   botright new +setlocal\ buftype=nofile\ bufhidden=wipe\ nobuflisted\ noswapfile\ nowrap
   call append(0, split(xcc#capture(a:excmd), "\n"))
 endfunction
 
 " xcc#buffer#navigate {{{1
-function! xcc#buffer#navigate(cmd)
+function! xcc#buffer#navigate(cmd) abort
   if xcc#window#is_plugin_window(winnr())
     call xcc#window#goto_edit_window()
   endif
@@ -22,23 +22,23 @@ endfunction
 let s:alt_edit_bufnr = -1
 let s:alt_edit_bufpos = []
 
-function! xcc#buffer#record()
-  let bufnr = bufnr('%')
-  if buflisted(bufnr) && bufloaded(bufnr)
+function! xcc#buffer#record() abort
+  let l:bufnr = bufnr('%')
+  if buflisted(l:bufnr) && bufloaded(l:bufnr)
         \ && !xcc#plugin#is_registered(bufnr('%'))
-    let s:alt_edit_bufnr = bufnr
+    let s:alt_edit_bufnr = l:bufnr
     let s:alt_edit_bufpos = getpos('.')
   endif
 endfunction
 
 " xcc#buffer#dump {{{1
-function! xcc#buffer#dump()
+function! xcc#buffer#dump() abort
   echomsg "last alt edit buffer = " . bufname(s:alt_edit_bufnr)
   echomsg "last alt edit buffer pos = " . string(s:alt_edit_bufpos)
 endfunction
 
 " xcc#buffer#to_alternate_edit_buf {{{1
-function! xcc#buffer#to_alternate_edit_buf()
+function! xcc#buffer#to_alternate_edit_buf() abort
   if xcc#window#is_plugin_window(winnr())
     call xcc#msg#warn("Swap buffer in plugin window is not allowed")
     return
@@ -87,7 +87,7 @@ endfunction
 
 " xcc#buffer#keep_window_bd {{{1
 " Delete the buffer; keep windows; create a scratch buffer if no buffers left
-function! xcc#buffer#keep_window_bd()
+function! xcc#buffer#keep_window_bd() abort
   if xcc#window#is_plugin_window(winnr())
     call xcc#msg#warn("Can't close plugin window by bd")
     return

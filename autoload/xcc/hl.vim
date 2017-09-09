@@ -1,12 +1,12 @@
-function xcc#hl#clear_confirm()
+function xcc#hl#clear_confirm() abort
   match none
 endfunction
 
-function xcc#hl#clear_target()
+function xcc#hl#clear_target() abort
   2match none
 endfunction
 
-function xcc#hl#confirm_line(linenr)
+function xcc#hl#confirm_line(linenr) abort
   " clear previous highlight result
   match none
 
@@ -15,7 +15,7 @@ function xcc#hl#confirm_line(linenr)
   silent execute 'match xccConfirmLine ' . pat
 endfunction
 
-function xcc#hl#target_line(linenr)
+function xcc#hl#target_line(linenr) abort
   " clear previous highlight result
   2match none
 

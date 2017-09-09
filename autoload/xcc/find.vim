@@ -1,66 +1,68 @@
+" xcc#find#buffer {{{1
 " Find all occurrences of a pattern in a file.
-function! xcc#find#buffer(pattern)
-  if getbufvar(winbufnr(winnr()), "&ft") ==# "qf"
+function! xcc#find#buffer(pattern) abort
+  if getbufvar(winbufnr(winnr()), '&ft') ==# 'qf'
     call xcc#msg#warn("Cannot search the quickfix window")
     return
   endif
+
   try
-    silent noautocmd execute "lvimgrep /" . a:pattern . "/gj " . fnameescape(expand("%"))
-  catch /^Vim\%((\a\+)\)\=:E480/  " Pattern not found
+    silent noautocmd execute 'lvimgrep /' . a:pattern . '/gj ' . fnameescape(expand('%'))
+  catch /^Vim\%((\a\+)\)\=:E480/
     call xcc#msg#warn("No match")
   endtry
-  bo lwindow
+
+  botright lwindow
 endfunction
 
+" xcc#find#all_buffers {{{1
 " Find all occurrences of a pattern in all open files.
-function! xcc#find#all_buffers(pattern)
-  " Get the list of open files
+function! xcc#find#all_buffers(pattern) abort
   let l:files = map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'fnameescape(bufname(v:val))')
+
   try
-    silent noautocmd execute "vimgrep /" . a:pattern . "/gj " . join(l:files)
-  catch /^Vim\%((\a\+)\)\=:E480/  " Pattern not found
+    silent noautocmd execute 'vimgrep /' . a:pattern . '/gj ' . join(l:files)
+  catch /^Vim\%((\a\+)\)\=:E480/
     call xcc#msg#warn("No match")
   endtry
-  bo cwindow
+
+  botright cwindow
 endfunction
 
-function! xcc#find#choose_dir(...) " ... is an optional prompt
+" xcc#find#choose_dir {{{1
+" ... is an optional prompt
+function! xcc#find#choose_dir(...) abort
   let l:idx = inputlist([get(a:000, 0, "Change directory to:"), "1. ".getcwd(), "2. ".expand("%:p:h"), "3. Other"])
   let l:dir = (l:idx == 1 ? getcwd() : (l:idx == 2 ? expand("%:p:h") : (l:idx == 3 ? fnamemodify(input("Directory: ", "", "file"), ':p') : "")))
   if strlen(l:dir) <= 0
-    call xcc#msg#notice("Cancelled.")
+    call xcc#msg#notice("Cancelled")
     return ''
   endif
   return l:dir
 endfunction
 
-function! xcc#find#grep(args)
-  if getcwd() != expand("%:p:h")
+" xcc#find#grep {{{1
+function! xcc#find#grep(args) abort
+  if getcwd() != expand('%:p:h')
     let l:dir = xcc#find#choose_dir()
     if empty(l:dir) | return | endif
     execute 'lcd' l:dir
   endif
   execute 'silent grep!' a:args
-  bo cwindow
+  botright cwindow
   redraw!
 endfunction
 
-function! xcc#find#grep_code(args)
-  execute 'silent grep!' a:args
-  bo cwindow
-  redraw!
-endfunction
-
+" xcc#find#fuzzy {{{1
 " Filter a list and return a List of selected items.
 " 'input' is any shell command that sends its output, one item per line, to
 " stdout, or a List of items to be filtered.
 " ... optional prompt
-function! xcc#find#fuzzy(input, ...)
+function! xcc#find#fuzzy(input, ...) abort
   if type(a:input) == v:t_string
     let l:cmd = a:input
     echom l:cmd
   else
-    " Assume List
     let l:input = tempname()
     call writefile(a:input, l:input)
     let l:cmd  = 'cat '.fnameescape(l:input)
@@ -83,23 +85,25 @@ function! xcc#find#fuzzy(input, ...)
   try
     return filereadable(l:output) ? readfile(l:output) : []
   finally
-    if exists("l:input")
+    if exists('l:input')
       silent! call delete(l:input)
     endif
     silent! call delete(l:output)
   endtry
 endfunction
 
+" xcc#find#arglist {{{1
 " Filter a list of paths and populate the arglist with the selected items.
-function! xcc#find#arglist(input_cmd)
+function! xcc#find#arglist(input_cmd) abort
   let l:arglist = xcc#find#fuzzy(a:input_cmd, 'Choose files')
   if empty(l:arglist) | return | endif
   execute 'args' join(map(l:arglist, { i,v -> fnameescape(v) }))
 endfunction
 
+" xcc#find#file {{{1
 " Fuzzy find files.
 " ... is an optional directory
-function! xcc#find#file(...)
+function! xcc#find#file(...) abort
   if has('gui_running') || (!executable('rg') && !executable('rg'))
     execute 'CtrlP' (a:0 > 0 ? a:1 : '')
   elseif executable('rg')
@@ -109,7 +113,8 @@ function! xcc#find#file(...)
   endif
 endfunction
 
-function! xcc#find#colorscheme()
+" xcc#find#colorscheme {{{1
+function! xcc#find#colorscheme() abort
   let l:colors = map(globpath(&runtimepath, "colors/*.vim", v:false, v:true) , { i,v -> fnamemodify(v, ":t:r") })
   let l:colors += map(globpath(&packpath, "pack/*/{opt,start}/*/colors/*.vim", v:false, v:true) , { i,v -> fnamemodify(v, ":t:r") })
   let l:colorscheme = xcc#find#fuzzy(l:colors, 'Theme')

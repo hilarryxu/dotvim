@@ -1,9 +1,9 @@
-function! xcc#terminal#open()
+function! xcc#terminal#open() abort
   call system('tmux split-window')
   call system('tmux last-pane')
 endfunction
 
-function! xcc#terminal#send(lines)
+function! xcc#terminal#send(lines) abort
   if !exists('b:xcc_bound_terminal') || empty(b:xcc_bound_terminal)
     let b:xcc_bound_terminal = input('Tmux pane number: ')
   endif
@@ -12,7 +12,7 @@ function! xcc#terminal#send(lines)
   endfor
 endfunction
 
-function! xcc#terminal#meta_mode(mode)
+function! xcc#terminal#meta_mode(mode) abort
   if has('nvim') || has('gui_running')
     return
   endif

@@ -1,4 +1,4 @@
-function xcc#os#is(name)
+function! xcc#os#is(name) abort
   if a:name ==# 'osx'
     return has('macunix')
   elseif a:name ==# 'windows'

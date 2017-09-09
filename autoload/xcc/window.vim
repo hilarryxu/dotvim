@@ -3,7 +3,7 @@
 " size: the initial size of the window
 " pos: 'left', 'right', 'top', 'bottom'
 " nested: 0 or 1. if nested, the window will be created besides current window
-function xcc#window#new(bufname, size, pos, nested, callback)
+function! xcc#window#new(bufname, size, pos, nested, callback) abort
   let winpos = ''
   if a:nested == 1
     if a:pos == 'left' || a:pos == 'top'
@@ -54,7 +54,7 @@ endfunction
 " focus: 0 or 1. if focus, we will move cursor to opened window
 " callback: init callback when window created
 
-function xcc#window#open(bufname, size, pos, nested, focus, callback)
+function! xcc#window#open(bufname, size, pos, nested, focus, callback) abort
   call xcc#window#new(a:bufname, a:size, a:pos, a:nested, a:callback)
 
   if a:focus == 0
@@ -63,7 +63,7 @@ function xcc#window#open(bufname, size, pos, nested, focus, callback)
 endfunction
 
 " xcc#window#close {{{1
-function xcc#window#close(winnr)
+function! xcc#window#close(winnr) abort
   if a:winnr == -1
     return
   endif
@@ -82,7 +82,7 @@ function xcc#window#close(winnr)
 endfunction
 
 " xcc#window#resize {{{1
-function xcc#window#resize(winnr, pos, new_size)
+function! xcc#window#resize(winnr, pos, new_size) abort
   let vcmd = ''
   if a:pos == 'left' || a:pos == 'right'
     let vcmd = 'vertical'
@@ -97,7 +97,7 @@ endfunction
 let s:last_editbuf_winid = -1
 let s:last_editplugin_bufnr = -1
 
-function xcc#window#record()
+function! xcc#window#record() abort
   let winnr = winnr()
   let bufopts = []
   " if this is plugin window and do not have {action: norecord}
@@ -111,24 +111,24 @@ function xcc#window#record()
 endfunction
 
 " xcc#window#dump {{{1
-function xcc#window#dump()
+function! xcc#window#dump() abort
   echomsg "last edit window id = " . s:last_editbuf_winid
   echomsg "last edit buffer = " . bufname(xcc#window#last_edit_bufnr())
   echomsg "last edit plugin = " . bufname(s:last_editplugin_bufnr)
 endfunction
 
 " xcc#window#is_plugin_window {{{1
-function xcc#window#is_plugin_window(winnr)
+function! xcc#window#is_plugin_window(winnr) abort
   return xcc#plugin#is_registered(winbufnr(a:winnr))
 endfunction
 
 " xcc#window#last_edit_bufnr {{{1
-function xcc#window#last_edit_bufnr()
+function! xcc#window#last_edit_bufnr() abort
   return winbufnr(s:last_editbuf_winid)
 endfunction
 
 " xcc#window#check_if_autoclose {{{1
-function xcc#window#check_if_autoclose(winnr)
+function! xcc#window#check_if_autoclose(winnr) abort
   let bufopts = []
   if xcc#plugin#is_registered(winbufnr(a:winnr), bufopts)
     if index(bufopts, 'autoclose') != -1
@@ -139,7 +139,7 @@ function xcc#window#check_if_autoclose(winnr)
 endfunction
 
 " xcc#window#goto_edit_window {{{1
-function xcc#window#goto_edit_window()
+function! xcc#window#goto_edit_window() abort
   " if current window is edit_window, don't do anything
   let winnr = winnr()
   if !xcc#window#is_plugin_window(winnr)
@@ -184,7 +184,7 @@ function xcc#window#goto_edit_window()
 endfunction
 
 " xcc#window#goto_plugin_window {{{1
-function xcc#window#goto_plugin_window()
+function! xcc#window#goto_plugin_window() abort
   " get winnr from bufnr
   let winnr = bufwinnr(s:last_editplugin_bufnr)
 
@@ -194,7 +194,7 @@ function xcc#window#goto_plugin_window()
 endfunction
 
 " xcc#window#switch_window {{{1
-function xcc#window#switch_window()
+function! xcc#window#switch_window() abort
   if xcc#window#is_plugin_window(winnr())
     call xcc#window#goto_edit_window()
   else

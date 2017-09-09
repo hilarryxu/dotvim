@@ -3,7 +3,7 @@ let s:registered_plugin = {}
 let s:empty_filetype = '__EMPTY__'
 
 " xcc#plugin#dump {{{1
-function xcc#plugin#dump()
+function! xcc#plugin#dump() abort
   silent echohl Statement
   echo 'List of registered plugins:'
   silent echohl None
@@ -20,7 +20,7 @@ function xcc#plugin#dump()
 endfunction
 
 " xcc#plugin#register {{{1
-function xcc#plugin#register(filetype, options)
+function! xcc#plugin#register(filetype, options) abort
   let filetype = a:filetype
   if filetype == ''
     let filetype = s:empty_filetype
@@ -39,7 +39,7 @@ function xcc#plugin#register(filetype, options)
 endfunction
 
 " xcc#plugin#is_registered {{{1
-function xcc#plugin#is_registered(bufnr, ...)
+function! xcc#plugin#is_registered(bufnr, ...) abort
   if !bufexists(a:bufnr)
     return 0
   endif
