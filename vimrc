@@ -268,6 +268,30 @@
     noautocmd silent! windo call s:quickfix_cursor(a:mode)
     noautocmd silent! execute '' . l:winnr . 'wincmd w'
   endfunction
+
+  function! Xcc_GrepCode(regex)
+    if executable('rg')
+      silent execute 'AsyncRun! rg --no-heading --vimgrep "' . a:regex . '"'
+    elseif executable('ag')
+      silent execute 'AsyncRun! ag --vimgrep "' . a:regex . '"'
+    endif
+  endfunction
+
+  function! s:GrepOperator(type)
+      let saved_unnamed_register = @@
+
+      if a:type ==# 'v'
+          normal! `<v`>y
+      elseif a:type ==# 'char'
+          normal! `[v`]y
+      else
+          return
+      endif
+
+      call Xcc_GrepCode(@@)
+
+      let @@ = saved_unnamed_register
+  endfunction
 " }}
 " Commands (plugins excluded) {{
   " Find all occurrences of a pattern in the current buffer
@@ -419,6 +443,11 @@
   noremap <Space>sc :call xcc_snip#copyright('Larry Xu')<CR>
   noremap <Space>sm :call xcc_snip#main()<CR>
   noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
+
+  " <Leader>
+  nnoremap <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
+  vnoremap <Leader>g :<C-u>call <SID>GrepOperator(visualmode())<CR>
+
 " }}
 " Plugins {{
   " Disabled Vim Plugins {{
@@ -452,8 +481,8 @@
     nmap <Space>dd <plug>(dirvish_up)
   " }}
   " Easy Align {{
-    xmap <Leader>ea <plug>(EasyAlign)
-    nmap <Leader>ea <plug>(EasyAlign)
+    xmap <Space>ea <plug>(EasyAlign)
+    nmap <Space>ea <plug>(EasyAlign)
   " }}
   " MUcomplete {{
     inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
