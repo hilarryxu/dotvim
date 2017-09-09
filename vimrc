@@ -270,9 +270,6 @@
   endfunction
 " }}
 " Commands (plugins excluded) {{
-  " Grep code in working dir
-  command! -nargs=* -complete=file GrepCode call xcc#find#grep_code(<q-args>)
-
   " Find all occurrences of a pattern in the current buffer
   command! -nargs=1 Search call xcc#find#buffer(<q-args>)
 
@@ -381,14 +378,15 @@
   inoremap <silent> <M-d> <C-\><C-o>:call Xcc_PrevWindowCursor(7)<CR>
 
   " Buffers
-  nnoremap <Space>bn :bnext<CR>
-  nnoremap <Space>bp :bprevious<CR>
+  nnoremap <Space>bn :call xcc#buffer#navigate('bn')<CR>
+  nnoremap <Space>bp :call xcc#buffer#navigate('bp')<CR>
   nnoremap <Space>bf :bfirst<CR>
   nnoremap <Space>bl :blast<CR>
-  nnoremap <space>bd :bdelete<CR>
-  noremap <silent> <Left> :bprevious<CR>
-  noremap <silent> <Right> :bnext<CR>
-  noremap <silent> <Up> :bdelete<CR>
+  nnoremap <space>bd :call xcc#buffer#keep_window_bd()<CR>
+  noremap <silent> <Left> :call xcc#buffer#navigate('bp')<CR>
+  noremap <silent> <Right> :call xcc#buffer#navigate('bn')<CR>
+  noremap <silent> <Up> :call xcc#buffer#keep_window_bd()<CR>
+  noremap <silent> <Down> :call xcc#buffer#to_alternate_edit_buf()<CR>
   for i in range(1, 9)
     execute 'nnoremap <silent> <Space>' . i . ' :b ' . i . '<CR>'
   endfor
@@ -397,7 +395,11 @@
   nnoremap <Space>ff :<C-u>FindFile<CR>
 
   " Goto
-  nnoremap g1 :GrepCode <C-R>=expand("<cword>")<CR><CR>
+  if executable('rg')
+    nnoremap g1 :AsyncRun! rg --no-heading --vimgrep <cword><CR>
+  elseif executable('ag')
+    nnoremap g1 :AsyncRun! ag --vimgrep <cword><CR>
+  endif
 
   " Toggle
   nnoremap <silent> <Space>vq :call xcc#quickfix#toggle(6)<CR>
@@ -589,6 +591,8 @@
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
     autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
+
+    autocmd User AsyncRunStart call xcc#quickfix#toggle(8, 1)
   augroup END
 
   " Reload menu
