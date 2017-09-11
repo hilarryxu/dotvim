@@ -353,7 +353,6 @@
   cnoremap <C-e> <End>
   cnoremap <C-f> <C-d>
   cnoremap <C-b> <Left>
-  cnoremap <C-d> <Del>
   cnoremap <C-_> <C-k>
 
   " Some usefull maps
@@ -475,7 +474,7 @@
     nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
     nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
     nnoremap <Space>ft :<C-u>CtrlPTag<CR>
-    nnoremap <Space>fu :<C-u>if !exists("g:loaded_ctrlp_funky")<bar>packadd ctrlp-funky<bar>endif<CR>:CtrlPFunky<CR>
+    nnoremap <Space>fu :<C-u>:CtrlPFunky<CR>
   " }}
   " Dirvish {{
     nmap <Space>dd <plug>(dirvish_up)

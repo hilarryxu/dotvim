@@ -3,7 +3,7 @@ setlocal indentexpr=GetGooglePythonIndent(v:lnum)
 " maximum number of lines to look backwards.
 let s:maxoff = 50
 
-function! GetGooglePythonIndent(lnum)
+function! GetGooglePythonIndent(lnum) abort
   " Indent inside parens.
   " Align with the open paren unless it is at the end of the line.
   " E.g.
