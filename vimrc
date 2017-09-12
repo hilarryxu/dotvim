@@ -459,7 +459,7 @@
     let g:loaded_vimballPlugin = 1
     let g:loaded_zipPlugin = 1
   " }}
-  " CtrlP {{
+  " CtrlP | LeaderF {{
     let g:ctrlp_cmd = 'CtrlPBuffer'
     let g:ctrlp_working_path_mode = 'ra'
     if executable('rg')
@@ -474,7 +474,9 @@
     nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
     nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
     nnoremap <Space>ft :<C-u>CtrlPTag<CR>
-    nnoremap <Space>fu :<C-u>:CtrlPFunky<CR>
+    nnoremap <Space>fq :<C-u>:CtrlPQuickfix<CR>
+    " nnoremap <Space>fu :<C-u>:CtrlPFunky<CR>
+    nnoremap <Space>fu :<C-u>:LeaderfFunky<CR>
   " }}
   " Dirvish {{
     nmap <Space>dd <plug>(dirvish_up)
