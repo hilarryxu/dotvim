@@ -1,0 +1,3 @@
+asyncrun.vim/  goyo.vim/  limelight.vim/      vim-commentary/  vim-eunuch/      vim-peekaboo/       vim-scriptease/  vim-sneak/
+ctrlp.vim/     gv.vim/    tpope-vim-abolish/  vim-dirvish/     vim-fugitive/    vim-projectionist/  vim-showmarks/   vim-surround/
+ctrlsf.vim/    LeaderF/   vim-choosewin/      vim-easy-align/  vim-mucomplete/  vim-repeat/         vim-slash/       vim-unimpaired/
