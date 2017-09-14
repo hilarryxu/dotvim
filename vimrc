@@ -119,13 +119,14 @@
   endtry
 " }}
 " Editing {{
+  " New buffer position
   set splitright " When splitting vertically, focus goes to the right window
   set splitbelow " When splitting horizontally, focus goes to the bottom window
   " Tab
-  set expandtab " Use soft tabs by default
   set tabstop=2
   set shiftwidth=2
   set softtabstop=2
+  set expandtab
 " }}
 " Find, replace, and completion {{
   set hlsearch " Highlight search results
@@ -137,8 +138,10 @@
   " Grep
   if executable('rg')
     set grepprg=rg\ --no-heading\ --vimgrep
+    let s:grep_cmd = 'rg --no-heading --vimgrep'
   elseif executable('ag')
     set grepprg=ag\ --vimgrep
+    let s:grep_cmd = 'ag --vimgrep'
   endif
   set grepformat^=%f:%l:%c:%m
   " Complete
@@ -270,11 +273,7 @@
   endfunction
 
   function! Xcc_GrepCode(regex)
-    if executable('rg')
-      silent execute 'AsyncRun! rg --no-heading --vimgrep "' . a:regex . '"'
-    elseif executable('ag')
-      silent execute 'AsyncRun! ag --vimgrep "' . a:regex . '"'
-    endif
+    silent execute 'AsyncRun! ' . s:grep_cmd . ' "' . a:regex . '"'
   endfunction
 
   function! s:GrepOperator(type)
@@ -302,6 +301,9 @@
 
   " Fuzzy search for files inside a directory (default: working dir).
   command! -nargs=? -complete=dir FindFile call xcc#find#file(<q-args>)
+
+  " Grep code in cwd
+  command! -nargs=1 GrepCode call Xcc_GrepCode(<q-args>)
 
   " Execute an external command and show the output in a new buffer
   command! -complete=shellcmd -nargs=+ Shell call xcc#job#to_buffer(<q-args>, 'B')
@@ -418,11 +420,7 @@
   nnoremap <Space>ff :<C-u>FindFile<CR>
 
   " Goto
-  if executable('rg')
-    nnoremap g1 :AsyncRun! rg --no-heading --vimgrep <cword><CR>
-  elseif executable('ag')
-    nnoremap g1 :AsyncRun! ag --vimgrep <cword><CR>
-  endif
+  nnoremap <silent> g1 :call Xcc_GrepCode(expand('<cword>'))<CR>
 
   " Toggle
   nnoremap <silent> <Space>vq :call xcc#quickfix#toggle(6)<CR>
@@ -444,8 +442,8 @@
   noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
 
   " <Leader>
-  nnoremap <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
-  vnoremap <Leader>g :<C-u>call <SID>GrepOperator(visualmode())<CR>
+  nnoremap <silent> <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
+  vnoremap <silent> <Leader>g :<C-u>call <SID>GrepOperator(visualmode())<CR>
 
 " }}
 " Plugins {{
@@ -616,11 +614,8 @@
 
   augroup vimrcEx
     au!
-    autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
+    autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
 
     autocmd User AsyncRunStart call xcc#quickfix#toggle(8, 1)
   augroup END
