@@ -132,8 +132,6 @@
   set hlsearch " Highlight search results
   set incsearch " Search as you type
   set noignorecase " Case-sensitive search by default
-  set infercase " Smart case when doing keyword completion
-  set smartcase " Use case-sensitive search if there is a capital letter in the search expression
   set keywordprg=:help " Get help for word under cursor by pressing K
   " Grep
   if executable('rg')
@@ -145,18 +143,16 @@
   endif
   set grepformat^=%f:%l:%c:%m
   " Complete
+  set shortmess+=c " Shut off completion messages
+  set belloff+=ctrlg " If Vim beeps during completion
   " set complete+=i      " Use included files for completion
   " set complete+=kspell " Use spell dictionary for completion, if available
-  set completeopt+=menuone,noselect
   set completeopt-=preview
+  set completeopt+=menuone,noinsert,noselect
   " Files and directories to ignore
   set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
   set wildmenu " Show possible matches when autocompleting
   set wildignorecase " Ignore case when completing file names and directories
-  " Cscope
-  set cscoperelative
-  set cscopequickfix=s-,c-,d-,i-,t-,e-
-  if has('patch-7.4.2033') | set cscopequickfix+=a- | endif
 " }}
 " Appearance {{
   set notitle " Do not set the terminal title
@@ -483,10 +479,21 @@
     xmap <Space>ea <plug>(EasyAlign)
     nmap <Space>ea <plug>(EasyAlign)
   " }}
+  " UltiSnip {{
+  let g:UltiSnipsExpandTrigger='<C-l>'
+  let g:UltiSnipsEditSplit = 'horizontal'
+  let g:UltiSnipsSnippetsDir=$HOME.'/.vim/mysnippets'
+  let g:UltiSnipsEnableSnipMate = 0
+  " }}
   " MUcomplete {{
+    let g:mucomplete#no_mappings = 0
+    let g:mucomplete#chains = {}
+    let g:mucomplete#chains.default = ['keyp']
+    let g:mucomplete#chains.vim = ['cmd', 'keyp']
+    let g:mucomplete#chains.python = ['keyp', 'tags', 'ulti']
     inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
-    inoremap <expr> <cr> mucomplete#popup_exit("\<cr>")
+    " inoremap <expr> <cr> mucomplete#popup_exit("\<cr>")
     nnoremap <silent> <Space>oa :<C-u>MUcompleteAutoToggle<CR>
   " }}
   " Show Marks {{
