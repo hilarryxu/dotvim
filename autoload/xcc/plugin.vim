@@ -1,4 +1,6 @@
-" Section: vars
+" vars {{{1
+let g:xcc#plugin#plugin_key = 'xcc_plugin_key'
+
 let s:registered_plugin = {}
 let s:empty_filetype = '__EMPTY__'
 
@@ -45,7 +47,10 @@ function! xcc#plugin#is_registered(bufnr, ...) abort
   endif
 
   let bufname = bufname(a:bufnr)
-  let filetype = getbufvar(a:bufnr, '&filetype')
+  let filetype = getbufvar(a:bufnr, g:xcc#plugin#plugin_key)
+  if filetype == ''
+    let filetype = getbufvar(a:bufnr, '&filetype')
+  endif
   if filetype == ''
     let filetype = s:empty_filetype
   endif
