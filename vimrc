@@ -164,6 +164,7 @@
   set nowrap " Don't wrap lines by default
   " Fold
   set foldmethod=marker
+  set foldlevelstart=99
   " GUI
   if has('gui_running')
     set guioptions-=T
@@ -510,12 +511,13 @@
     endif
     let g:user_command_async = 1
 
-    nnoremap <Space>fb :<C-u>CtrlPBuffer<CR>
-    nnoremap <Space>fr :<C-u>CtrlPMRUFiles<CR>
-    nnoremap <Space>ft :<C-u>CtrlPTag<CR>
-    nnoremap <Space>fq :<C-u>:CtrlPQuickfix<CR>
-    " nnoremap <Space>fu :<C-u>:CtrlPFunky<CR>
-    nnoremap <Space>fu :<C-u>:LeaderfFunky<CR>
+    let g:Lf_UseVersionControlTool = 0
+
+    nnoremap <Space>fb :<C-u>LeaderfBuffer<CR>
+    nnoremap <Space>fr :<C-u>LeaderfMru<CR>
+    nnoremap <Space>ft :<C-u>LeaderfTag<CR>
+    nnoremap <Space>fq :<C-u>CtrlPQuickfix<CR>
+    nnoremap <Space>fu :<C-u>LeaderfFunky<CR>
   " }}
   " Dirvish {{
     nmap <Space>dd <plug>(dirvish_up)
@@ -668,6 +670,7 @@
     au!
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
+    autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab list
 
     autocmd User AsyncRunStart call xcc#quickfix#toggle(8, 1)
   augroup END
