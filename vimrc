@@ -118,6 +118,47 @@
   finally
   endtry
 " }}
+" Plug {{
+  call plug#begin('~/.vim/plugged')
+
+  Plug 'hilarryxu/xcc.vim'
+  Plug 'hilarryxu/tag-preview.vim'
+
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'tacahiroy/ctrlp-funky'
+  Plug 'dyng/ctrlsf.vim'
+  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+  Plug 'hilarryxu/LeaderF-funky'
+
+  Plug 'lifepillar/vim-mucomplete'
+  Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+  Plug 't9md/vim-choosewin'
+  Plug 'skywind3000/asyncrun.vim'
+
+  Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-scriptease'
+  Plug 'tpope/tpope-vim-abolish'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-eunuch'
+  Plug 'tpope/vim-projectionist'
+  Plug 'tpope/vim-fugitive'
+
+  Plug 'junegunn/vim-easy-align'
+  Plug 'junegunn/gv.vim'
+  Plug 'junegunn/vim-slash'
+  Plug 'junegunn/vim-peekaboo'
+  " Plug 'junegunn/goyo.vim'
+  " Plug 'junegunn/limelight.vim'
+
+  Plug 'justinmk/vim-dirvish'
+  Plug 'justinmk/vim-sneak'
+
+  Plug 'jacquesbh/vim-showmarks'
+
+  call plug#end()
+" }}
 " Editing {{
   " New buffer position
   set splitright " When splitting vertically, focus goes to the right window
@@ -670,7 +711,7 @@
     au!
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
-    autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab list
+    autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab
 
     autocmd User AsyncRunStart call xcc#quickfix#toggle(8, 1)
   augroup END

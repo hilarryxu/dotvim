@@ -3,9 +3,12 @@
 /*~
 /init.vim
 /tmp/
-/pack/
 /spell
 /tags
 /view
 /viminfo
 /vimrc_local
+
+/pack/
+/_pack/
+/plugged/
