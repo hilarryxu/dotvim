@@ -156,6 +156,9 @@
   Plug 'justinmk/vim-sneak'
 
   Plug 'jacquesbh/vim-showmarks'
+  Plug 'othree/html5.vim'
+  Plug 'posva/vim-vue'
+  Plug 'fatih/vim-go'
 
   call plug#end()
 " }}
