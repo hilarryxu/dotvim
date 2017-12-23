@@ -159,6 +159,8 @@
   Plug 'othree/html5.vim'
   Plug 'posva/vim-vue'
   Plug 'fatih/vim-go'
+  Plug 'sophacles/vim-bundle-mako'
+  Plug 'kchmck/vim-coffee-script'
 
   call plug#end()
 " }}
