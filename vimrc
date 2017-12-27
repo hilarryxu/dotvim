@@ -706,8 +706,8 @@
   endif
 
   " Local settings
-  if filereadable($DOTVIM . '/init.vim')
-    source $DOTVIM/init.vim
+  if filereadable($DOTVIM . '/rc-local.vim')
+    source $DOTVIM/rc-local.vim
   else
     colorscheme seoul256
   endif

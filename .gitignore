@@ -1,7 +1,7 @@
 .DS_Store
 
 /*~
-/init.vim
+/rc-local.vim
 /tmp/
 /spell
 /tags
@@ -9,6 +9,5 @@
 /viminfo
 /vimrc_local
 
-/pack/
-/_pack/
 /plugged/
+/_pack/
