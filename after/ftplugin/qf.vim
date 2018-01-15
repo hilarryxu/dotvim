@@ -7,8 +7,8 @@ command! -buffer -nargs=1 ReverseFilterFile call xcc#quickfix#filter('<args>', '
 
 " Section: Maps
 
-nnoremap <silent> <buffer> <Localleader>r   :execute 'Filter ' . @/<CR>
-nnoremap <silent> <buffer> <Localleader>fr  :execute 'FilterFile ' . @/<CR>
-nnoremap <silent> <buffer> <Localleader>d   :execute 'ReverseFilter ' . @/<CR>
-nnoremap <silent> <buffer> <Localleader>fd  :execute 'ReverseFilterFile ' . @/<CR>
-nnoremap <silent> <buffer> <Localleader>u   :call xcc#quickfix#restore()<CR>
+nnoremap <silent> <buffer> <LocalLeader>r   :execute 'Filter ' . @/<CR>
+nnoremap <silent> <buffer> <LocalLeader>fr  :execute 'FilterFile ' . @/<CR>
+nnoremap <silent> <buffer> <LocalLeader>d   :execute 'ReverseFilter ' . @/<CR>
+nnoremap <silent> <buffer> <LocalLeader>fd  :execute 'ReverseFilterFile ' . @/<CR>
+nnoremap <silent> <buffer> <LocalLeader>u   :call xcc#quickfix#restore()<CR>
