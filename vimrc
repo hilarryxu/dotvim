@@ -1,251 +1,138 @@
-" Modeline and Notes {{
-" vim: set sw=2 ts=2 sts=0 et fmr={{,}} fcs=vert\:| fdm=marker fdt=substitute(getline(v\:foldstart),'\\"\\s\\\|\{\{','','g') nospell:
-"
-" - To override the settings of a color scheme, create a file
-"   after/colors/<theme name>.vim It will be automatically loaded after the
-"   color scheme is activated.
-" }}
-" Environment {{
-  set nocompatible " Must be first line
+" Section: s:env {{{
+function! VimrcEnvironment()
+  let env = {}
+  let env.is_mac = has('mac')
+  let env.is_win = has('win32') || has('win64')
 
-  " vim-sensible {{
-    if has('autocmd')
-      filetype plugin indent on
-    endif
-    if has('syntax') && !exists('g:syntax_on')
-      syntax enable
-    endif
+  let user_dir = env.is_win
+        \ ? expand('$VIM/vimfiles')
+        \ : expand('~/.vim')
+  let env.path = {
+        \   'user':        user_dir,
+        \   'plugins':     user_dir . '/plugins',
+        \   'data':        user_dir . '/data',
+        \   'local_vimrc': user_dir . '/.vimrc_local',
+        \   'tmp':         user_dir . '/tmp',
+        \   'undo':        user_dir . '/data/undo',
+        \   'vim_plug':    user_dir . '/vim-plug',
+        \ }
 
-    set autoindent
-    set backspace=indent,eol,start
-    set complete-=i
-    set smarttab
+  return env
+endfunction
 
-    set nrformats-=octal
+let s:env = VimrcEnvironment()
+" }}}
+" Section: vim-sensible {{{
+if has('autocmd')
+  filetype plugin indent on
+endif
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
 
-    if !has('nvim') && &ttimeoutlen == -1
-      set ttimeout
-      set ttimeoutlen=100
-    endif
+set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
 
-    set incsearch
-    " Use <C-L> to clear the highlighting of :set hlsearch.
-    if maparg('<C-L>', 'n') ==# ''
-      nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-    endif
+set nrformats-=octal
 
-    set laststatus=2
-    set ruler
-    set wildmenu
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
 
-    if !&scrolloff
-      set scrolloff=1
-    endif
-    if !&sidescrolloff
-      set sidescrolloff=5
-    endif
-    set display+=lastline
+set incsearch
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
 
-    if &encoding ==# 'latin1' && has('gui_running')
-      set encoding=utf-8
-    endif
+set laststatus=2
+set ruler
+set wildmenu
 
-    if &listchars ==# 'eol:$'
-      set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-    endif
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
+set display+=lastline
 
-    if v:version > 703 || v:version == 703 && has("patch541")
-      set formatoptions+=j " Delete comment character when joining commented lines
-    endif
-
-    if has('path_extra')
-      setglobal tags-=./tags tags-=./tags; tags^=./tags;
-    endif
-
-    if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
-      set shell=/bin/bash
-    endif
-
-    set autoread " Re-read file if it is changed by an external program
-
-    if &history < 1000
-      set history=1000
-    endif
-    if &tabpagemax < 50
-      set tabpagemax=50
-    endif
-    if !empty(&viminfo)
-      set viminfo^=!
-    endif
-    set sessionoptions-=options
-
-    " Allow color schemes to do bright colors without forcing bold.
-    if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-      set t_Co=16
-    endif
-
-    " Load matchit.vim, but only if the user hasn't installed a newer version.
-    if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-      runtime! macros/matchit.vim
-    endif
-
-    inoremap <C-U> <C-G>u<C-U>
-  " }}
-
-  " The vim is from https://github.com/koron/vim-kaoriya
-  let s:is_windows = has('win32') || has('win64')
-  let $DOTVIM = expand('~/.vim')
-
-  set hidden " Allow buffer switching without saving
-
-  " Encoding and FileFormat
+if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
-  set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
-  set fileencoding=utf-8
-  set ffs=unix,dos,mac
-  set ff=unix
+endif
 
-  " Consolidate temporary files in a central spot
-  set backup
-  set writebackup
-  set backupdir=~/.vim/tmp
-  set backupext=.bak
-  set noswapfile
-  set noundofile
-  try
-    silent call mkdir(expand('~/.vim/tmp'), 'p', 0755)
-  catch /^Vim\%((\a\+)\)\=:E/
-  finally
-  endtry
-" }}
-" Plug {{
-  call plug#begin('~/.vim/plugged')
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+endif
 
-  Plug 'hilarryxu/xcc.vim'
-  Plug 'hilarryxu/tag-preview.vim'
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
 
-  Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'tacahiroy/ctrlp-funky'
-  Plug 'dyng/ctrlsf.vim'
-  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-  Plug 'hilarryxu/LeaderF-funky'
+if has('path_extra')
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+endif
 
-  Plug 'lifepillar/vim-mucomplete'
-  Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-  Plug 't9md/vim-choosewin'
-  Plug 'skywind3000/asyncrun.vim'
+if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
+  set shell=/bin/bash
+endif
 
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-repeat'
-  Plug 'tpope/vim-scriptease'
-  Plug 'tpope/tpope-vim-abolish'
-  Plug 'tpope/vim-unimpaired'
-  Plug 'tpope/vim-eunuch'
-  Plug 'tpope/vim-projectionist'
-  Plug 'tpope/vim-fugitive'
+set autoread " Re-read file if it is changed by an external program
 
-  Plug 'junegunn/vim-easy-align'
-  Plug 'junegunn/gv.vim'
-  Plug 'junegunn/vim-slash'
-  Plug 'junegunn/vim-peekaboo'
-  " Plug 'junegunn/goyo.vim'
-  " Plug 'junegunn/limelight.vim'
+if &history < 1000
+  set history=1000
+endif
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+set sessionoptions-=options
 
-  Plug 'justinmk/vim-dirvish'
-  Plug 'justinmk/vim-sneak'
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+  set t_Co=16
+endif
 
-  Plug 'jacquesbh/vim-showmarks'
-  Plug 'othree/html5.vim'
-  Plug 'posva/vim-vue'
-  Plug 'fatih/vim-go'
-  Plug 'sophacles/vim-bundle-mako'
-  Plug 'kchmck/vim-coffee-script'
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
 
-  call plug#end()
-" }}
-" Editing {{
-  " New buffer position
-  set splitright " When splitting vertically, focus goes to the right window
-  set splitbelow " When splitting horizontally, focus goes to the bottom window
-  " Tab
-  set tabstop=2
-  set shiftwidth=2
-  set softtabstop=2
-  set expandtab
-" }}
-" Find, replace, and completion {{
-  set hlsearch " Highlight search results
-  set incsearch " Search as you type
-  set noignorecase " Case-sensitive search by default
-  set keywordprg=:help " Get help for word under cursor by pressing K
-  " Grep
-  if executable('rg')
-    set grepprg=rg\ --no-heading\ --vimgrep
-    let s:grep_cmd = 'rg --no-heading --vimgrep'
-  elseif executable('ag')
-    set grepprg=ag\ --vimgrep
-    let s:grep_cmd = 'ag --vimgrep'
-  endif
-  set grepformat^=%f:%l:%c:%m
-  " Complete
-  set shortmess+=c " Shut off completion messages
-  set belloff+=ctrlg " If Vim beeps during completion
-  " set complete+=i      " Use included files for completion
-  " set complete+=kspell " Use spell dictionary for completion, if available
-  set completeopt-=preview
-  set completeopt+=menuone,noinsert,noselect
-  " Files and directories to ignore
-  set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
-  set wildmenu " Show possible matches when autocompleting
-  set wildignorecase " Ignore case when completing file names and directories
-" }}
-" Appearance {{
-  set notitle " Do not set the terminal title
-  set number " Turn line numbering on
-  set relativenumber " Display line numbers relative to the line with the cursor
-  set laststatus=2 " Always show status line
-  set showcmd " Show (partial) command in the last line of the screen
-  " Wrap
-  set nowrap " Don't wrap lines by default
-  " Fold
-  set foldmethod=marker
-  set foldlevelstart=99
-  " GUI
-  if has('gui_running')
-    set guioptions-=T
-    " set guioptions-=m
-    set guioptions-=L
-    " set guioptions-=r
-    set guioptions-=b
-    set mouse=a
-    set cursorline
-    " set cursorcolumn
-    if s:is_windows
-      set guifont=Consolas_for_Powerline_FixedD:h11:cANSI
-      if has('packages')
-        set packpath^=~/.vim
-        set packpath+=~/.vim/after
-      endif
-      set rtp^=~/.vim
-      set rtp+=~/.vim/after
+inoremap <C-U> <C-G>u<C-U>
+" }}}
+" Section: Functions {{{
+  function! s:mkdir_if_needed(dir) abort
+    if isdirectory(a:dir)
+      return 0
     endif
-  endif
-" }}
-" Status line {{
-  set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
-" }}
-" Helper functions {{
-  function! Xcc_StripTrailingWhitespaces()
-    let _s=@/
-    let l = line('.')
-    let c = col('.')
-    %s/\s\+$//e
-    let @/=_s
-    call cursor(l, c)
+
+    call mkdir(a:dir, 'p')
+    return 1
   endfunction
 
-  function! Xcc_TogglePaste()
+  function! s:minautopac_add(repo, ...) abort
+    let l:opts = get(a:000, 0, {})
+    if has_key(l:opts, 'for')
+      let l:name = substitute(a:repo, '^.*/', '', '')
+      let l:ft = type(l:opts.for) == type([]) ? join(l:opts.for, ',') : l:opts.for
+      execute printf('autocmd FileType %s packadd %s', l:ft, l:name)
+    endif
+  endfunction
+
+  function! s:remove_trailingspace() abort
+    let l:winview = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:winview)
+    redraw  " See :h :echo-redraw
+    echomsg 'Trailing space removed!'
+  endfunction
+
+  function! s:toggle_paste() abort
     if (&paste == 1)
       set nopaste
       echo "Paste: nopaste"
@@ -253,86 +140,6 @@
       set paste
       echo "Paste: paste"
     endif
-  endfunction
-
-  function! Xcc_PrevWindowCursor(mode)
-    if winnr('$') <= 1
-      return
-    endif
-    noautocmd silent! wincmd p
-    if a:mode == 0
-      exec "normal! \<c-y>"
-    elseif a:mode == 1
-      exec "normal! \<c-e>"
-    elseif a:mode == 2
-      exec "normal! " . winheight('.') . "\<c-y>"
-    elseif a:mode == 3
-      exec "normal! " . winheight('.') . "\<c-e>"
-    elseif a:mode == 4
-      normal! gg
-    elseif a:mode == 5
-      normal! G
-    elseif a:mode == 6
-      exec "normal! \<c-u>"
-    elseif a:mode == 7
-      exec "normal! \<c-d>"
-    elseif a:mode == 8
-      exec "normal! k"
-    elseif a:mode == 9
-      exec "normal! j"
-    endif
-    noautocmd silent! wincmd p
-  endfunction
-
-  function! Xcc_QuickfixCursor(mode)
-    function! s:quickfix_cursor(mode)
-      if &buftype == 'quickfix'
-        if a:mode == 0
-          exec "normal! \<c-y>"
-        elseif a:mode == 1
-          exec "normal! \<c-e>"
-        elseif a:mode == 2
-          exec "normal! " . winheight('.') . "\<c-y>"
-        elseif a:mode == 3
-          exec "normal! " . winheight('.') . "\<c-e>"
-        elseif a:mode == 4
-          normal! gg
-        elseif a:mode == 5
-          normal! G
-        elseif a:mode == 6
-          exec "normal! \<c-u>"
-        elseif a:mode == 7
-          exec "normal! \<c-d>"
-        elseif a:mode == 8
-          exec "normal! k"
-        elseif a:mode == 9
-          exec "normal! j"
-        endif
-      endif
-    endfunc
-    let l:winnr = winnr()
-    noautocmd silent! windo call s:quickfix_cursor(a:mode)
-    noautocmd silent! execute '' . l:winnr . 'wincmd w'
-  endfunction
-
-  function! Xcc_GrepCode(regex)
-    silent execute 'AsyncRun! ' . s:grep_cmd . ' "' . a:regex . '"'
-  endfunction
-
-  function! s:GrepOperator(type)
-      let saved_unnamed_register = @@
-
-      if a:type ==# 'v'
-          normal! `<v`>y
-      elseif a:type ==# 'char'
-          normal! `[v`]y
-      else
-          return
-      endif
-
-      call Xcc_GrepCode(@@)
-
-      let @@ = saved_unnamed_register
   endfunction
 
   function! Xcc_SetMetaMode(mode) abort
@@ -379,8 +186,203 @@
       set ttimeoutlen=100
     endif
   endfunction
-" }}
-" Commands (plugins excluded) {{
+
+  function! Xcc_PrevWindowCursor(mode) abort
+    if winnr('$') <= 1
+      return
+    endif
+    noautocmd silent! wincmd p
+    if a:mode == 0
+      exec "normal! \<c-y>"
+    elseif a:mode == 1
+      exec "normal! \<c-e>"
+    elseif a:mode == 2
+      exec "normal! " . winheight('.') . "\<c-y>"
+    elseif a:mode == 3
+      exec "normal! " . winheight('.') . "\<c-e>"
+    elseif a:mode == 4
+      normal! gg
+    elseif a:mode == 5
+      normal! G
+    elseif a:mode == 6
+      exec "normal! \<c-u>"
+    elseif a:mode == 7
+      exec "normal! \<c-d>"
+    elseif a:mode == 8
+      exec "normal! k"
+    elseif a:mode == 9
+      exec "normal! j"
+    endif
+    noautocmd silent! wincmd p
+  endfunction
+
+  function! Xcc_QuickfixCursor(mode) abort
+    function! s:quickfix_cursor(mode)
+      if &buftype == 'quickfix'
+        if a:mode == 0
+          exec "normal! \<c-y>"
+        elseif a:mode == 1
+          exec "normal! \<c-e>"
+        elseif a:mode == 2
+          exec "normal! " . winheight('.') . "\<c-y>"
+        elseif a:mode == 3
+          exec "normal! " . winheight('.') . "\<c-e>"
+        elseif a:mode == 4
+          normal! gg
+        elseif a:mode == 5
+          normal! G
+        elseif a:mode == 6
+          exec "normal! \<c-u>"
+        elseif a:mode == 7
+          exec "normal! \<c-d>"
+        elseif a:mode == 8
+          exec "normal! k"
+        elseif a:mode == 9
+          exec "normal! j"
+        endif
+      endif
+    endfunc
+    let l:winnr = winnr()
+    noautocmd silent! windo call s:quickfix_cursor(a:mode)
+    noautocmd silent! execute '' . l:winnr . 'wincmd w'
+  endfunction
+" }}}
+" Section: minpac {{{
+silent! packadd minpac
+if exists('*minpac#init')
+  call minpac#init()
+
+  command! -nargs=+ -bar Plug call minpac#add(<args>) | call s:minautopac_add(<args>)
+else
+  command! -nargs=+ Plug call s:minautopac_add(<args>)
+endif
+
+Plug 'k-takata/minpac', {'type': 'opt'}
+Plug 'hilarryxu/xcc.vim'
+Plug 'hilarryxu/tag-preview.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'lifepillar/vim-mucomplete'
+Plug 'lifepillar/vim-cheat40'
+Plug 'lifepillar/vim-outlaw'
+Plug 'junegunn/vim-easy-align'
+Plug 'justinmk/vim-sneak'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'cocopon/vaffle.vim', {'type': 'opt'}
+Plug 'majutsushi/tagbar', {'type': 'opt'}
+Plug 'mbbill/undotree', {'type': 'opt'}
+Plug 'neomake/neomake', {'type': 'opt'}
+
+Plug 'cocopon/iceberg.vim', {'type': 'opt'}
+Plug 'lifepillar/vim-wwdc16-theme', {'type': 'opt'}
+" }}}
+" Section: Settings {{{
+call s:mkdir_if_needed(s:env.path.tmp)
+call s:mkdir_if_needed(s:env.path.undo)
+
+set hidden
+set notitle
+set showcmd
+set showmatch
+set nowrap
+set number
+set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+set splitright
+set splitbelow
+set list
+if executable('rg')
+  set grepprg=rg\ -i\ --vimgrep
+endif
+set grepformat^=%f:%l:%c:%m
+set completeopt+=menuone,noselect
+set completeopt-=preview
+set shortmess+=c
+set belloff+=ctrlg
+
+set encoding=utf-8
+set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
+set fileencoding=utf-8
+set ffs=unix,dos,mac
+set ff=unix
+
+set nobackup
+set noswapfile
+execute 'set undodir=' . s:env.path.undo
+set undofile
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+
+  set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
+  set wildmenu " Show possible matches when autocompleting
+  set wildignorecase " Ignore case when completing file names and directories
+
+  set hlsearch
+  set noignorecase
+  set incsearch
+  set smartcase
+  set wrapscan
+" }}}
+" Section: Plugin configs {{{
+  " Disabled vim plugins {{{
+  let g:loaded_getscriptPlugin = 1
+  let g:loaded_gzip = 1
+  let g:loaded_logiPat = 1
+  let g:loaded_netrwPlugin = 1
+  let g:loaded_rrhelper = 1
+  let g:loaded_tarPlugin = 1
+  let g:loaded_vimballPlugin = 1
+  let g:loaded_zipPlugin = 1
+  " }}}
+  " CtrlP {{{
+  let g:ctrlp_map = '<Leader>p'
+  let g:ctrlp_cmd = 'CtrlP'
+  if executable('rg')
+    let g:ctrlp_user_command = 'rg %s --files --maxdepth=10 --color=never'
+    let g:ctrlp_use_caching = 0
+  endif
+
+  let g:ctrlp_custom_ignore = {
+        \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+        \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+        \ }
+  let g:ctrlp_working_path_mode=0
+  let g:ctrlp_match_window_bottom=1
+  let g:ctrlp_max_height=15
+  let g:ctrlp_match_window_reversed=0
+  let g:ctrlp_mruf_max=500
+  let g:ctrlp_follow_symlinks=1
+  " }}}
+  " MUcomplete {{{
+  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
+  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
+  inoremap <expr> <cr> mucomplete#popup_exit("\<cr>")
+  nnoremap <silent> <leader>oa :<c-u>MUcompleteAutoToggle<cr>
+  " }}}
+  " Vaffle {{{
+  nnoremap <silent> <leader>d :<c-u>if !exists('g:loaded_vaffle')<bar>packadd vaffle.vim<bar>endif<cr>:Vaffle<cr>
+  " }}}
+  " EasyAlign {{{
+  nmap ga <Plug>(EasyAlign)
+  xmap ga <Plug>(EasyAlign)
+  " }}}
+  " Sneak {{{
+  let g:sneak#label = 1
+  let g:sneak#use_ic_scs = 1
+  " }}}
+  " Tagbar {{{
+  noremap <silent> <leader>vt :<c-u>if !exists("g:loaded_tagbar")<bar>packadd tagbar<bar>endif<cr>:TagbarToggle<cr>
+  let g:tagbar_autofocus = 1
+  let g:tagbar_iconchars = ['▸', '▾']
+  " }}}
+" }}}
+" Section: Commands {{{
+  " Pack manager
+  command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
+  command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+
   " Find all occurrences of a pattern in the current buffer
   command! -nargs=1 Search call xcc#find#buffer(<q-args>)
 
@@ -413,13 +415,14 @@
       \ "> trans<" . synIDattr(synID(line("."),col("."),0),"name") .
       \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
       \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
-" }}
-" Key mappings (plugins excluded) {{
-  call Xcc_SetMetaMode(0)
+" }}}
+" Section: Mappings {{{
+  call Xcc_SetMetaMode(1)
+  noremap <M-x> :echo "ALT-X pressed"<CR>
+  noremap <Esc>x :echo "ESC-X pressed"<CR>
 
   let mapleader = ","
   let maplocalleader = "\\"
-  nnoremap ; :
 
   " Let's vim
   nnoremap <Up> <nop>
@@ -446,9 +449,37 @@
   cnoremap <C-_> <C-k>
 
   " Some usefull maps
+  nnoremap ; :
+  noremap j gj
+  noremap k gk
   vnoremap < <gv
   vnoremap > >gv
+  noremap <C-g> 2<C-g>
+  set pastetoggle=<F9>
+  nnoremap gQ <Nop>
   nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
+
+  " Windows
+  if $TERM =~# '^\%(tmux\|screen\)'
+    nnoremap <silent> <M-h> :<c-u>call xcc#tmux#navigate('h')<cr>
+    nnoremap <silent> <M-j> :<c-u>call xcc#tmux#navigate('j')<cr>
+    nnoremap <silent> <M-k> :<c-u>call xcc#tmux#navigate('k')<cr>
+    nnoremap <silent> <M-l> :<c-u>call xcc#tmux#navigate('l')<cr>
+  else
+    nnoremap <M-l> <c-w>l
+    nnoremap <M-h> <c-w>h
+    nnoremap <M-j> <c-w>j
+    nnoremap <M-k> <c-w>k
+  endif
+
+  " Easy copy/paste
+  nnoremap <Leader>y "*y
+  vnoremap <Leader>y "*y
+  nnoremap <Leader>Y "*Y
+  nnoremap <Leader>p "*p
+  vnoremap <Leader>p "*p
+  nnoremap <Leader>P "*P
+  vnoremap <Leader>P "*P
 
   " Inser pairs
   inoremap <C-x>( ()<Esc>i
@@ -459,23 +490,10 @@
   inoremap <C-x>< <><Esc>i
   inoremap <C-x>{ {<Esc>o}<Esc>ko
 
-  " Windows
-  if $TERM =~# '^\%(tmux\|screen\)'
-    nnoremap <silent> <M-h> :<C-u>call xcc#tmux#navigate('h')<CR>
-    nnoremap <silent> <M-j> :<C-u>call xcc#tmux#navigate('j')<CR>
-    nnoremap <silent> <M-k> :<C-u>call xcc#tmux#navigate('k')<CR>
-    nnoremap <silent> <M-l> :<C-u>call xcc#tmux#navigate('l')<CR>
-  else
-    nnoremap <M-l> <C-w>l
-    nnoremap <M-h> <C-w>h
-    nnoremap <M-j> <C-w>j
-    nnoremap <M-k> <C-w>k
-  endif
+  " Make
+  nnoremap <silent> <Leader>m :<c-u>update<cr>:silent make<bar>redraw!<bar>bo cwindow<cr>
 
   " Cursor
-  nnoremap <silent> <M-u> :call Xcc_PrevWindowCursor(6)<CR>
-  nnoremap <silent> <M-d> :call Xcc_PrevWindowCursor(7)<CR>
-
   nnoremap <silent> <M-[> :call Xcc_QuickfixCursor(2)<CR>
   nnoremap <silent> <M-]> :call Xcc_QuickfixCursor(3)<CR>
   nnoremap <silent> <M-{> :call Xcc_QuickfixCursor(4)<CR>
@@ -491,241 +509,70 @@
   inoremap <silent> <M-d> <C-\><C-o>:call Xcc_PrevWindowCursor(7)<CR>
 
   " Buffers
-  nnoremap <Space>bn :call xcc#buffer#navigate('bn')<CR>
-  nnoremap <Space>bp :call xcc#buffer#navigate('bp')<CR>
-  nnoremap <Space>bf :bfirst<CR>
-  nnoremap <Space>bl :blast<CR>
-  nnoremap <space>bd :call xcc#buffer#keep_window_bd()<CR>
-  noremap <silent> <Left> :call xcc#buffer#navigate('bp')<CR>
-  noremap <silent> <Right> :call xcc#buffer#navigate('bn')<CR>
-  noremap <silent> <Up> :call xcc#buffer#keep_window_bd()<CR>
-  noremap <silent> <Down> :call xcc#buffer#to_alternate_edit_buf()<CR>
-  for i in range(1, 9)
-    execute 'nnoremap <silent> <Space>' . i . ' :b ' . i . '<CR>'
-  endfor
+  nnoremap          <Leader>bb :<C-u>ls<cr>:b<space>
+  nnoremap <silent> <Leader>bd :<C-u>call xcc#buffer#keep_window_bd()<CR>
+  nnoremap <silent> <Leader>bm :<C-u>CmdBuffer messages<cr>
+  nnoremap <silent> <Leader>bn :<C-u>enew<cr>
+  nnoremap <silent> <Leader>bs :<C-u>vnew +setlocal\ buftype=nofile\ bufhidden=wipe\ noswapfile<cr>
+  nnoremap <silent> <Leader>br :<C-u>setlocal readonly!<cr>
+  nnoremap <silent> <Leader>bw :<C-u>bw<cr>
+  nnoremap <silent> <Leader>bW :<C-u>bw!<cr>
 
-  " Files
-  nnoremap <Space>ff :<C-u>FindFile<CR>
+  " Square bracket mappings (many of them inspired by Unimpaired)
+  nnoremap <silent> [<space> :<c-u>put!=repeat(nr2char(10),v:count1)<cr>']+1
+  nnoremap <silent> ]<space> :<c-u>put=repeat(nr2char(10),v:count1)<cr>'[-1
+  nnoremap <silent> [a :<c-u><c-r>=v:count1<cr>prev<cr>
+  nnoremap <silent> ]a :<c-u><c-r>=v:count1<cr>next<cr>
+  nnoremap <silent> ]b :<c-u><c-r>=v:count1<cr>bn<cr>
+  nnoremap <silent> [b :<c-u><c-r>=v:count1<cr>bp<cr>
+  nnoremap <silent> ]l :<c-u><c-r>=v:count1<cr>lnext<cr>zz
+  nnoremap <silent> [l :<c-u><c-r>=v:count1<cr>lprevious<cr>zz
+  nnoremap <silent> ]L :<c-u>llast<cr>zz
+  nnoremap <silent> [L :<c-u>lfirst<cr>zz
+  nnoremap <silent> ]n :<c-u><c-r>=v:count1<cr>/\v^[<\|=>]{7}<cr>
+  nnoremap <silent> [n :<c-u><c-r>=v:count1<cr>?\v^[<\|=>]{7}<cr>
+  nnoremap <silent> ]q :<c-u><c-r>=v:count1<cr>cnext<cr>zz
+  nnoremap <silent> [q :<c-u><c-r>=v:count1<cr>cprevious<cr>zz
+  nnoremap <silent> ]Q :<c-u>clast<cr>zz
+  nnoremap <silent> [Q :<c-u>cfirst<cr>zz
+  nnoremap <silent> ]t :<c-u><c-r>=v:count1<cr>tn<cr>
+  nnoremap <silent> [t :<c-u><c-r>=v:count1<cr>tp<cr>
 
-  " Goto
-  nnoremap <silent> g1 :call Xcc_GrepCode(expand('<cword>'))<CR>
-
-  " Toggle
-  nnoremap <silent> <Space>vq :call xcc#quickfix#toggle(6)<CR>
+  " Edit
+  nnoremap <silent> <leader>es :<c-u>call <sid>removeTrailingSpace()<cr>
+  vnoremap <silent> <leader>eU :<c-u>s/\%V\v<(.)(\w*)/\u\1\L\2/g<cr>
+  inoremap <expr> ) strpart(getline('.'), col('.') - 1, 1) ==# ')' ? "\<right>" :  ')'
+  inoremap <expr> ] strpart(getline('.'), col('.') - 1, 1) ==# ']' ? "\<right>" :  ']'
+  inoremap <expr> } strpart(getline('.'), col('.') - 1, 1) ==# '}' ? "\<right>" :  '}'
 
   " Options
-  nnoremap <silent> <Space>op :<C-u>call Xcc_TogglePaste()<CR>
-  nnoremap <silent> <Space>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
-  nnoremap <silent> <Space>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
-  nnoremap <silent> <Space>ol :<C-u>setlocal list!<CR>
-  nnoremap <silent> <Space>on :<C-u>setlocal number!<CR>
-  nnoremap <silent> <Space>or :<C-u>setlocal relativenumber!<CR>
-  nnoremap <silent> <Space>ot :<C-u>setlocal expandtab!<CR>
+  nnoremap <silent> <Leader>op :<C-u>call Xcc_TogglePaste()<CR>
+  nnoremap <silent> <Leader>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
+  nnoremap <silent> <Leader>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
+  nnoremap <silent> <Leader>ol :<C-u>setlocal list!<CR>
+  nnoremap <silent> <Leader>on :<C-u>setlocal number!<CR>
+  nnoremap <silent> <Leader>or :<C-u>setlocal relativenumber!<CR>
+  nnoremap <silent> <Leader>ot :<C-u>setlocal expandtab!<CR>
 
-  " xcc_snip
-  noremap <Space>s- :call xcc_snip#comment_block('-')<CR>
-  noremap <Space>s= :call xcc_snip#comment_block('=')<CR>
-  noremap <Space>sc :call xcc_snip#copyright('Larry Xu')<CR>
-  noremap <Space>sm :call xcc_snip#main()<CR>
-  noremap <Space>st "=strftime("%Y/%m/%d %H:%M:%S")<CR>gp
-
-  " <Leader>
-  nnoremap <silent> <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
-  vnoremap <silent> <Leader>g :<C-u>call <SID>GrepOperator(visualmode())<CR>
-
-" }}
-" Plugins {{
-  " Disabled Vim Plugins {{
-    let g:loaded_getscriptPlugin = 1
-    let g:loaded_gzip = 1
-    let g:loaded_logiPat = 1
-    let g:loaded_netrwPlugin = 1
-    let g:loaded_rrhelper = 1
-    let g:loaded_tarPlugin = 1
-    let g:loaded_vimballPlugin = 1
-    let g:loaded_zipPlugin = 1
-  " }}
-  " CtrlP | LeaderF {{
-    let g:ctrlp_cmd = 'CtrlPBuffer'
-    let g:ctrlp_working_path_mode = 'ra'
-    if executable('rg')
-      let g:ctrlp_user_command = 'rg %s --files --maxdepth=10 --color=never'
-      let g:ctrlp_use_caching = 0
-    elseif executable('ag')
-      let g:ctrlp_user_command = 'ag -g "" %s'
-      let g:ctrlp_use_caching = 0
-    endif
-    let g:user_command_async = 1
-
-    let g:Lf_UseVersionControlTool = 0
-
-    nnoremap <Space>fb :<C-u>LeaderfBuffer<CR>
-    nnoremap <Space>fr :<C-u>LeaderfMru<CR>
-    nnoremap <Space>ft :<C-u>LeaderfTag<CR>
-    nnoremap <Space>fq :<C-u>CtrlPQuickfix<CR>
-    nnoremap <Space>fu :<C-u>LeaderfFunky<CR>
-  " }}
-  " Dirvish {{
-    nmap <Space>dd <plug>(dirvish_up)
-  " }}
-  " Easy Align {{
-    xmap <Space>ea <plug>(EasyAlign)
-    nmap <Space>ea <plug>(EasyAlign)
-  " }}
-  " UltiSnip {{
-  let g:UltiSnipsExpandTrigger='<C-l>'
-  let g:UltiSnipsEditSplit = 'horizontal'
-  let g:UltiSnipsSnippetsDir=$HOME.'/.vim/mysnippets'
-  let g:UltiSnipsEnableSnipMate = 0
-  " }}
-  " MUcomplete {{
-    let g:mucomplete#no_mappings = 0
-    let g:mucomplete#chains = {}
-    let g:mucomplete#chains.default = ['keyp']
-    let g:mucomplete#chains.vim = ['cmd', 'keyp']
-    let g:mucomplete#chains.python = ['keyp', 'tags', 'ulti']
-    inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
-    inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
-    " inoremap <expr> <cr> mucomplete#popup_exit("\<cr>")
-    nnoremap <silent> <Space>oa :<C-u>MUcompleteAutoToggle<CR>
-  " }}
-  " Show Marks {{
-    function! Xcc_ToggleShowMarks()
-      if exists('b:showmarks')
-        NoShowMarks
-      else
-        DoShowMarks
-      endif
-    endfunction
-    nnoremap <silent> <Space>vm :<C-u>call Xcc_ToggleShowMarks()<CR>
-  " }}
-  " Sneak {{
-    let g:sneak#streak = 1
-    " Match according to ignorecase and smartcase
-    let g:sneak#use_ic_scs = 1
-  " }}
-  " Lightline {{
-    function! Xcc_LightlineFilename()
-      let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-      let modified = &modified ? ' +' : ''
-      return filename . modified
-    endfunction
-
-    let g:lightline = {
-          \ 'colorscheme': 'seoul256',
-          \ 'active': {
-          \   'left': [ [ 'mode', 'paste' ],
-          \             [ 'gitbranch', 'readonly', 'filename' ] ],
-          \   'right': [ [ 'lineinfo' ],
-          \              [ 'percent' ],
-          \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ],
-          \ },
-          \ 'component': {
-          \   'charvaluehex': '[%b][0x%B]',
-          \ },
-          \ 'component_function': {
-          \   'gitbranch': 'fugitive#head',
-          \   'filename': 'Xcc_LightlineFilename',
-          \ },
-          \ }
-  " }}
-  " Goyo and Limelight {{
-    function! s:goyo_enter()
-      silent !tmux set status off
-      silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-      set noshowmode
-      set noshowcmd
-      set scrolloff=999
-      Limelight
-    endfunction
-
-    function! s:goyo_leave()
-      silent !tmux set status on
-      silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
-      set showmode
-      set showcmd
-      set scrolloff=5
-      Limelight!
-    endfunction
-
-    autocmd! User GoyoEnter nested call <SID>goyo_enter()
-    autocmd! User GoyoLeave nested call <SID>goyo_leave()
-  " }}
-  " ChooseWin {{
-    let g:choosewin_overlay_enable = 1
-    nmap - <Plug>(choosewin)
-  " }}
-  " Tagbar {{
-    function! TagbarStatusLine(current, sort, fname, flags, ...) abort
-      return (a:current ? '%#NormalMode# Tagbar %* ' : '%#StatusLineNC# Tagbar ') . a:fname
-    endfunction
-
-    nnoremap <silent> <Space>vt :<C-u>if !exists("g:loaded_tagbar")<bar>packadd tagbar<bar>endif<CR>:TagbarToggle<CR>
-    let g:tagbar_autofocus = 1
-    let g:tagbar_iconchars = ['▸', '▾']
-    let g:tagbar_status_func = 'TagbarStatusLine'
-  " }}
-  " Undotree {{
-    let g:undotree_WindowLayout = 2
-    let g:undotree_SplitWidth = 40
-    let g:undotree_SetFocusWhenToggle = 1
-    let g:undotree_TreeNodeShape = '◦'
-    nnoremap <silent> <Space>vu :<C-u>if !exists("g:loaded_undotree")<bar>packadd undotree<bar>endif<CR>:UndotreeToggle<CR>
-  " }}
-  " 2HTML (Vim) {{
-    let g:html_pre_wrap = 1
-    let g:html_use_encoding = 'UTF-8'
-    let g:html_font = ['Consolas', 'Menlo']
-  " }}
-  " Markdown (Vim) {{
-    let g:markdown_folding = 1
-  " }}
-  " Python (Vim) {{
-    let g:python_version_2 = 1
-    let g:python_highlight_all = 1
-  " }}
-" }}
-" Themes {{
-  " Seoul256 {{
-    let g:seoul256_background = 236
-    let g:seoul256_light_background = 255
-  " }}
-" }}
-" Init {{
-  if !has('packages') " Use Pathogen as a fallback
-    runtime pack/bundle/opt/pathogen/autoload/pathogen.vim " Load Pathogen
-    let g:pathogen_blacklist = ['tagbar', 'undotree']
-    execute pathogen#infect('pack/bundle/start/{}', 'pack/my/start/{}', 'pack/my/opt/{}', 'pack/bundle/opt/{}', 'pack/themes/opt/{}')
-  endif
-
-  if &term =~ '256color'
-    " disable Background Color Erase (BCE) so that color schemes
-    " render properly when inside 256-color tmux and GNU screen.
-    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-    set t_ut=
-  endif
-
-  " Local settings
-  if filereadable($DOTVIM . '/rc-local.vim')
-    source $DOTVIM/rc-local.vim
-  else
-    colorscheme seoul256
-  endif
-
-  augroup vimrcEx
-    au!
+  " Appeareance (view)
+  nnoremap <silent> <Leader>vm :<c-u>marks<cr>
+  nnoremap <silent> <Leader>vs :<c-u>let &laststatus=2-&laststatus<cr>
+  nnoremap <silent> <Leader>vq :<C-u>call xcc#quickfix#toggle(6)<CR>
+" }}}
+" Section: Autocmds {{{
+  augroup vimrc_filetype
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
     autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab
 
-    autocmd User AsyncRunStart call xcc#quickfix#toggle(8, 1)
   augroup END
-
-  " Reload menu
-  if has('gui_running')
-    let $LANG = 'en'  "set message language  
-    set langmenu=en   "set menu's language of gvim. no spaces beside '='
-    source $VIMRUNTIME/delmenu.vim
-    source $VIMRUNTIME/menu.vim
-  endif
-" }}
+" }}}
+" Section: Local settings {{{
+if filereadable(s:env.path.local_vimrc)
+  execute 'source ' . s:env.path.local_vimrc
+else
+  colorscheme iceberg
+endif
+" }}}
