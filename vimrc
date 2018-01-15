@@ -280,6 +280,9 @@ Plug 'lifepillar/vim-wwdc16-theme', {'type': 'opt'}
 call s:mkdir_if_needed(s:env.path.tmp)
 call s:mkdir_if_needed(s:env.path.undo)
 
+let mapleader = ","
+let maplocalleader = "\\"
+
 set hidden
 set notitle
 set showcmd
@@ -420,9 +423,6 @@ set expandtab
   call Xcc_SetMetaMode(1)
   noremap <M-x> :echo "ALT-X pressed"<CR>
   noremap <Esc>x :echo "ESC-X pressed"<CR>
-
-  let mapleader = ","
-  let maplocalleader = "\\"
 
   " Let's vim
   nnoremap <Up> <nop>
