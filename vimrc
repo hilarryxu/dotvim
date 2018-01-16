@@ -20,7 +20,7 @@
           \   'local_vimrc': user_dir . '/.vimrc_local',
           \   'tmp':         user_dir . '/tmp',
           \   'undo':        user_dir . '/data/undo',
-          \   'vim_dein':    user_dir . '/bundles',
+          \   'dein_path':    user_dir . '/dein',
           \ }
 
     return env
@@ -28,14 +28,14 @@
 
   let s:env = VimrcEnvironment()
 
-  execute printf("set runtimepath+=%s/repos/github.com/Shougo/dein.vim", s:env.path.vim_dein)
+  execute printf("set runtimepath+=%s/repos/github.com/Shougo/dein.vim", s:env.path.dein_path)
 
 " }}}
 " Section: dein.vim {{{
-  if dein#load_state(s:env.path.vim_dein)
-    call dein#begin(s:env.path.vim_dein)
+  if dein#load_state(s:env.path.dein_path)
+    call dein#begin(s:env.path.dein_path)
 
-    call dein#add(s:env.path.vim_dein . '/repos/github.com/Shougo/dein.vim')
+    call dein#add(s:env.path.dein_path . '/repos/github.com/Shougo/dein.vim')
 
     call dein#add('hilarryxu/xcc.vim')
     call dein#add('hilarryxu/tag-preview.vim')
@@ -51,8 +51,8 @@
 
     call dein#add('justinmk/vim-sneak')
 
-    call dein#add('cocopon/vaffle.vim')
-    call dein#add('majutsushi/tagbar')
+    call dein#add('cocopon/vaffle.vim', { 'on_cmd': 'Vaffle' })
+    call dein#add('majutsushi/tagbar', { 'on_cmd': 'TagbarToggle' })
     call dein#add('mbbill/undotree')
     call dein#add('neomake/neomake')
     call dein#add('t9md/vim-quickhl')
@@ -167,16 +167,6 @@
 
     call mkdir(a:dir, 'p')
     return 1
-  endfunction
-
-  function! s:minautopac_add(repo, ...) abort
-    let l:opts = get(a:000, 0, {})
-
-    if has_key(l:opts, 'for')
-      let l:name = substitute(a:repo, '^.*/', '', '')
-      let l:ft = type(l:opts.for) == type([]) ? join(l:opts.for, ',') : l:opts.for
-      execute printf('autocmd FileType %s packadd %s', l:ft, l:name)
-    endif
   endfunction
 
   function! s:remove_trailingspace() abort
@@ -390,7 +380,7 @@
     nnoremap <silent> <Leader>oa :<c-u>MUcompleteAutoToggle<CR>
   " }}}
   " Vaffle {{{
-    nnoremap <silent> <Leader>d :<C-u>if !exists('g:loaded_vaffle')<BAR>packadd vaffle.vim<BAR>endif<CR>:Vaffle<CR>
+    nnoremap <silent> <Leader>d :<C-u>Vaffle<CR>
   " }}}
   " EasyAlign {{{
     nmap ga <Plug>(EasyAlign)
@@ -401,7 +391,7 @@
     let g:sneak#use_ic_scs = 1
   " }}}
   " Tagbar {{{
-    noremap <silent> <Leader>vt :<C-u>if !exists("g:loaded_tagbar")<BAR>packadd tagbar<BAR>endif<CR>:TagbarToggle<CR>
+    noremap <silent> <Leader>vt :<C-u>TagbarToggle<CR>
 
     let g:tagbar_autofocus = 1
     let g:tagbar_iconchars = ['▸', '▾']
@@ -458,8 +448,8 @@
 " Section: Commands {{{
 
   " Pack manager
-  command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
-  command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+  command! PackUpdate source $MYVIMRC | call dein#update()
+  command! PackClean  source $MYVIMRC | echo dein#check_clean()
 
   " Find all occurrences of a pattern in the current buffer
   command! -nargs=1 Search call xcc#find#buffer(<q-args>)
