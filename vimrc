@@ -257,30 +257,40 @@
   silent! packadd minpac
   if exists('*minpac#init')
     call minpac#init()
-
     command! -nargs=+ -bar Plug call minpac#add(<args>) | call s:minautopac_add(<args>)
   else
     command! -nargs=+ Plug call s:minautopac_add(<args>)
   endif
 
   Plug 'k-takata/minpac', {'type': 'opt'}
+
   Plug 'hilarryxu/xcc.vim'
   Plug 'hilarryxu/tag-preview.vim'
+
   Plug 'ctrlpvim/ctrlp.vim'
   Plug 'lifepillar/vim-mucomplete'
-  Plug 'lifepillar/vim-cheat40'
-  Plug 'lifepillar/vim-outlaw'
-  Plug 'junegunn/vim-easy-align'
-  Plug 'justinmk/vim-sneak'
+
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-surround'
-  Plug 'cocopon/vaffle.vim', {'type': 'opt'}
-  Plug 'majutsushi/tagbar', {'type': 'opt'}
-  Plug 'mbbill/undotree', {'type': 'opt'}
-  Plug 'neomake/neomake', {'type': 'opt'}
 
-  Plug 'cocopon/iceberg.vim', {'type': 'opt'}
-  Plug 'lifepillar/vim-wwdc16-theme', {'type': 'opt'}
+  Plug 'junegunn/vim-easy-align'
+
+  Plug 'justinmk/vim-sneak'
+
+  Plug 'cocopon/vaffle.vim', { 'type': 'opt' }
+  Plug 'majutsushi/tagbar', { 'type': 'opt' }
+  Plug 'mbbill/undotree', { 'type': 'opt' }
+  Plug 'neomake/neomake', { 'type': 'opt' }
+  Plug 't9md/vim-quickhl'
+  Plug 'zhaocai/GoldenView.Vim'
+
+  " python
+
+  " golang
+  Plug 'fatih/vim-go', { 'type': 'opt', 'for': 'go' }
+
+  " colorscheme
+  Plug 'cocopon/iceberg.vim', { 'type': 'opt' }
 
 " }}}
 " Section: Settings {{{
@@ -390,6 +400,17 @@
     let g:tagbar_autofocus = 1
     let g:tagbar_iconchars = ['▸', '▾']
   " }}}
+ " vim-quickhl {{{
+    nmap <Space>m <Plug>(quickhl-manual-this)
+    xmap <Space>m <Plug>(quickhl-manual-this)
+    nmap <Space>M <Plug>(quickhl-manual-reset)
+    xmap <Space>M <Plug>(quickhl-manual-reset)
+ " }}}
+ " GoldenView {{{
+   let g:goldenview__enable_default_mapping = 0
+   nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
+   nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
+ " }}}
 
 " }}}
 " Section: Commands {{{
