@@ -1,5 +1,10 @@
 " Section: s:env {{{
 
+  if &compatible
+    set nocompatible
+  endif
+
+
   function! VimrcEnvironment()
     let env = {}
     let env.is_mac = has('mac')
@@ -15,13 +20,54 @@
           \   'local_vimrc': user_dir . '/.vimrc_local',
           \   'tmp':         user_dir . '/tmp',
           \   'undo':        user_dir . '/data/undo',
-          \   'vim_plug':    user_dir . '/vim-plug',
+          \   'vim_dein':    user_dir . '/bundles',
           \ }
 
     return env
   endfunction
 
   let s:env = VimrcEnvironment()
+
+  execute printf("set runtimepath+=%s/repos/github.com/Shougo/dein.vim", s:env.path.vim_dein)
+
+" }}}
+" Section: dein.vim {{{
+  if dein#load_state(s:env.path.vim_dein)
+    call dein#begin(s:env.path.vim_dein)
+
+    call dein#add(s:env.path.vim_dein . '/repos/github.com/Shougo/dein.vim')
+
+    call dein#add('hilarryxu/xcc.vim')
+    call dein#add('hilarryxu/tag-preview.vim')
+
+    call dein#add('lifepillar/vim-mucomplete')
+    call dein#add('ctrlpvim/ctrlp.vim')
+    call dein#add('eugen0329/vim-esearch')
+
+    call dein#add('tpope/vim-repeat')
+    call dein#add('tpope/vim-surround')
+
+    call dein#add('junegunn/vim-easy-align')
+
+    call dein#add('justinmk/vim-sneak')
+
+    call dein#add('cocopon/vaffle.vim')
+    call dein#add('majutsushi/tagbar')
+    call dein#add('mbbill/undotree')
+    call dein#add('neomake/neomake')
+    call dein#add('t9md/vim-quickhl')
+
+    " python
+
+    " golang
+    call dein#add('fatih/vim-go', { 'on_ft': 'go' })
+
+    " colorscheme
+    call dein#add('cocopon/iceberg.vim')
+
+    call dein#end()
+    call dein#save_state()
+  endif
 
 " }}}
 " Section: vim-sensible {{{
@@ -250,48 +296,6 @@
     noautocmd silent! windo call s:quickfix_cursor(a:mode)
     noautocmd silent! execute '' . l:winnr . 'wincmd w'
   endfunction
-
-" }}}
-" Section: minpac {{{
-
-  silent! packadd minpac
-  if exists('*minpac#init')
-    call minpac#init()
-    command! -nargs=+ -bar Plug call minpac#add(<args>) | call s:minautopac_add(<args>)
-  else
-    command! -nargs=+ Plug call s:minautopac_add(<args>)
-  endif
-
-  Plug 'k-takata/minpac', {'type': 'opt'}
-
-  Plug 'hilarryxu/xcc.vim'
-  Plug 'hilarryxu/tag-preview.vim'
-
-  Plug 'lifepillar/vim-mucomplete'
-  Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'eugen0329/vim-esearch'
-
-  Plug 'tpope/vim-repeat'
-  Plug 'tpope/vim-surround'
-
-  Plug 'junegunn/vim-easy-align'
-
-  Plug 'justinmk/vim-sneak'
-
-  Plug 'cocopon/vaffle.vim', { 'type': 'opt' }
-  Plug 'majutsushi/tagbar', { 'type': 'opt' }
-  Plug 'mbbill/undotree', { 'type': 'opt' }
-  Plug 'neomake/neomake', { 'type': 'opt' }
-  Plug 't9md/vim-quickhl'
-  " Plug 'zhaocai/GoldenView.Vim'
-
-  " python
-
-  " golang
-  Plug 'fatih/vim-go'
-
-  " colorscheme
-  Plug 'cocopon/iceberg.vim', { 'type': 'opt' }
 
 " }}}
 " Section: Settings {{{
