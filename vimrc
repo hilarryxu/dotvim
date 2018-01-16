@@ -283,12 +283,12 @@
   Plug 'mbbill/undotree', { 'type': 'opt' }
   Plug 'neomake/neomake', { 'type': 'opt' }
   Plug 't9md/vim-quickhl'
-  Plug 'zhaocai/GoldenView.Vim'
+  " Plug 'zhaocai/GoldenView.Vim'
 
   " python
 
   " golang
-  Plug 'fatih/vim-go', { 'type': 'opt', 'for': 'go' }
+  Plug 'fatih/vim-go'
 
   " colorscheme
   Plug 'cocopon/iceberg.vim', { 'type': 'opt' }
@@ -398,8 +398,36 @@
   " }}}
   " Tagbar {{{
     noremap <silent> <Leader>vt :<C-u>if !exists("g:loaded_tagbar")<BAR>packadd tagbar<BAR>endif<CR>:TagbarToggle<CR>
+
     let g:tagbar_autofocus = 1
     let g:tagbar_iconchars = ['▸', '▾']
+    let g:tagbar_type_go = {
+          \ 'ctagstype': 'go',
+          \ 'kinds': [
+          \   'p:package',
+          \   'i:imports:1',
+          \   'c:constants',
+          \   'v:variables',
+          \   't:types',
+          \   'n:interfaces',
+          \   'w:fields',
+          \   'e:embedded',
+          \   'm:methods',
+          \   'r:constructor',
+          \   'f:functions'
+          \ ],
+          \ 'sro': '.',
+          \ 'kind2scope': {
+          \   't': 'ctype',
+          \   'n': 'ntype'
+          \ },
+          \ 'scope2kind': {
+          \   'ctype': 't',
+          \   'ntype': 'n'
+          \ },
+          \ 'ctagsbin': 'gotags',
+          \ 'ctagsargs': '-sort -silent'
+          \ }
   " }}}
  " vim-quickhl {{{
     nmap <Space>m <Plug>(quickhl-manual-this)
@@ -408,9 +436,9 @@
     xmap <Space>M <Plug>(quickhl-manual-reset)
  " }}}
  " GoldenView {{{
-   let g:goldenview__enable_default_mapping = 0
-   nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
-   nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
+   " let g:goldenview__enable_default_mapping = 0
+   " nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
+   " nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
  " }}}
 
 " }}}
@@ -457,7 +485,7 @@
 " Section: Maps {{{
 
   " Set Alt as Meta key
-  call Xcc_SetMetaMode(1)
+  call Xcc_SetMetaMode(0)
   noremap <M-x> :echo "ALT-X pressed"<CR>
   noremap <Esc>x :echo "ESC-X pressed"<CR>
 
@@ -584,7 +612,7 @@
   inoremap <expr> } strpart(getline('.'), col('.') - 1, 1) ==# '}' ? "\<Right>" :  '}'
 
   " Options
-  nnoremap <silent> <Leader>op :<C-u>call Xcc_TogglePaste()<CR>
+  nnoremap <silent> <Leader>op :<C-u>call <SID>toggle_paste()<CR>
   nnoremap <silent> <Leader>oh :<C-u>set hlsearch! \| set hlsearch?<CR>
   nnoremap <silent> <Leader>oi :<C-u>set ignorecase! \| set ignorecase?<CR>
   nnoremap <silent> <Leader>ol :<C-u>setlocal list!<CR>
