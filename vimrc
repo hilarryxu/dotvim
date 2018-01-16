@@ -267,8 +267,9 @@
   Plug 'hilarryxu/xcc.vim'
   Plug 'hilarryxu/tag-preview.vim'
 
-  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'lifepillar/vim-mucomplete'
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'eugen0329/vim-esearch'
 
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-surround'
