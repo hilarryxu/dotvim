@@ -401,7 +401,7 @@
 
     let g:tagbar_autofocus = 1
     let g:tagbar_iconchars = ['▸', '▾']
-    let g:tagbar_type_go = {
+    let g:xtagbar_type_go = {
           \ 'ctagstype': 'go',
           \ 'kinds': [
           \   'p:package',
@@ -439,6 +439,15 @@
    " let g:goldenview__enable_default_mapping = 0
    " nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
    " nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
+ " }}}
+ " vim-go {{{
+   let g:go_highlight_functions = 1
+   let g:go_highlight_methods = 1
+   let g:go_highlight_types = 1
+   let g:go_highlight_operators = 1
+   let g:go_highlight_build_constraints = 1
+
+   let g:go_fmt_command = 'goimports'
  " }}}
 
 " }}}
