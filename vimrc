@@ -46,13 +46,15 @@
 
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-surround')
+    call dein#add('tpope/vim-scriptease')
+    call dein#add('tpope/vim-projectionist')
 
     call dein#add('junegunn/vim-easy-align')
 
     call dein#add('justinmk/vim-sneak')
 
     call dein#add('cocopon/vaffle.vim', { 'on_cmd': 'Vaffle' })
-    call dein#add('majutsushi/tagbar', { 'on_cmd': 'TagbarToggle' })
+    call dein#add('majutsushi/tagbar')
     call dein#add('mbbill/undotree')
     call dein#add('neomake/neomake')
     call dein#add('t9md/vim-quickhl')
@@ -488,7 +490,7 @@
 " Section: Maps {{{
 
   " Set Alt as Meta key
-  call Xcc_SetMetaMode(0)
+  call Xcc_SetMetaMode(1)
   noremap <M-x> :echo "ALT-X pressed"<CR>
   noremap <Esc>x :echo "ESC-X pressed"<CR>
 
