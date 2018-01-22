@@ -31,7 +31,7 @@
   execute printf("set runtimepath+=%s/repos/github.com/Shougo/dein.vim", s:env.path.dein_path)
 
 " }}}
-" Section: dein.vim {{{
+" Section: plugs {{{
 
   call plug#begin('~/.vim/plugged')
 
@@ -40,12 +40,15 @@
 
   Plug 'lifepillar/vim-mucomplete'
   Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'itchyny/lightline.vim'
   Plug 'eugen0329/vim-esearch'
 
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-scriptease'
   Plug 'tpope/vim-projectionist'
+  Plug 'tpope/vim-fugitive'
 
   Plug 'junegunn/vim-easy-align'
 
@@ -63,6 +66,8 @@
   Plug 'fatih/vim-go', { 'for': 'go' }
 
   " web
+  Plug 'othree/html5.vim'
+  Plug 'pangloss/vim-javascript'
   Plug 'posva/vim-vue'
 
   " colorscheme
@@ -303,7 +308,7 @@
   set showmatch
   set nowrap
   set nonumber
-  set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+  " set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
   set splitright
   set splitbelow
   set list
@@ -422,7 +427,19 @@
    let g:go_fmt_command = 'goimports'
  " }}}
  " Neomake {{{
-   call neomake#configure#automake('rw', 2000)
+   " let g:neomake_open_list = 2
+   let g:neomake_javascript_enabled_makers = ['eslint']
+
+   let g:neomake_warning_sign = {
+     \ 'text': 'W',
+     \ 'texthl': 'WarningMsg',
+     \ }
+   let g:neomake_error_sign = {
+     \ 'text': 'E',
+     \ 'texthl': 'ErrorMsg',
+     \ }
+
+   call neomake#configure#automake('rw', 1000)
  " }}}
 
 " }}}
@@ -616,8 +633,9 @@
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
-    autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
     autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab nolist
+    autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
+    autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
   augroup END
 
 " }}}
