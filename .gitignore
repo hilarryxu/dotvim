@@ -1,13 +1,10 @@
 .DS_Store
 
 /*~
-/rc-local.vim
 /tmp/
 /spell
 /tags
-/view
 /viminfo
-/.vimrc_local
 /data/
 
 /plugged/

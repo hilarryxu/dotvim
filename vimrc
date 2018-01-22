@@ -32,44 +32,43 @@
 
 " }}}
 " Section: dein.vim {{{
-  if dein#load_state(s:env.path.dein_path)
-    call dein#begin(s:env.path.dein_path)
 
-    call dein#add(s:env.path.dein_path . '/repos/github.com/Shougo/dein.vim')
+  call plug#begin('~/.vim/plugged')
 
-    call dein#add('hilarryxu/xcc.vim')
-    call dein#add('hilarryxu/tag-preview.vim')
+  Plug 'hilarryxu/xcc.vim'
+  Plug 'hilarryxu/tag-preview.vim'
 
-    call dein#add('lifepillar/vim-mucomplete')
-    call dein#add('ctrlpvim/ctrlp.vim')
-    call dein#add('eugen0329/vim-esearch')
+  Plug 'lifepillar/vim-mucomplete'
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'eugen0329/vim-esearch'
 
-    call dein#add('tpope/vim-repeat')
-    call dein#add('tpope/vim-surround')
-    call dein#add('tpope/vim-scriptease')
-    call dein#add('tpope/vim-projectionist')
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-scriptease'
+  Plug 'tpope/vim-projectionist'
 
-    call dein#add('junegunn/vim-easy-align')
+  Plug 'junegunn/vim-easy-align'
 
-    call dein#add('justinmk/vim-sneak')
+  Plug 'justinmk/vim-sneak'
 
-    call dein#add('cocopon/vaffle.vim', { 'on_cmd': 'Vaffle' })
-    call dein#add('majutsushi/tagbar')
-    call dein#add('mbbill/undotree')
-    call dein#add('neomake/neomake')
-    call dein#add('t9md/vim-quickhl')
+  Plug 'cocopon/vaffle.vim'
+  Plug 'majutsushi/tagbar'
+  Plug 'mbbill/undotree'
+  Plug 'neomake/neomake'
+  Plug 't9md/vim-quickhl'
 
-    " python
+  " python
 
-    " golang
-    call dein#add('fatih/vim-go', { 'on_ft': 'go' })
+  " golang
+  Plug 'fatih/vim-go', { 'for': 'go' }
 
-    " colorscheme
-    call dein#add('cocopon/iceberg.vim')
+  " web
+  Plug 'posva/vim-vue'
 
-    call dein#end()
-    call dein#save_state()
-  endif
+  " colorscheme
+  Plug 'cocopon/iceberg.vim'
+
+  call plug#end()
 
 " }}}
 " Section: vim-sensible {{{
