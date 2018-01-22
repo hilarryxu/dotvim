@@ -20,6 +20,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Plugin Group: Colorscheme
 Plug 'junegunn/seoul256.vim'
+Plug 'cocopon/iceberg.vim'
 
 " Plugin Group: Statusbar
 " Plugin: vim-airline
@@ -31,7 +32,6 @@ Plug 'nixprime/cpsm'
 Plug 'Shougo/denite.nvim'
 Plug 'chemzqm/denite-extra'
 Plug 'rafi/vim-denite-z'
-
 " Plugin: fzf
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -41,7 +41,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next'
     \ }
-
 " Plugin: ncm
 Plug 'roxma/nvim-completion-manager'
 
@@ -49,14 +48,24 @@ Plug 'roxma/nvim-completion-manager'
 " Plugin: neomake
 Plug 'neomake/neomake'
 
+" Plugin Group: Formater
+" Plugin: neoformat
+Plug 'sbdchd/neoformat'
+
+" Plugin Group: File browser
+" Plugin: Dirvish
+Plug 'justinmk/vim-dirvish'
+" Better file browser
+" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+" Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+
 " Plugin Group: Basic plugins
 " Override configs by directory 
 Plug 'arielrossanigo/dir-configs-override.vim'
 " Better language packs
 Plug 'sheerun/vim-polyglot'
-" Better file browser
-" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-" Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+" Buffer switch
+Plug 'bsdelf/bufferhint'
 " Code commenter
 Plug 'scrooloose/nerdcommenter'
 " Class/module browser
@@ -65,10 +74,6 @@ Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 't9md/vim-choosewin'
 " Autoclose pairs
 " Plug 'jiangmiao/auto-pairs'
-" Surround
-Plug 'tpope/vim-surround'
-" Repeat
-Plug 'tpope/vim-repeat'
 " Sneak jump
 Plug 'justinmk/vim-sneak'
 " Easy align
@@ -81,6 +86,16 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'itchyny/vim-cursorword'
 " Pending tasks list
 Plug 'fisadev/FixedTaskList.vim'
+
+" Plugin Group: tpope
+" Surround
+Plug 'tpope/vim-surround'
+" Repeat
+Plug 'tpope/vim-repeat'
+" Dispatch
+Plug 'tpope/vim-dispatch'
+" Projectionist
+Plug 'tpope/vim-projectionist'
 
 " Plugin Group: Others
 " Plug 'ap/vim-buftabline'
@@ -133,6 +148,26 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
+" Ignore
+set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.pyc,.pyo,.egg-info,.class
+
+set wildignore=*.o,*.obj,*~,*.exe,*.a,*.pdb,*.lib
+set wildignore+=*.so,*.dll,*.swp,*.egg,*.jar,*.class,*.pyc,*.pyo,*.bin,*.dex
+set wildignore+=*.zip,*.7z,*.rar,*.gz,*.tar,*.gzip,*.bz2,*.tgz,*.xz
+set wildignore+=*DS_Store*,*.ipch
+set wildignore+=*.gem
+set wildignore+=*.png,*.jpg,*.gif,*.bmp,*.tga,*.pcx,*.ppm,*.img,*.iso
+set wildignore+=*.so,*.swp,*.zip,*/.Trash/**,*.pdf,*.dmg,*/.rbenv/**
+set wildignore+=*/.nx/**,*.app,*.git,.git,*.hg,.hg
+set wildignore+=*.wav,*.mp3,*.ogg,*.pcm
+set wildignore+=*.mht,*.suo,*.sdf,*.jnlp
+set wildignore+=*.chm,*.epub,*.pdf,*.mobi,*.ttf
+set wildignore+=*.mp4,*.avi,*.flv,*.mov,*.mkv,*.swf,*.swc
+set wildignore+=*.ppt,*.pptx,*.docx,*.xlt,*.xls,*.xlsx,*.odt,*.wps
+set wildignore+=*.msi,*.crx,*.deb,*.vfd,*.apk,*.ipa,*.bin,*.msu
+set wildignore+=*.gba,*.sfc,*.078,*.nds,*.smd,*.smc
+set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
+
 " Use 256 colors when possible
 if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
   let &t_Co = 256
@@ -142,7 +177,7 @@ else
 endif
 
 " Plugin configs {{{1
-" Plugin: denite {{{2
+" Plugin: Denite {{{2
 call denite#custom#option('default', 'prompt', '> ')
 "call denite#custom#option('default', 'direction', 'bottom')
 call denite#custom#option('default', 'empty', 0)
@@ -311,12 +346,27 @@ nnoremap <silent> <Space>w  :<C-u>DeniteCursorWord -auto-resize line<CR>
 "let NERDTreeShowLineNumbers = 1
 "nnoremap <F3> :NERDTreeToggle<CR>
 
-" Pluin: airline {{{2
-let g:airline#extensions#tabline#enabled = 0
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
+" Plugin: Airline {{{2
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'iceberg'
 
-" Plugin: ultisnips {{{2
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+
+nmap <Space>1 <Plug>AirlineSelectTab1
+nmap <Space>2 <Plug>AirlineSelectTab2
+nmap <Space>3 <Plug>AirlineSelectTab3
+nmap <Space>4 <Plug>AirlineSelectTab4
+nmap <Space>5 <Plug>AirlineSelectTab5
+nmap <Space>6 <Plug>AirlineSelectTab6
+nmap <Space>7 <Plug>AirlineSelectTab7
+nmap <Space>8 <Plug>AirlineSelectTab8
+nmap <Space>9 <Plug>AirlineSelectTab9
+
+" Plugin: Ultisnips {{{2
 let g:UltiSnipsNoPythonWarning = 1
 let g:UltiSnipsExpandTrigger = '<C-j>'
 let g:UltiSnipsJumpForwardTrigger = '<C-j>'
@@ -334,13 +384,24 @@ nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F12> :call LanguageClient_textDocument_rename()<CR>
 
-" Plugin: neomake {{{2
+" Plugin: Neomake {{{2
 call neomake#configure#automake('rw', 1000)
 
-" Plugin: tagbar {{{2
+" Plugin: Tagbar {{{2
 let g:tagbar_left = 1
 let g:tagbar_width = 28
 nnoremap <silent> <F2> :TagbarToggle<CR>
+
+" Plugin: BufferHint {{{2
+nnoremap - :call bufferhint#Popup()<CR>
+nnoremap <Leader>pp :call bufferhint#LoadPrevious()<CR>
+
+let g:bufferhint_CustomHighlight = 1
+hi! default link KeyHint Statement
+hi! default link AtHint Identifier
+
+" Plugin: Dirvish {{{2
+nmap <Leader>dd <plug>(dirvish_up)
 
 " Functions {{{1
 " Simple clean utility
@@ -372,16 +433,47 @@ endfunction
 " :W to save file by sudo
 command W w !sudo tee % > /dev/null
 
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+
 " Maps {{{1
-nnoremap <Leader>e :e <C-R>=substitute(expand('%:p:h').'/', getcwd().'/', '', '')<CR>
-nnoremap <Leader>v :vs <C-R>=substitute(expand('%:p:h').'/', getcwd().'/', '', '')<CR>
-nnoremap <Leader>t :tabe <C-R>=substitute(expand('%:p:h').'/', getcwd().'/', '', '')<CR>
+" Let's vim
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
+
+" Visual shifting
+vnoremap < <gv
+vnoremap > >gv
+
+" Navigate into console error messages
+nmap <F5> :cnext<CR>
+nmap <F6> :cprev<CR>
+
 " Replace all of current word
-nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
+nnoremap <Leader>ss :%s/\<<C-r><C-w>\>//g<Left><Left>
+
 " Search with grep
-nnoremap <Leader>/ :Ag<space>
+nnoremap <Leader>/ :Ag<Space>
+nnoremap g1 :Ag <C-r><C-w><CR>
+
+" Yank and replace
+noremap <Space>y yiw
+noremap <Space>r viw"0p
+
+" color syntax info
+map <Space><F3> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+	    \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
 " clean some dirty charactors
 nnoremap <silent> <Leader>cl :<C-u>call <SID>Clean()<CR>
+
 " Buffer
 nnoremap H :bp<CR>
 nnoremap L :bn<CR>
@@ -395,7 +487,7 @@ nnoremap <Leader>pt :set paste!<CR>
 augroup vimrcFileType
   au!
   au FileType vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 foldmethod=marker
-  au FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+  au FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
   au FileType coffee setlocal tabstop=2 softtabstop=2 shiftwidth=2
   au FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
   au FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
@@ -403,6 +495,8 @@ augroup vimrcFileType
   au FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4
   au FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
   au FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
+
+  au FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab list
 augroup END
 
 " Custom {{{1
