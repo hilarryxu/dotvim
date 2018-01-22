@@ -303,7 +303,7 @@
   set showcmd
   set showmatch
   set nowrap
-  set number
+  set nonumber
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
   set splitright
   set splitbelow
@@ -316,6 +316,8 @@
   set completeopt-=preview
   set shortmess+=c
   set belloff+=ctrlg
+  set splitright
+  set splitbelow
 
   set encoding=utf-8
   set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
@@ -395,35 +397,10 @@
   " Tagbar {{{
     noremap <silent> <Leader>vt :<C-u>TagbarToggle<CR>
 
+    let g:tagbar_left = 1
+    let g:tagbar_width = 28
     let g:tagbar_autofocus = 1
-    let g:tagbar_iconchars = ['▸', '▾']
-    let g:xtagbar_type_go = {
-          \ 'ctagstype': 'go',
-          \ 'kinds': [
-          \   'p:package',
-          \   'i:imports:1',
-          \   'c:constants',
-          \   'v:variables',
-          \   't:types',
-          \   'n:interfaces',
-          \   'w:fields',
-          \   'e:embedded',
-          \   'm:methods',
-          \   'r:constructor',
-          \   'f:functions'
-          \ ],
-          \ 'sro': '.',
-          \ 'kind2scope': {
-          \   't': 'ctype',
-          \   'n': 'ntype'
-          \ },
-          \ 'scope2kind': {
-          \   'ctype': 't',
-          \   'ntype': 'n'
-          \ },
-          \ 'ctagsbin': 'gotags',
-          \ 'ctagsargs': '-sort -silent'
-          \ }
+    " let g:tagbar_iconchars = ['▸', '▾']
   " }}}
  " vim-quickhl {{{
     nmap <Space>m <Plug>(quickhl-manual-this)
@@ -444,6 +421,9 @@
    let g:go_highlight_build_constraints = 1
 
    let g:go_fmt_command = 'goimports'
+ " }}}
+ " Neomake {{{
+   call neomake#configure#automake('rw', 2000)
  " }}}
 
 " }}}
@@ -490,7 +470,7 @@
 " Section: Maps {{{
 
   " Set Alt as Meta key
-  call Xcc_SetMetaMode(1)
+  call Xcc_SetMetaMode(0)
   noremap <M-x> :echo "ALT-X pressed"<CR>
   noremap <Esc>x :echo "ESC-X pressed"<CR>
 
@@ -531,10 +511,10 @@
 
   " Windows
   if $TERM =~# '^\%(tmux\|screen\)'
-    nnoremap <silent> <M-h> :<C-u>call xcc#tmux#navigate('h')<CR>
-    nnoremap <silent> <M-j> :<C-u>call xcc#tmux#navigate('j')<CR>
-    nnoremap <silent> <M-k> :<C-u>call xcc#tmux#navigate('k')<CR>
-    nnoremap <silent> <M-l> :<C-u>call xcc#tmux#navigate('l')<CR>
+    " nnoremap <silent> <M-h> :<C-u>call xcc#tmux#navigate('h')<CR>
+    " nnoremap <silent> <M-j> :<C-u>call xcc#tmux#navigate('j')<CR>
+    " nnoremap <silent> <M-k> :<C-u>call xcc#tmux#navigate('k')<CR>
+    " nnoremap <silent> <M-l> :<C-u>call xcc#tmux#navigate('l')<CR>
   else
     nnoremap <M-l> <C-w>l
     nnoremap <M-h> <C-w>h
@@ -638,7 +618,7 @@
     autocmd FileType vim setlocal foldmethod=marker
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
-    autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab
+    autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab nolist
   augroup END
 
 " }}}
