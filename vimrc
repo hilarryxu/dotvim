@@ -28,8 +28,6 @@
 
   let s:env = VimrcEnvironment()
 
-  execute printf("set runtimepath+=%s/repos/github.com/Shougo/dein.vim", s:env.path.dein_path)
-
 " }}}
 " Section: plugs {{{
 
@@ -51,6 +49,7 @@
   Plug 'tpope/vim-fugitive'
 
   Plug 'junegunn/vim-easy-align'
+  Plug 'junegunn/vim-peekaboo'
 
   Plug 'justinmk/vim-sneak'
 
@@ -58,6 +57,8 @@
   Plug 'majutsushi/tagbar'
   Plug 'mbbill/undotree'
   Plug 'neomake/neomake'
+  Plug 'bsdelf/bufferhint'
+  Plug 'itchyny/vim-cursorword'
   Plug 't9md/vim-quickhl'
 
   " python
@@ -67,6 +68,7 @@
 
   " web
   Plug 'othree/html5.vim'
+  Plug 'docunext/closetag.vim'
   Plug 'pangloss/vim-javascript'
   Plug 'posva/vim-vue'
 
@@ -441,13 +443,12 @@
 
    call neomake#configure#automake('rw', 1000)
  " }}}
+ " bufferhint {{{
+   nnoremap - :call bufferhint#Popup()<CR>
+ " }}}
 
 " }}}
 " Section: Commands {{{
-
-  " Pack manager
-  command! PackUpdate source $MYVIMRC | call dein#update()
-  command! PackClean  source $MYVIMRC | echo dein#check_clean()
 
   " Find all occurrences of a pattern in the current buffer
   command! -nargs=1 Search call xcc#find#buffer(<q-args>)
