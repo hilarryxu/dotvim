@@ -199,6 +199,16 @@
     endif
   endfunction
 
+  function! s:smooth_scroll(up) abort
+    execute "normal " . (a:up ? "\<c-y>" : "\<c-e>")
+    redraw
+    for l:count in range(3, &scroll, 2)
+      sleep 10m
+      execute "normal " . (a:up ? "\<c-y>" : "\<c-e>")
+      redraw
+    endfor
+  endfunction
+
   function! Xcc_SetMetaMode(mode) abort
     if has('nvim') || has('gui_running')
       return
@@ -568,6 +578,12 @@
   nnoremap gQ <Nop>
   nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
 
+  " Scoll
+  nnoremap <silent> <C-u> :call <SID>smooth_scroll(1)<CR>
+  nnoremap <silent> <C-d> :call <SID>smooth_scroll(0)<CR>
+  nnoremap <C-e> <C-e><C-e>
+  nnoremap <C-y> <C-y><C-y>
+
   " Windows
   if $TERM =~# '^\%(tmux\|screen\)'
     " nnoremap <silent> <M-h> :<C-u>call xcc#tmux#navigate('h')<CR>
@@ -579,6 +595,11 @@
     nnoremap <M-h> <C-w>h
     nnoremap <M-j> <C-w>j
     nnoremap <M-k> <C-w>k
+
+    nnoremap <C-l> <C-w>l
+    nnoremap <C-h> <C-w>h
+    nnoremap <C-j> <C-w>j
+    nnoremap <C-k> <C-w>k
   endif
 
   " Easy copy/paste
