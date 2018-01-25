@@ -39,6 +39,7 @@
   Plug 'lifepillar/vim-mucomplete'
   Plug 'ctrlpvim/ctrlp.vim'
   Plug 'itchyny/lightline.vim'
+  Plug 'thinca/vim-localrc'
   Plug 'eugen0329/vim-esearch'
 
   Plug 'tpope/vim-repeat'
@@ -60,6 +61,10 @@
   Plug 'bsdelf/bufferhint'
   Plug 'itchyny/vim-cursorword'
   Plug 't9md/vim-quickhl'
+  Plug 'haya14busa/incsearch.vim'
+
+  " vim
+  Plug 'fcpg/vim-complimentary'
 
   " python
 
@@ -408,44 +413,49 @@
     let g:tagbar_autofocus = 1
     " let g:tagbar_iconchars = ['▸', '▾']
   " }}}
- " vim-quickhl {{{
+  " vim-quickhl {{{
     nmap <Space>m <Plug>(quickhl-manual-this)
     xmap <Space>m <Plug>(quickhl-manual-this)
     nmap <Space>M <Plug>(quickhl-manual-reset)
     xmap <Space>M <Plug>(quickhl-manual-reset)
- " }}}
+  " }}}
  " GoldenView {{{
    " let g:goldenview__enable_default_mapping = 0
    " nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
    " nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
  " }}}
- " vim-go {{{
-   let g:go_highlight_functions = 1
-   let g:go_highlight_methods = 1
-   let g:go_highlight_types = 1
-   let g:go_highlight_operators = 1
-   let g:go_highlight_build_constraints = 1
+  " vim-go {{{
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_types = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_build_constraints = 1
 
-   let g:go_fmt_command = 'goimports'
- " }}}
- " Neomake {{{
-   " let g:neomake_open_list = 2
-   let g:neomake_javascript_enabled_makers = ['eslint']
+    let g:go_fmt_command = 'goimports'
+  " }}}
+  " Neomake {{{
+    " let g:neomake_open_list = 2
+    let g:neomake_javascript_enabled_makers = ['eslint']
 
-   let g:neomake_warning_sign = {
-     \ 'text': 'W',
-     \ 'texthl': 'WarningMsg',
-     \ }
-   let g:neomake_error_sign = {
-     \ 'text': 'E',
-     \ 'texthl': 'ErrorMsg',
-     \ }
+    let g:neomake_warning_sign = {
+      \ 'text': 'W',
+      \ 'texthl': 'WarningMsg',
+      \ }
+    let g:neomake_error_sign = {
+      \ 'text': 'E',
+      \ 'texthl': 'ErrorMsg',
+      \ }
 
-   call neomake#configure#automake('rw', 1000)
+    call neomake#configure#automake('rw', 1000)
  " }}}
- " bufferhint {{{
-   nnoremap - :call bufferhint#Popup()<CR>
- " }}}
+  " bufferhint {{{
+    nnoremap - :call bufferhint#Popup()<CR>
+  " }}}
+  " incsearch {{{
+    map /  <Plug>(incsearch-forward)
+    map ?  <Plug>(incsearch-backward)
+    map g/ <Plug>(incsearch-stay)
+  " }}}
 
 " }}}
 " Section: Commands {{{
