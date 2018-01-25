@@ -308,52 +308,69 @@
   let mapleader = ","
   let maplocalleader = "\\"
 
+  " Basic
   set hidden
-  set notitle
+  set number
   set showcmd
   set showmatch
+  set notitle
   set nowrap
-  set number
+  set list
+  set shortmess+=c
+  set belloff+=ctrlg
+
+  " Statusline
   set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+
+  " Window split
   set splitright
   set splitbelow
-  set list
+
+  " Make and Grep
   if executable('rg')
     set grepprg=rg\ -i\ --vimgrep
   endif
   set grepformat^=%f:%l:%c:%m
+
+  " Complete option
   set completeopt+=menuone,noselect
   set completeopt-=preview
-  set shortmess+=c
-  set belloff+=ctrlg
-  set splitright
-  set splitbelow
 
+  " File format and encoding
   set encoding=utf-8
   set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
   set fileencoding=utf-8
   set ffs=unix,dos,mac
   set ff=unix
 
+  " Backup
   set nobackup
   set noswapfile
   execute 'set undodir=' . s:env.path.undo
   set undofile
 
+  " Tab
   set tabstop=2
   set shiftwidth=2
   set softtabstop=2
   set expandtab
 
+  " Ignore
   set wildignore+=.DS_Store,Icon\?,*.dmg,*.git,*.pyc,*.o,*.obj,*.so,*.swp,*.zip
   set wildmenu " Show possible matches when autocompleting
   set wildignorecase " Ignore case when completing file names and directories
 
+  " Search
   set hlsearch
   set noignorecase
   set incsearch
   set smartcase
   set wrapscan
+
+  " Disable sounds
+  set noerrorbells
+  set novisualbell
+  set t_vb=
 
   " GUI
   if has('gui_running')
