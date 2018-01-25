@@ -20,7 +20,7 @@
           \   'local_vimrc': user_dir . '/.vimrc_local',
           \   'tmp':         user_dir . '/tmp',
           \   'undo':        user_dir . '/data/undo',
-          \   'dein_path':    user_dir . '/dein',
+          \   'plug_path':   user_dir . '/plugged',
           \ }
 
     return env
@@ -31,7 +31,7 @@
 " }}}
 " Section: plugs {{{
 
-  call plug#begin('~/.vim/plugged')
+  silent! call plug#begin(s:env.path.plug_path)
 
   Plug 'hilarryxu/xcc.vim'
   Plug 'hilarryxu/tag-preview.vim'
@@ -355,6 +355,21 @@
   set smartcase
   set wrapscan
 
+  " GUI
+  if has('gui_running')
+    set guioptions-=T
+    " set guioptions-=m
+    set guioptions-=L
+    " set guioptions-=r
+    set guioptions-=b
+    set mouse=a
+    set cursorline
+    " set cursorcolumn
+    if s:env.is_win
+      set guifont=Consolas_for_Powerline_FixedD:h11:cANSI
+    endif
+  endif
+
 " }}}
 " Section: Plugin configs {{{
 
@@ -388,9 +403,10 @@
     let g:ctrlp_follow_symlinks = 1
 
     nnoremap <silent> <Leader>fb :<C-u>CtrlPBuffer<CR>
-    nnoremap <silent> <Leader>fm :<C-u>CtrlPMRUFiles<CR>
+    nnoremap <silent> <Leader>fr :<C-u>CtrlPMRUFiles<CR>
     nnoremap <silent> <Leader>fq :<C-u>CtrlPQuickfix<CR>
     nnoremap <silent> <Leader>ft :<C-u>CtrlPTag<CR>
+    nnoremap <silent> <Leader>fo :<C-u>CtrlPBufTag<CR>
   " }}}
   " MUcomplete {{{
     inoremap <expr> <C-e> mucomplete#popup_exit("\<C-e>")
@@ -657,4 +673,11 @@
     colorscheme iceberg
   endif
 
+  " Reload menu
+  if has('gui_running') && s:env.is_win
+    let $LANG = 'en'
+    set langmenu=en
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+  endif
 " }}}
