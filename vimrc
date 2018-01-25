@@ -386,6 +386,11 @@
     let g:ctrlp_match_window_reversed = 0
     let g:ctrlp_mruf_max = 500
     let g:ctrlp_follow_symlinks = 1
+
+    nnoremap <silent> <Leader>fb :<C-u>CtrlPBuffer<CR>
+    nnoremap <silent> <Leader>fm :<C-u>CtrlPMRUFiles<CR>
+    nnoremap <silent> <Leader>fq :<C-u>CtrlPQuickfix<CR>
+    nnoremap <silent> <Leader>ft :<C-u>CtrlPTag<CR>
   " }}}
   " MUcomplete {{{
     inoremap <expr> <C-e> mucomplete#popup_exit("\<C-e>")
@@ -418,11 +423,6 @@
     nmap <Space>M <Plug>(quickhl-manual-reset)
     xmap <Space>M <Plug>(quickhl-manual-reset)
   " }}}
- " GoldenView {{{
-   " let g:goldenview__enable_default_mapping = 0
-   " nmap <silent> <Space>s <Plug>GoldenViewSwitchMain
-   " nmap <silent> <Space>S <Plug>GoldenViewSwitchToggle
- " }}}
   " vim-go {{{
     let g:go_highlight_functions = 1
     let g:go_highlight_methods = 1
@@ -567,7 +567,7 @@
   inoremap <C-x>{ {<Esc>o}<Esc>ko
 
   " Leader stuff
-  nnoremap <silent> <Leader>m :<C-u>update<CR>:silent make<BAR>redraw!<BAR>bo cwindow<CR>
+  nnoremap <silent> <Leader>ma :<C-u>update<CR>:silent make<BAR>redraw!<BAR>bo cwindow<CR>
   nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
   " Cursor
