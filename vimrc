@@ -38,7 +38,6 @@
 
   Plug 'lifepillar/vim-mucomplete'
   Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'itchyny/lightline.vim'
   Plug 'thinca/vim-localrc'
   Plug 'eugen0329/vim-esearch'
 
@@ -314,8 +313,8 @@
   set showcmd
   set showmatch
   set nowrap
-  set nonumber
-  " set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+  set number
+  set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
   set splitright
   set splitbelow
   set list
