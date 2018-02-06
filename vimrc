@@ -60,7 +60,8 @@
     Plug 'Yggdroot/LeaderF'
   elseif s:env.gui && !has('terminal')
     Plug 'ctrlpvim/ctrlp.vim'
-  else
+  endif
+  if !s:env.gui || has('terminal')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'on': [] }
     Plug 'junegunn/fzf.vim', { 'on': [] }
   endif
@@ -237,6 +238,11 @@
       execute "normal " . (a:up ? "\<c-y>" : "\<c-e>")
       redraw
     endfor
+  endfunction
+
+  function! Xcc_DeferPlugFZF(timer) abort
+    call plug#load('fzf')
+    call plug#load('fzf.vim')
   endfunction
 
   function! Xcc_SetMetaMode(mode) abort
@@ -475,6 +481,16 @@
       nnoremap <silent> <Leader>fq :<C-u>CtrlPQuickfix<CR>
       nnoremap <silent> <Leader>ft :<C-u>CtrlPTag<CR>
       nnoremap <silent> <Leader>fo :<C-u>CtrlPBufTag<CR>
+    endif
+  " }}}
+  " FZF {{{
+    if has_key(g:plugs, 'fzf.vim')
+      call timer_start(700, 'Xcc_DeferPlugFZF')
+      nnoremap <Leader>ff :Files<CR>
+      nnoremap <Leader>fb :Buffers<CR>
+      nnoremap <Leader>fw :Windows<CR>
+
+      nnoremap <Leader>ag :Ag<CR>
     endif
   " }}}
   " MUcomplete {{{
