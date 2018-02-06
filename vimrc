@@ -26,6 +26,8 @@
     let l:env.vim8 = exists('*job_start')
     let l:env.timer = exists('*timer_start')
     let l:env.tmux = !empty($TMUX)
+    let l:env.gui = has('gui_running')
+    let l:env.has_python = has('python') || has('python3')
 
     let user_dir = expand('~/.vim')
     let l:env.path = {
@@ -54,8 +56,16 @@
   Plug 'hilarryxu/xcc.vim'
   Plug 'hilarryxu/tag-preview.vim'
 
+  if s:env.has_python
+    Plug 'Yggdroot/LeaderF'
+  elseif s:env.gui && !has('terminal')
+    Plug 'ctrlpvim/ctrlp.vim'
+  else
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'on': [] }
+    Plug 'junegunn/fzf.vim', { 'on': [] }
+  endif
+
   Plug 'lifepillar/vim-mucomplete'
-  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'thinca/vim-localrc'
   Plug 'eugen0329/vim-esearch'
 
@@ -430,30 +440,42 @@
     let g:loaded_vimballPlugin = 1
     let g:loaded_zipPlugin = 1
   " }}}
-  " CtrlP {{{
-    let g:ctrlp_map = '<C-p>'
-    let g:ctrlp_cmd = 'CtrlP'
-    if executable('rg')
-      let g:ctrlp_user_command = 'rg %s --files --maxdepth=10 --color=never'
-      let g:ctrlp_use_caching = 0
+  " LeaderF {{{
+    if has_key(g:plugs, 'LeaderF')
+      let g:Lf_ShortcutF = '<C-p>'
+      let g:Lf_ShortcutB = '<Leader>fb'
+      nnoremap <Leader>ff :LeaderfFile<CR>
+      nnoremap <Leader>fr :LeaderfMru<CR>
+      nnoremap <Leader>fl :LeaderfLine<CR>
+      nnoremap <Leader>fL :LeaderfLineAll<CR>
     endif
+  " }}}
+  " CtrlP {{{
+    if has_key(g:plugs, 'ctrlp.vim')
+      let g:ctrlp_map = '<C-p>'
+      let g:ctrlp_cmd = 'CtrlP'
+      if executable('rg')
+        let g:ctrlp_user_command = 'rg %s --files --maxdepth=10 --color=never'
+        let g:ctrlp_use_caching = 0
+      endif
 
-    let g:ctrlp_custom_ignore = {
-          \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-          \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
-          \ }
-    let g:ctrlp_working_path_mode = 0
-    let g:ctrlp_match_window_bottom = 1
-    let g:ctrlp_max_height = 15
-    let g:ctrlp_match_window_reversed = 0
-    let g:ctrlp_mruf_max = 500
-    let g:ctrlp_follow_symlinks = 1
+      let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+            \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+            \ }
+      let g:ctrlp_working_path_mode = 0
+      let g:ctrlp_match_window_bottom = 1
+      let g:ctrlp_max_height = 15
+      let g:ctrlp_match_window_reversed = 0
+      let g:ctrlp_mruf_max = 500
+      let g:ctrlp_follow_symlinks = 1
 
-    nnoremap <silent> <Leader>fb :<C-u>CtrlPBuffer<CR>
-    nnoremap <silent> <Leader>fr :<C-u>CtrlPMRUFiles<CR>
-    nnoremap <silent> <Leader>fq :<C-u>CtrlPQuickfix<CR>
-    nnoremap <silent> <Leader>ft :<C-u>CtrlPTag<CR>
-    nnoremap <silent> <Leader>fo :<C-u>CtrlPBufTag<CR>
+      nnoremap <silent> <Leader>fb :<C-u>CtrlPBuffer<CR>
+      nnoremap <silent> <Leader>fr :<C-u>CtrlPMRUFiles<CR>
+      nnoremap <silent> <Leader>fq :<C-u>CtrlPQuickfix<CR>
+      nnoremap <silent> <Leader>ft :<C-u>CtrlPTag<CR>
+      nnoremap <silent> <Leader>fo :<C-u>CtrlPBufTag<CR>
+    endif
   " }}}
   " MUcomplete {{{
     inoremap <expr> <C-e> mucomplete#popup_exit("\<C-e>")
