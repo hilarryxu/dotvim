@@ -57,7 +57,7 @@
   Plug 'hilarryxu/tag-preview.vim'
 
   if s:env.has_python
-    Plug 'Yggdroot/LeaderF'
+    Plug 'Yggdroot/LeaderF', { 'on': [] }
   elseif s:env.gui && !has('terminal')
     Plug 'ctrlpvim/ctrlp.vim'
   endif
@@ -237,6 +237,10 @@
       execute "normal " . (a:up ? "\<c-y>" : "\<c-e>")
       redraw
     endfor
+  endfunction
+
+  function! Xcc_DeferPlugLeaderF(timer) abort
+    call plug#load('LeaderF')
   endfunction
 
   function! Xcc_DeferPlugFZF(timer) abort
@@ -452,6 +456,8 @@
   " }}}
   " LeaderF {{{
     if has_key(g:plugs, 'LeaderF')
+      call timer_start(500, 'Xcc_DeferPlugLeaderF')
+
       let g:Lf_ShortcutF = '<C-p>'
       let g:Lf_ShortcutB = '<Leader>fb'
       nnoremap <Leader>ff :LeaderfFile<CR>
@@ -490,6 +496,7 @@
   " FZF {{{
     if has_key(g:plugs, 'fzf.vim')
       call timer_start(700, 'Xcc_DeferPlugFZF')
+
       nnoremap <Space>ff :Files<CR>
       nnoremap <Space>fb :Buffers<CR>
       nnoremap <Space>fw :Windows<CR>
