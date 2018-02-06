@@ -85,8 +85,7 @@
   Plug 'cocopon/vaffle.vim'
   Plug 'majutsushi/tagbar'
   Plug 'mbbill/undotree'
-  Plug 'neomake/neomake'
-  Plug 'bsdelf/bufferhint'
+  Plug 'neomake/neomake', { 'on': [] }
   Plug 'itchyny/vim-cursorword'
   Plug 't9md/vim-quickhl'
   Plug 'haya14busa/incsearch.vim'
@@ -243,6 +242,11 @@
   function! Xcc_DeferPlugFZF(timer) abort
     call plug#load('fzf')
     call plug#load('fzf.vim')
+  endfunction
+
+  function! Xcc_DeferPlugNeomake(timer) abort
+    call plug#load('neomake')
+    call neomake#configure#automake('rw', 1000)
   endfunction
 
   function! Xcc_SetMetaMode(mode) abort
@@ -486,9 +490,9 @@
   " FZF {{{
     if has_key(g:plugs, 'fzf.vim')
       call timer_start(700, 'Xcc_DeferPlugFZF')
-      nnoremap <Leader>ff :Files<CR>
-      nnoremap <Leader>fb :Buffers<CR>
-      nnoremap <Leader>fw :Windows<CR>
+      nnoremap <Space>ff :Files<CR>
+      nnoremap <Space>fb :Buffers<CR>
+      nnoremap <Space>fw :Windows<CR>
 
       nnoremap <Leader>ag :Ag<CR>
     endif
@@ -534,24 +538,23 @@
     let g:go_fmt_command = 'goimports'
   " }}}
   " Neomake {{{
-    " let g:neomake_open_list = 2
-    let g:neomake_python_enabled_makers = ['flake8']
-    let g:neomake_javascript_enabled_makers = ['eslint']
+    if has_key(g:plugs, 'neomake')
+      call timer_start(200, 'Xcc_DeferPlugNeomake')
 
-    let g:neomake_warning_sign = {
-      \ 'text': 'W',
-      \ 'texthl': 'WarningMsg',
-      \ }
-    let g:neomake_error_sign = {
-      \ 'text': 'E',
-      \ 'texthl': 'ErrorMsg',
-      \ }
+      " let g:neomake_open_list = 2
+      let g:neomake_python_enabled_makers = ['flake8']
+      let g:neomake_javascript_enabled_makers = ['eslint']
 
-    call neomake#configure#automake('rw', 1000)
+      let g:neomake_warning_sign = {
+        \ 'text': 'W',
+        \ 'texthl': 'WarningMsg',
+        \ }
+      let g:neomake_error_sign = {
+        \ 'text': 'E',
+        \ 'texthl': 'ErrorMsg',
+        \ }
+    endif
  " }}}
-  " bufferhint {{{
-    nnoremap - :call bufferhint#Popup()<CR>
-  " }}}
   " incsearch {{{
     map /  <Plug>(incsearch-forward)
     map ?  <Plug>(incsearch-backward)
