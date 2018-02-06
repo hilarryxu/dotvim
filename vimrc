@@ -1,21 +1,35 @@
+" Author: Larry Xu <hilarryxu@gmail.com>
+" Changed: 2018-02-06
+
 " Section: s:env {{{
+
+  scriptencoding utf-8
 
   if &compatible
     set nocompatible
   endif
 
+  let s:TYPE = {
+        \ 'string':  type(''),
+        \ 'list':    type([]),
+        \ 'dict':    type({}),
+        \ 'funcref': type(function('call'))
+        \ }
 
   function! VimrcEnvironment()
-    let env = {}
-    let env.is_mac = has('mac')
-    let env.is_win = has('win32') || has('win64')
+    let l:env = {}
+    let l:env.is_mac = has('mac')
+    let l:env.is_win = has('win32') || has('win64')
+    let l:env.is_linux = has('unix') && !has('macunix') && !has('win32unix')
 
-    let user_dir = env.is_win
-          \ ? expand('$VIM/vimfiles')
-          \ : expand('~/.vim')
-    let env.path = {
+    let l:env.nvim = has('nvim') && exists('*jobwait') && !l:env.is_win
+    let l:env.vim8 = exists('*job_start')
+    let l:env.timer = exists('*timer_start')
+    let l:env.tmux = !empty($TMUX)
+
+    let user_dir = expand('~/.vim')
+    let l:env.path = {
           \   'user':        user_dir,
-          \   'plugins':     user_dir . '/plugins',
           \   'data':        user_dir . '/data',
           \   'local_vimrc': user_dir . '/.vimrc_local',
           \   'tmp':         user_dir . '/tmp',
@@ -23,10 +37,14 @@
           \   'plug_path':   user_dir . '/plugged',
           \ }
 
-    return env
+    return l:env
   endfunction
 
   let s:env = VimrcEnvironment()
+
+  if s:env.is_win
+    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+  endif
 
 " }}}
 " Section: plugs {{{
@@ -695,7 +713,7 @@
 
   augroup vimrc_filetype
     autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker
     autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
     autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab nolist
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
