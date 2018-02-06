@@ -92,20 +92,20 @@
   Plug 'haya14busa/incsearch.vim'
 
   " vim
-  Plug 'fcpg/vim-complimentary'
+  Plug 'fcpg/vim-complimentary', { 'for': 'vim' }
 
   " python
   Plug 'tmhedberg/SimpylFold',    { 'on': [] }
   Plug 'python-mode/python-mode', { 'on': [] }
 
   " golang
-  Plug 'fatih/vim-go', { 'for': 'go' }
+  Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
 
   " web
-  Plug 'othree/html5.vim'
-  Plug 'docunext/closetag.vim'
-  Plug 'pangloss/vim-javascript'
-  Plug 'posva/vim-vue'
+  Plug 'othree/html5.vim', { 'for': 'html' }
+  Plug 'docunext/closetag.vim', { 'for': 'html' }
+  Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+  Plug 'posva/vim-vue', { 'for': 'vue' }
 
   " colorscheme
   Plug 'cocopon/iceberg.vim'
