@@ -497,6 +497,7 @@
   " }}}
   " Neomake {{{
     " let g:neomake_open_list = 2
+    let g:neomake_python_enabled_makers = ['flake8']
     let g:neomake_javascript_enabled_makers = ['eslint']
 
     let g:neomake_warning_sign = {
@@ -519,11 +520,11 @@
     map g/ <Plug>(incsearch-stay)
   " }}}
   " python-mode {{{
-    let g:pymode_lint_checkers = ['pyflakes']
     let g:pymode_trim_whitespaces = 0
     let g:pymode_options = 0
     let g:pymode_rope = 0
     let g:pymode_lint = 0
+    let g:pymode_run = 0
     let g:pymode_indent = 1
     let g:pymode_folding = 0
     let g:pymode_options_colorcolumn = 1
@@ -727,7 +728,7 @@
   augroup vimrc_filetype
     autocmd!
     autocmd FileType vim setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker
-    autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
+    autocmd FileType python setlocal omnifunc=
     autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab nolist
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
