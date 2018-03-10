@@ -105,6 +105,7 @@
   Plug 'docunext/closetag.vim', { 'for': 'html' }
   Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
   Plug 'posva/vim-vue', { 'for': 'vue' }
+  Plug 'sophacles/vim-bundle-mako'
 
   " colorscheme
   Plug 'cocopon/iceberg.vim'
@@ -364,7 +365,7 @@
 
   " Basic
   set hidden
-  set number
+  set nonumber
   set showcmd
   set showmatch
   set notitle
@@ -781,6 +782,8 @@
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
     autocmd FileType vue setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType mako setlocal shiftwidth=2 tabstop=2 softtabstop=2
   augroup END
 
 " }}}
