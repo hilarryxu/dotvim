@@ -506,6 +506,10 @@
     endif
   " }}}
   " MUcomplete {{{
+    let g:mucomplete#chains = {
+          \ 'default' : ['c-p', 'tags', 'omni']
+          \ }
+
     inoremap <expr> <C-e> mucomplete#popup_exit("\<C-e>")
     inoremap <expr> <C-y> mucomplete#popup_exit("\<C-y>")
     inoremap <expr> <CR> mucomplete#popup_exit("\<CR>")
