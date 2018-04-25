@@ -1,5 +1,5 @@
 " Author: Larry Xu <hilarryxu@gmail.com>
-" Changed: 2018-02-06
+" Changed: 2018-04-25
 
 " Section: s:env {{{
 
@@ -53,29 +53,29 @@
 
   silent! call plug#begin(s:env.path.plug_path)
 
+  " my plugins
   Plug 'hilarryxu/xcc.vim'
   Plug 'hilarryxu/tag-preview.vim'
 
+  " Enhancement
   if s:env.has_python
     Plug 'Yggdroot/LeaderF', { 'on': [] }
   elseif s:env.gui && !has('terminal')
     Plug 'ctrlpvim/ctrlp.vim'
   endif
+
   if !s:env.gui || has('terminal')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'on': [] }
     Plug 'junegunn/fzf.vim', { 'on': [] }
   endif
 
-  Plug 'lifepillar/vim-mucomplete'
   Plug 'thinca/vim-localrc'
   Plug 'eugen0329/vim-esearch'
 
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-scriptease'
   Plug 'tpope/vim-projectionist'
-  Plug 'tpope/vim-fugitive'
 
   Plug 'junegunn/vim-easy-align'
   Plug 'junegunn/vim-peekaboo'
@@ -90,25 +90,43 @@
   Plug 't9md/vim-quickhl'
   Plug 'haya14busa/incsearch.vim'
 
-  " vim
+  " Coding
+  Plug 'tpope/vim-commentary'
+
+  if s:env.has_python
+    Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+  endif
+
+  " Git
+  if executable('git')
+    Plug 'airblade/vim-gitgutter'
+    Plug 'tpope/vim-fugitive' | Plug 'junegunn/gv.vim'
+  endif
+
+  " Completion
+
+  " Vim
   Plug 'fcpg/vim-complimentary', { 'for': 'vim' }
 
-  " python
+  " Python
   Plug 'tmhedberg/SimpylFold',    { 'on': [] }
   Plug 'python-mode/python-mode', { 'on': [] }
 
-  " golang
-  Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
+  " Go
+  if executable('go')
+    Plug 'fatih/vim-go'
+  endif
 
-  " web
+  " Web
   Plug 'othree/html5.vim', { 'for': 'html' }
   Plug 'docunext/closetag.vim', { 'for': 'html' }
   Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
   Plug 'posva/vim-vue', { 'for': 'vue' }
   Plug 'sophacles/vim-bundle-mako'
 
-  " colorscheme
+  " Colorscheme
   Plug 'cocopon/iceberg.vim'
+  Plug 'junegunn/seoul256.vim'
 
   call plug#end()
 
@@ -505,16 +523,6 @@
       nnoremap <Leader>ag :Ag<CR>
     endif
   " }}}
-  " MUcomplete {{{
-    let g:mucomplete#chains = {
-          \ 'default' : ['c-p', 'tags', 'omni']
-          \ }
-
-    inoremap <expr> <C-e> mucomplete#popup_exit("\<C-e>")
-    inoremap <expr> <C-y> mucomplete#popup_exit("\<C-y>")
-    inoremap <expr> <CR> mucomplete#popup_exit("\<CR>")
-    nnoremap <silent> <Leader>oa :<c-u>MUcompleteAutoToggle<CR>
-  " }}}
   " Vaffle {{{
     nnoremap <silent> <Leader>d :<C-u>Vaffle<CR>
   " }}}
@@ -549,6 +557,15 @@
 
     let g:go_fmt_command = 'goimports'
   " }}}
+  " ultisnips {{{
+    if has_key(g:plugs, 'ultisnips')
+      let g:UltiSnipsNoPythonWarning = 1
+      let g:UltiSnipsExpandTrigger = '<C-j>'
+      let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+      let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+      let g:UltiSnipsEditSplit = 'vertical'
+    endif
+  " }}}
   " Neomake {{{
     if has_key(g:plugs, 'neomake')
       call timer_start(200, 'Xcc_DeferPlugNeomake')
@@ -566,7 +583,7 @@
         \ 'texthl': 'ErrorMsg',
         \ }
     endif
- " }}}
+  " }}}
   " incsearch {{{
     map /  <Plug>(incsearch-forward)
     map ?  <Plug>(incsearch-backward)
@@ -806,4 +823,5 @@
     source $VIMRUNTIME/delmenu.vim
     source $VIMRUNTIME/menu.vim
   endif
+
 " }}}
