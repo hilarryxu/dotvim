@@ -63,35 +63,30 @@
   elseif s:env.gui && !has('terminal')
     Plug 'ctrlpvim/ctrlp.vim'
   endif
-
   if !s:env.gui || has('terminal')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'on': [] }
     Plug 'junegunn/fzf.vim', { 'on': [] }
   endif
-
   Plug 'thinca/vim-localrc'
-  Plug 'eugen0329/vim-esearch'
-
+  Plug 'vim-airline/vim-airline'
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-scriptease'
   Plug 'tpope/vim-projectionist'
-
   Plug 'junegunn/vim-easy-align'
   Plug 'junegunn/vim-peekaboo'
-
   Plug 'justinmk/vim-sneak'
-
   Plug 'cocopon/vaffle.vim'
-  Plug 'majutsushi/tagbar'
   Plug 'mbbill/undotree'
-  Plug 'neomake/neomake', { 'on': [] }
   Plug 'itchyny/vim-cursorword'
   Plug 't9md/vim-quickhl'
   Plug 'haya14busa/incsearch.vim'
 
   " Coding
+  Plug 'Shougo/echodoc.vim' | Plug 'Shougo/context_filetype.vim'
   Plug 'tpope/vim-commentary'
+  Plug 'eugen0329/vim-esearch'
+  Plug 'neomake/neomake', { 'on': [] }
 
   if s:env.has_python
     Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -104,6 +99,22 @@
   endif
 
   " Completion
+  if (has('nvim') || v:version >= 800) && has('python3')
+    if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+    endif
+
+    Plug 'Shougo/neco-syntax'
+    Plug 'Shougo/neco-vim'
+    Plug 'Shougo/neoinclude.vim'
+    Plug 'fszymanski/deoplete-emoji'
+    Plug 'zchee/deoplete-go'
+    Plug 'zchee/deoplete-jedi'
+  endif
 
   " Vim
   Plug 'fcpg/vim-complimentary', { 'for': 'vim' }
@@ -523,6 +534,19 @@
       nnoremap <Leader>ag :Ag<CR>
     endif
   " }}}
+  " deoplete.nvim {{{
+    if (has('nvim') || v:version >= 800) && has('python3')
+      let g:deoplete#enable_at_startup = 1
+    endif
+  " }}}
+  " vim-airline {{{
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_powerline_fonts = 1
+    set noshowmode
+  " }}}
+  " echodoc.vim {{{
+    let g:echodoc_enable_at_startup = 1
+  " }}}
   " Vaffle {{{
     nnoremap <silent> <Leader>d :<C-u>Vaffle<CR>
   " }}}
@@ -533,14 +557,6 @@
   " Sneak {{{
     let g:sneak#label = 1
     let g:sneak#use_ic_scs = 1
-  " }}}
-  " Tagbar {{{
-    noremap <silent> <Leader>vt :<C-u>TagbarToggle<CR>
-
-    let g:tagbar_left = 1
-    let g:tagbar_width = 28
-    let g:tagbar_autofocus = 1
-    " let g:tagbar_iconchars = ['▸', '▾']
   " }}}
   " vim-quickhl {{{
     nmap <Space>m <Plug>(quickhl-manual-this)
@@ -560,9 +576,9 @@
   " ultisnips {{{
     if has_key(g:plugs, 'ultisnips')
       let g:UltiSnipsNoPythonWarning = 1
-      let g:UltiSnipsExpandTrigger = '<C-j>'
-      let g:UltiSnipsJumpForwardTrigger = '<C-j>'
-      let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+      let g:UltiSnipsExpandTrigger = '<Tab>'
+      let g:UltiSnipsJumpForwardTrigger = '<Tab>'
+      let g:UltiSnipsJumpBackwardTrigger = '<S-Tab>'
       let g:UltiSnipsEditSplit = 'vertical'
     endif
   " }}}
