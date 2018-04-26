@@ -81,6 +81,15 @@
   Plug 'itchyny/vim-cursorword'
   Plug 't9md/vim-quickhl'
   Plug 'haya14busa/incsearch.vim'
+  Plug 'skywind3000/quickmenu.vim'
+  Plug 'skywind3000/asyncrun.vim'
+  Plug 'mhinz/vim-signify'
+
+  Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-indent'
+  Plug 'kana/vim-textobj-syntax'
+  Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+  Plug 'sgur/vim-textobj-parameter'
 
   " Coding
   Plug 'Shougo/echodoc.vim' | Plug 'Shougo/context_filetype.vim'
@@ -94,7 +103,6 @@
 
   " Git
   if executable('git')
-    Plug 'airblade/vim-gitgutter'
     Plug 'tpope/vim-fugitive' | Plug 'junegunn/gv.vim'
   endif
 
@@ -494,6 +502,10 @@
       nnoremap <Leader>fr :LeaderfMru<CR>
       nnoremap <Leader>fl :LeaderfLine<CR>
       nnoremap <Leader>fL :LeaderfLineAll<CR>
+      noremap <C-n> :LeaderfMru<CR>
+      noremap <M-p> :LeaderfFunction<CR>
+      noremap <M-n> :LeaderfBuffer<CR>
+      noremap <M-m> :LeaderfTag<CR>
     endif
   " }}}
   " CtrlP {{{
@@ -559,6 +571,17 @@
   " }}}
   " echodoc.vim {{{
     let g:echodoc_enable_at_startup = 1
+  " }}}
+  " quickmenu.vim {{{
+    let g:quickmenu_options = "HL"
+
+    noremap <silent><F12> :call quickmenu#toggle(0)<CR>
+  " }}}
+  " asyncrun.vim {{{
+    let g:asyncrun_open = 6
+    let g:asyncrun_bell = 1
+
+    nnoremap <F10> :call asyncrun#quickfix_toggle(6)<CR>
   " }}}
   " Vaffle {{{
     nnoremap <silent> <Space>d :<C-u>Vaffle<CR>
