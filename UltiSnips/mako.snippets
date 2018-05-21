@@ -1,0 +1,21 @@
+snippet fs "Layui form select"
+<div class="layui-form-item required">
+	<label class="layui-form-label">$1</label>
+	<div class="layui-input-inline">
+		<select name="$2" lay-verify="required">
+			<option value=""></option>
+			$0
+		</select>
+	</div>
+</div>
+endsnippet
+
+snippet fi "Layui form input"
+<div class="layui-form-item">
+	<label class="layui-form-label">${1:label}</label>
+	<div class="layui-input-inline">
+		<input class="layui-input" type="text" name="${2:name}"
+			placeholder="$0" autocomplete="off">
+	</div>
+</div>
+endsnippet

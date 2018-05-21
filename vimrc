@@ -96,6 +96,7 @@
   Plug 'tpope/vim-commentary'
   Plug 'eugen0329/vim-esearch'
   Plug 'neomake/neomake', { 'on': [] }
+  Plug 'mattn/emmet-vim'
 
   if s:env.has_python
     Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -656,6 +657,13 @@
     let g:pymode_options_colorcolumn = 1
     let g:pymode_breakpoint_bind = '<Leader>br'
   " }}}
+  " emmet {{{
+    let g:user_emmet_settings = {
+          \    'mako': {
+          \        'extends': 'html',
+          \    },
+          \ }
+  " }}}
 
 " }}}
 " Section: Commands {{{
@@ -857,10 +865,11 @@
     autocmd FileType python setlocal omnifunc=
     autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4 noexpandtab nolist
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 softtabstop=4 cinoptions=:0
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
-    autocmd FileType vue setlocal shiftwidth=2 tabstop=2 softtabstop=2
     autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType less setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
     autocmd FileType mako setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType vue setlocal shiftwidth=2 tabstop=2 softtabstop=2
   augroup END
 
 " }}}
