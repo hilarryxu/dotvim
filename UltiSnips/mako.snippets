@@ -1,4 +1,4 @@
-snippet fs "Layui form select"
+snippet lfs "Layui form select"
 <div class="layui-form-item required">
 	<label class="layui-form-label">$1</label>
 	<div class="layui-input-inline">
@@ -10,12 +10,55 @@ snippet fs "Layui form select"
 </div>
 endsnippet
 
-snippet fi "Layui form input"
+snippet lfi "Layui form input"
 <div class="layui-form-item">
 	<label class="layui-form-label">${1:label}</label>
 	<div class="layui-input-inline">
 		<input class="layui-input" type="text" name="${2:name}"
 			placeholder="$0" autocomplete="off">
 	</div>
+</div>
+endsnippet
+
+snippet lft "Layui form textarea"
+<div class="layui-form-item layui-form-text">
+	<label class="layui-form-label">${1:label}</label>
+	<div class="layui-input-block">
+		<textarea name="${2:name}" placeholder="$0" class="layui-textarea"></textarea>
+	</div>
+</div>
+endsnippet
+
+snippet lfri "Layui form required input"
+<div class="layui-form-item required">
+	<label class="layui-form-label">${1:label}</label>
+	<div class="layui-input-inline">
+		<input class="layui-input" type="text" name="${2:name}"
+			placeholder="$0" autocomplete="off" lay-verify="required">
+	</div>
+</div>
+endsnippet
+
+snippet lfb "Layui form submit"
+<div class="layui-form-item">
+	<div class="layui-input-block">
+		<button class="layui-btn" lay-filter="*$0" lay-submit>提交</button>
+	</div>
+</div>
+endsnippet
+
+snippet ltab "Layui tabs"
+<div class="layui-tab layui-tab-brief">
+	<ul class="layui-tab-title">
+		<li class="layui-this">$1</li>
+		<li>$2</li>
+	</ul>
+	<div class="layui-tab-content">
+		<div class="layui-tab-item layui-show">
+		$0
+		</div>  <!-- .layui-tab-item -->
+		<div class="layui-tab-item">
+		</div>  <!-- .layui-tab-item -->
+	</div>  <!-- .layui-tab-content -->
 </div>
 endsnippet
