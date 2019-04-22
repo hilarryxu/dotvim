@@ -1,12 +1,4 @@
-.DS_Store
-
-/*~
-/tmp/
-/spell
-/tags
-/viminfo
-/data/
-
-/plugged/
-/pack/
-/dein/
+bundle/
+plugged/
+tmp/
+data/
