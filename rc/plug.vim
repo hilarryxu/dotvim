@@ -38,7 +38,8 @@ endif
 
 " Completion
 if s:env.nvim
-  Plug 'Valloric/YouCompleteMe'
+  Plug 'maralla/completor.vim'
+  " Plug 'Valloric/YouCompleteMe'
 elseif s:env.is_win
   Plug 'Shougo/neocomplete.vim'
 endif
