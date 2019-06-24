@@ -44,7 +44,7 @@ nmap <Space>8 <Plug>AirlineSelectTab8
 nmap <Space>9 <Plug>AirlineSelectTab9
 
 " Neomake {{{1
-call neomake#configure#automake('rw', 1000)
+" call neomake#configure#automake('rw', 1000)
 
 " Ultisnips {{{1
 let g:UltiSnipsNoPythonWarning = 1

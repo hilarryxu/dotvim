@@ -6,6 +6,7 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-eunuch'
 Plug 'itchyny/vim-cursorword'
 Plug 'mhinz/vim-signify'
 Plug 'justinmk/vim-dirvish'
@@ -26,7 +27,7 @@ endif
 
 " Coding
 Plug 'tpope/vim-commentary'
-Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
+" Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
 Plug 'sbdchd/neoformat'
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
