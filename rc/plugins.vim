@@ -44,7 +44,9 @@ nmap <Space>8 <Plug>AirlineSelectTab8
 nmap <Space>9 <Plug>AirlineSelectTab9
 
 " Neomake {{{1
-" call neomake#configure#automake('rw', 1000)
+call neomake#configure#automake('rw', 1000)
+let g:neomake_open_list = 2
+let g:neomake_python_enabled_makers = ['flake8']
 
 " Ultisnips {{{1
 let g:UltiSnipsNoPythonWarning = 1

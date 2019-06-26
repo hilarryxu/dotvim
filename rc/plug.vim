@@ -27,7 +27,7 @@ endif
 
 " Coding
 Plug 'tpope/vim-commentary'
-" Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
+Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
 Plug 'sbdchd/neoformat'
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 

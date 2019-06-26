@@ -24,6 +24,28 @@ if s:env.nvim
   "       \ 'cpp': 1,
   "       \ 'python': 1,
   "       \ }
+
+  " function! Tab_Or_Complete() abort
+  "   if pumvisible()
+  "     return "\<C-N>"
+  "   elseif col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^[[:keyword:][:ident:]]'
+  "     return "\<C-R>=completor#do('complete')\<CR>"
+  "   else
+  "     return "\<Tab>"
+  "   endif
+  " endfunction
+
+  " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+  " let g:completor_auto_trigger = 0
+  " inoremap <expr> <Tab> Tab_Or_Complete()
+  "
+  inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return pumvisible() ? "\<C-y>" : "\<CR>"
+  endfunction
 elseif s:env.is_win
   let g:neocomplete#enable_at_startup = 1
   let g:neocomplete#enable_smart_case = 1
