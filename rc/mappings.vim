@@ -51,7 +51,7 @@ nnoremap <silent> <Leader>ma :<C-u>update<CR>:silent make<BAR>redraw!<BAR>bo cwi
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
 " Some usefull maps
-nnoremap ; :
+" nnoremap ; :
 noremap j gj
 noremap k gk
 vnoremap < <gv

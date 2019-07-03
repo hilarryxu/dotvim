@@ -8,9 +8,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-eunuch'
 Plug 'itchyny/vim-cursorword'
-Plug 'mhinz/vim-signify'
+" Plug 'mhinz/vim-signify'
 Plug 'justinmk/vim-dirvish'
-Plug 'bsdelf/bufferhint'
 Plug 'justinmk/vim-sneak'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
@@ -37,9 +36,8 @@ if executable('git')
 endif
 
 " Completion
-if s:env.nvim
+if s:env.has_python && !s:env.is_win
   Plug 'maralla/completor.vim'
-  " Plug 'Valloric/YouCompleteMe'
 elseif s:env.is_win
   Plug 'Shougo/neocomplete.vim'
 endif
