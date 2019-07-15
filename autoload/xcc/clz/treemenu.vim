@@ -46,7 +46,8 @@ fun! g:MenuBuffer.init_buffer()
   syn match MenuLabelExpanded   +\(^[~]-*\)\@<=[a-zA-Z0-9-()._/ ]*+
   syn match MenuLabelCollapsed  +\(^[+]-*\)\@<=[a-zA-Z0-9-()._/ ]*+
 
-  hi MenuId ctermfg=black ctermbg=black guifg=black guibg=black
+  " hi MenuId ctermfg=black ctermbg=black guifg=black guibg=black
+  hi def link MenuId NonText
   hi MenuPre ctermfg=darkblue guifg=darkblue
   hi CursorLine cterm=underline
 
