@@ -198,6 +198,30 @@ function! s:capture(excmd) abort
   endif
 endfunction
 
+if exists('*systemlist')
+  function! s:systemlist(cmd, ...) abort
+    if type(a:cmd) == 3
+      let cmd = map(a:cmd, 'shellescape(v:val)')
+      let excmd = join(cmd, ' ')
+      return a:0 == 0 ? systemlist(excmd) : systemlist(excmd, a:1)
+    else
+      return a:0 == 0 ? systemlist(a:cmd) : systemlist(a:cmd, a:1)
+    endif
+  endfunction
+else
+  function! s:systemlist(cmd, ...) abort
+    if type(a:cmd) == 3
+      let cmd = map(a:cmd, 'shellescape(v:val)')
+      let excmd = join(cmd, ' ')
+      return a:0 == 0 ? split(system(excmd), "\n")
+            \ : split(system(excmd, a:1), "\n")
+    else
+      return a:0 == 0 ? split(system(a:cmd), "\n")
+            \ : split(system(a:cmd, a:1), "\n")
+    endif
+  endfunction
+endif
+
 fun! s:get_ff_output(inpath, outpath, callback, channel, status)
   let l:output = filereadable(a:outpath) ? readfile(a:outpath) : []
   silent! call delete(a:outpath)
@@ -275,7 +299,7 @@ fun! V_fuzzy(input, callback, prompt) abort
   endif
 
   if !has('gui_running') && executable('tput') && filereadable('/dev/tty')
-    let l:output = systemlist(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; ' . l:cmd, &lines))
+    let l:output = s:systemlist(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; ' . l:cmd, &lines))
     redraw!
     silent! call delete(a:inpath)
     call function(a:callback)(l:output)
