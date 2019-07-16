@@ -198,6 +198,19 @@ function! s:capture(excmd) abort
   endif
 endfunction
 
+fun! s:get_ff_output(inpath, outpath, callback, channel, status)
+  let l:output = filereadable(a:outpath) ? readfile(a:outpath) : []
+  silent! call delete(a:outpath)
+  silent! call delete(a:inpath)
+  call function(a:callback)(l:output)
+endf
+
+for s:ff_bin in ['fzy', 'sk', 'fzf', 'selecta', 'pick', ''] " Sort according to your preference
+  if executable(s:ff_bin)
+    break
+  endif
+endfor
+
 function! V_search_in_buffer(pattern) abort
   if getbufvar(winbufnr(winnr()), '&ft') ==# 'qf'
     call s:warn('Cannot search the quickfix window')
@@ -236,6 +249,70 @@ function! V_cmd(cmd, ...) abort
   execute 'lcd' opt['cwd']
   execute '%!' cmd
 endfunction
+
+fun! V_fuzzy(input, callback, prompt) abort
+  if empty(s:ff_bin)
+    return
+  endif
+
+  let l:ff_cmds = {
+        \ 'fzf':     "|fzf -m --height 15 --prompt '".a:prompt."> ' 2>/dev/tty",
+        \ 'fzy':     "|fzy --lines=15 --prompt='".a:prompt."> ' 2>/dev/tty",
+        \ 'pick':    "|pick -X",
+        \ 'selecta': "|selecta 2>/dev/tty",
+        \ 'sk':      "|sk -m --height 15 --prompt '".a:prompt."> '"
+        \ }
+
+  let l:ff_cmd = l:ff_cmds[s:ff_bin]
+
+  if type(a:input) ==# 1  " v:t_string
+    let l:inpath = ''
+    let l:cmd = a:input . l:ff_cmd
+  else  " Assume List
+    let l:inpath = tempname()
+    call writefile(a:input, l:inpath)
+    let l:cmd  = 'cat '.fnameescape(l:inpath) . l:ff_cmd
+  endif
+
+  if !has('gui_running') && executable('tput') && filereadable('/dev/tty')
+    let l:output = systemlist(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; ' . l:cmd, &lines))
+    redraw!
+    silent! call delete(a:inpath)
+    call function(a:callback)(l:output)
+    return
+  endif
+
+  let l:outpath = tempname()
+  let l:cmd .= " >" . fnameescape(l:outpath)
+
+  if has('terminal')
+    botright 15split
+    call term_start([&shell, &shellcmdflag, l:cmd], {
+          \ "term_name": a:prompt,
+          \ "curwin": 1,
+          \ "term_finish": "close",
+          \ "exit_cb": function('s:get_ff_output', [l:inpath, l:outpath, a:callback])
+          \ })
+  else
+   silent execute '!' . l:cmd
+   redraw!
+   call s:get_ff_output(l:inpath, l:outpath, a:callback, -1, v:shell_error)
+  endif
+endf
+
+fun! s:set_arglist(paths)
+  if empty(a:paths) | return | endif
+  execute "args" join(map(a:paths, 'fnameescape(v:val)'))
+endf
+
+fun! V_arglist_fuzzy(input_cmd)
+  call V_fuzzy(a:input_cmd, 's:set_arglist', 'Choose files')
+endf
+
+fun! V_findfile(...)
+  let l:dir = (a:0 > 0 ? ' '.a:1 : ' .')
+  call V_arglist_fuzzy(executable('rg') ? 'rg --files'.l:dir : 'find'.l:dir.' -type f')
+endf
 
 function! NilStripTrailingWhitespaces()
   let _s=@/
@@ -288,6 +365,9 @@ function! s:my_cr_function()
   return pumvisible() ? "\<C-n>\<C-y>" : "\<CR>"
 endfunction
 
+" find/filter
+nnoremap <silent> <Leader>ff :<C-u>FindFile<CR>
+
 " tab
 nnoremap <Leader>an :tabn<CR>
 nnoremap <Leader>ap :tabp<CR>
@@ -331,6 +411,7 @@ endif
 
 command! -nargs=1 Search call V_search_in_buffer(<q-args>)
 command! -nargs=* -complete=file Grep call V_grep(<q-args>)
+command! -nargs=? -complete=dir FindFile call V_findfile(<q-args>)
 
 command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
 
