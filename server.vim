@@ -184,6 +184,20 @@ function! s:warn(error) abort
   echohl None
 endfunction
 
+function! s:capture(excmd) abort
+  if exists('*execute')
+    return execute(a:excmd)
+  else
+    try
+      redir => cout
+      execute 'silent! ' . a:excmd
+    finally
+      redir END
+    endtry
+    return cout
+  endif
+endfunction
+
 function! V_search_in_buffer(pattern) abort
   if getbufvar(winbufnr(winnr()), '&ft') ==# 'qf'
     call s:warn('Cannot search the quickfix window')
@@ -206,7 +220,7 @@ endfunction
 function! V_vim_cmd(cmd) abort
   botright 10new
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call append(0, split(execute(a:cmd), "\n"))
+  call append(0, split(s:capture(a:cmd), "\n"))
   normal gg
 endfunction
 
