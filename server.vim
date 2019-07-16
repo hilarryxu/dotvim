@@ -1,17 +1,102 @@
 " .vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2017/07/20
+" Updated:  2019/07/16
 "
 " This file changes a lot.
 
-" prem {{{1
-set nocompatible
+" Section: prem {{{1
+scriptencoding utf-8
 
-let s:is_windows = has('win32') || has('win64')
+if &compatible
+  set nocompatible
+endif
 
-filetype plugin indent on
-syntax on
+" Section: sensible {{{1
+if has('autocmd')
+  filetype plugin indent on
+endif
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
+
+set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
+
+set nrformats-=octal
+
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
+
+set incsearch
+
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+set laststatus=2
+set ruler
+set wildmenu
+
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
+set display+=lastline
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
+
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+endif
+
+if v:version > 703 || v:version == 703 && has('patch541')
+  " Delete comment character when joining commented lines
+  set formatoptions+=j
+endif
+
+if has('path_extra')
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+endif
+
+if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
+  set shell=/bin/bash
+endif
+
+" Re-read file if it is changed by an external program
+set autoread
+
+if &history < 1000
+  set history=1000
+endif
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+set sessionoptions-=options
+
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+  set t_Co=16
+endif
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+inoremap <C-U> <C-G>u<C-U>
 
 " config {{{1
 let mapleader = ","
@@ -84,27 +169,7 @@ set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 set wildignore+=*/bower_components/*,*/node_modules/*
 set wildignore+=*/nginx_runtime/*,*/build/*,*/logs/*
 
-" gui
-if has("gui_running")
-  " egt
-  set guioptions-=T
-  set guioptions-=m
-  set guioptions-=L
-  set guioptions-=r
-  set guioptions-=b
-  set cursorline
-  set cursorcolumn
-  set paste
-  set autochdir
-  if has("win32")
-    set guifont=Consolas_for_Powerline_FixedD:h10:cANSI
-  endif
-endif
-
 " plugin {{{1
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
 
 " func {{{1
 function! NilStripTrailingWhitespaces()
@@ -181,7 +246,7 @@ nnoremap <silent> <Leader>tb :call NilToggleBackground()<CR>
 map <silent> <leader>ee :e $HOME/_vimrc<cr>
 nnoremap <silent> <Leader>ss :call NilStripTrailingWhitespaces()<CR>
 nnoremap <Leader>nh :nohlsearch<CR>
-nmap ? /\<\><Left><Left>
+" nmap ? /\<\><Left><Left>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>Q :qa!<CR>
 
@@ -198,9 +263,8 @@ if !(has('win32') || has('win64'))
   command! W w !sudo tee % > /dev/null
 endif
 
-" filetype {{{1
+" Section: autocmd {{{1
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
-autocmd BufNewFile,BufRead *.vue setf htmldjango
 
 autocmd FileType python set tabstop=4|set shiftwidth=4|set softtabstop=4|set expandtab
 autocmd FileType html set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
@@ -218,8 +282,6 @@ command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
     \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
     \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
-" set background=dark
 colorscheme torte
-set nonumber
 
 " vim:set et sw=2 ts=2 fdm=marker fdl=0:
