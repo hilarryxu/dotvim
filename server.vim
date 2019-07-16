@@ -103,6 +103,7 @@ let mapleader = ","
 let maplocalleader = "\\"
 nnoremap ; :
 
+set nonumber
 set backspace=indent,eol,start
 set history=1000
 set nrformats-=octal
@@ -110,7 +111,6 @@ set ttimeout
 set ttimeoutlen=100
 set updatetime=200
 set ruler
-set number
 set showcmd
 set wildmenu
 set complete-=i
@@ -162,6 +162,12 @@ set nowrap
 set textwidth=80
 set formatoptions=qrn1
 
+" grep
+if executable('rg')
+  set grepprg=rg\ -i\ --vimgrep
+endif
+set grepformat^=%f:%l:%c:%m
+
 " wildignore
 set wildignore+=*.pyc,*.sqlite,*.sqlite3,cscope.out
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
@@ -171,7 +177,32 @@ set wildignore+=*/nginx_runtime/*,*/build/*,*/logs/*
 
 " plugin {{{1
 
-" func {{{1
+" Section: functions {{{1
+function! s:warn(error) abort
+  echohl WarningMsg
+  echomsg a:error
+  echohl None
+endfunction
+
+function! V_search_in_buffer(pattern) abort
+  if getbufvar(winbufnr(winnr()), '&ft') ==# 'qf'
+    call s:warn('Cannot search the quickfix window')
+    return
+  endif
+  try
+    silent noautocmd execute 'lvimgrep /' . a:pattern . '/gj ' . fnameescape(expand('%'))
+  catch /^Vim\%((\a\+)\)\=:E480/  " Pattern not found
+    call s:warn('No match')
+  endtry
+  bo lwindow
+endfunction
+
+function! V_grep(args) abort
+  execute 'silent grep!' a:args
+  bo cwindow
+  redraw!
+endfunction
+
 function! NilStripTrailingWhitespaces()
   let _s=@/
   let l = line(".")
@@ -199,7 +230,7 @@ function! NilToggleBackground()
   endif
 endfunction
 
-" mapping {{{1
+" Section: mapping {{{1
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
@@ -249,6 +280,7 @@ nnoremap <Leader>nh :nohlsearch<CR>
 " nmap ? /\<\><Left><Left>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>Q :qa!<CR>
+nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
 
 inoremap <C-g> <Esc>
 
@@ -258,10 +290,13 @@ noremap <silent> <Up> :bdelete<CR>
 
 set pastetoggle=<F9>
 
-" command {{{1
+" Section: command {{{1
 if !(has('win32') || has('win64'))
   command! W w !sudo tee % > /dev/null
 endif
+
+command! -nargs=1 Search call V_search_in_buffer(<q-args>)
+command! -nargs=* -complete=file Grep call V_grep(<q-args>)
 
 " Section: autocmd {{{1
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
