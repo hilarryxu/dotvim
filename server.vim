@@ -203,6 +203,26 @@ function! V_grep(args) abort
   redraw!
 endfunction
 
+function! V_vim_cmd(cmd) abort
+  botright 10new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call append(0, split(execute(a:cmd), "\n"))
+  normal gg
+endfunction
+
+function! V_cmd(cmd, ...) abort
+  let opt = get(a:000, 0, {})
+  if !has_key(opt, 'cwd')
+    let opt['cwd'] = fnameescape(expand('%:p:h'))
+  endif
+  let cmd = join(map(a:cmd, 'v:val !~# "\\v^[%#<]" || expand(v:val) == "" ? v:val : shellescape(expand(v:val))'))
+  execute get(opt, 'pos', 'botright') 'new'
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  nnoremap <buffer> q <c-w>c
+  execute 'lcd' opt['cwd']
+  execute '%!' cmd
+endfunction
+
 function! NilStripTrailingWhitespaces()
   let _s=@/
   let l = line(".")
@@ -243,10 +263,10 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" nnoremap <C-h> <C-w>h
+" nnoremap <C-j> <C-w>j
+" nnoremap <C-k> <C-w>k
+" nnoremap <C-l> <C-w>l
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>\<C-y>" : "\<Tab>"
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -297,6 +317,8 @@ endif
 
 command! -nargs=1 Search call V_search_in_buffer(<q-args>)
 command! -nargs=* -complete=file Grep call V_grep(<q-args>)
+
+command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
 
 " Section: autocmd {{{1
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
