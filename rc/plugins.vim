@@ -16,13 +16,6 @@ else
   let g:ctrlp_map = ''
 endif
 
-if s:env.is_win
-  " neosnippet {{{1
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
-endif
-
 " Airline {{{1
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'iceberg'
@@ -45,8 +38,8 @@ nmap <Space>9 <Plug>AirlineSelectTab9
 
 " Neomake {{{1
 call neomake#configure#automake('rw', 1000)
-" let g:neomake_open_list = 2
 let g:neomake_python_enabled_makers = ['flake8']
+" let g:neomake_open_list = 2
 
 " Ultisnips {{{1
 let g:UltiSnipsNoPythonWarning = 1

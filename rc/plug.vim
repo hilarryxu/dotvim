@@ -36,16 +36,14 @@ if executable('git')
 endif
 
 " Completion
-if s:env.has_python && !s:env.is_win
+if s:env.has_python
   Plug 'maralla/completor.vim'
-elseif s:env.is_win
-  Plug 'Shougo/neocomplete.vim'
 endif
 
 " Snippet
-if s:env.has_python && !s:env.is_win
+if s:env.has_python
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-elseif s:env.is_win
+else
   Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'
 endif
