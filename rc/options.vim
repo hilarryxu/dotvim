@@ -73,6 +73,13 @@ set noerrorbells
 set novisualbell
 set t_vb=
 
+" nvim
+if s:env.nvim
+  let g:loaded_python_provider = 1
+  let g:python_host_prog = '/usr/bin/python'
+  let g:python3_host_prog = '/usr/bin/python3'
+endif
+
 " GUI
 if has('gui_running')
   set guioptions-=T

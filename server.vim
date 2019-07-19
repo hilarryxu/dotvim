@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/07/16
+" Updated:  2019/07/19
 "
 " This file changes a lot.
 
@@ -175,7 +175,16 @@ set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 set wildignore+=*/bower_components/*,*/node_modules/*
 set wildignore+=*/nginx_runtime/*,*/build/*,*/logs/*
 
-" plugin {{{1
+" Section: plugins {{{1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_gzip = 1
+let g:loaded_logiPat = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_rrhelper = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_vimballPlugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_spellfile_plugin = 1
 
 " Section: functions {{{1
 function! s:warn(error) abort
@@ -365,7 +374,7 @@ function! NilToggleBackground()
   endif
 endfunction
 
-" Section: mapping {{{1
+" Section: mappings {{{1
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
@@ -377,11 +386,6 @@ inoremap <right> <nop>
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
-
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>\<C-y>" : "\<Tab>"
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -419,8 +423,11 @@ nnoremap <Leader>nh :nohlsearch<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>Q :qa!<CR>
 nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
-
 inoremap <C-g> <Esc>
+vnoremap < <gv
+vnoremap > >gv
+noremap <C-g> 2<C-g>
+nnoremap gQ <Nop>
 
 noremap <silent> <Left> :bp<CR>
 noremap <silent> <Right> :bn<CR>
@@ -428,7 +435,7 @@ noremap <silent> <Up> :bdelete<CR>
 
 set pastetoggle=<F9>
 
-" Section: command {{{1
+" Section: commands {{{1
 if !(has('win32') || has('win64'))
   command! W w !sudo tee % > /dev/null
 endif
@@ -439,15 +446,13 @@ command! -nargs=? -complete=dir FindFile call V_findfile(<q-args>)
 
 command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
 
-" Section: autocmd {{{1
+" Section: autocmds {{{1
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
-autocmd FileType python set tabstop=4|set shiftwidth=4|set softtabstop=4|set expandtab
-autocmd FileType html set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-autocmd FileType htmldjango set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-autocmd FileType css set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-autocmd FileType stylus set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
+augroup vimrc_filetype
+  autocmd!
+  autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
+augroup END
 
 " color {{{1
 autocmd ColorScheme * call matchadd('Todo', '\W\zs\(NOTICE\|WARNING\|DANGER\)')
