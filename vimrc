@@ -71,6 +71,7 @@ call s:load_rc('plugins')
 call s:load_rc('commands')
 call s:load_rc('mappings')
 call s:load_rc('autocmds')
+call xcc#plug#load()
 
 if filereadable(s:env.path.local_vimrc)
   execute 'source ' . s:env.path.local_vimrc

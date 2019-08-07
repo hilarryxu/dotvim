@@ -38,6 +38,7 @@ endif
 " Completion
 if s:env.has_python
   Plug 'maralla/completor.vim'
+  Plug 'Shougo/neco-vim' | Plug 'maralla/completor-necovim'
 endif
 
 " Snippet
