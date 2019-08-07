@@ -1,15 +1,11 @@
 " vimrc for windows.
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/04/19
+" Updated:  2019/08/07
 "
 " This file changes a lot.
 
 scriptencoding utf-8
-
-if &compatible
-  set nocompatible
-endif
 
 function! VimrcEnvironment()
   let env = {}
