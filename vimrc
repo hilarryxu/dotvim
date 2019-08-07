@@ -41,6 +41,7 @@ function! VimrcEnvironment()
 endfunction
 
 let s:env = VimrcEnvironment()
+let $VIMHOME = s:env.path.user
 let g:vimrc_env = s:env
 
 if s:env.nvim
@@ -71,7 +72,6 @@ call s:load_rc('plugins')
 call s:load_rc('commands')
 call s:load_rc('mappings')
 call s:load_rc('autocmds')
-call xcc#plug#load()
 
 if filereadable(s:env.path.local_vimrc)
   execute 'source ' . s:env.path.local_vimrc
