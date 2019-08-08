@@ -1,4 +1,4 @@
-command! -nargs=? EV call xcc#plug#edit#EV#commander(<f-args>)
+command! -nargs=? -complete=customlist,xcc#plug#edit#EV#complete EV call xcc#plug#edit#EV#commander(<f-args>)
 
 command! -nargs=* E call xcc#plug#edit#ED#edit_another(<f-args>)
 command! -nargs=* D call xcc#plug#edit#ED#edit_in_another(<f-args>)
