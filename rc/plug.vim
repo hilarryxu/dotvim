@@ -6,16 +6,16 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
-Plug 'tpope/vim-eunuch'
-Plug 'itchyny/vim-cursorword'
+" Plug 'tpope/vim-eunuch'
+" Plug 'itchyny/vim-cursorword'
 " Plug 'mhinz/vim-signify'
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
-Plug 'fisadev/FixedTaskList.vim'
+" Plug 'fisadev/FixedTaskList.vim'
 Plug 't9md/vim-quickhl'
-Plug 'haya14busa/incsearch.vim'
+" Plug 'haya14busa/incsearch.vim'
 
 " File finder
 if s:env.has_python
@@ -26,9 +26,10 @@ endif
 
 " Coding
 Plug 'tpope/vim-commentary'
+Plug 'skywind3000/asyncrun.vim'
 Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
 Plug 'sbdchd/neoformat'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+" Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
 " Git
 if executable('git')
@@ -48,6 +49,9 @@ else
   Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'
 endif
+
+" Vim
+Plug 'mhinz/vim-lookup', { 'for': 'vim' }
 
 " Python
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }

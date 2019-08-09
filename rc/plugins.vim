@@ -50,3 +50,6 @@ let g:UltiSnipsEditSplit = 'vertical'
 
 " Dirvish {{{1
 nmap <Leader>dd <plug>(dirvish_up)
+
+" vim-lookup {{{1
+autocmd FileType vim nnoremap <buffer><silent> <CR> :call lookup#lookup()<CR>
