@@ -5,7 +5,7 @@
 
 let s:Help = {}
 
-fun! s:Help.reg(brief, fulltext, show_brief)
+fun! s:Help.reg(brief, fulltext, show_brief) abort
   let b:help_brief = a:brief . ' | Press ? For Help.'
   let b:help_brief_height = 0
   let b:help_show_brief_on = a:show_brief
@@ -21,11 +21,11 @@ fun! s:Help.reg(brief, fulltext, show_brief)
   call s:Help.init_syntax()
 endf
 
-fun! s:Help.redraw()
+fun! s:Help.redraw() abort
   call s:Help.show_brief()
 endf
 
-fun! s:toggle_fulltext()
+fun! s:toggle_fulltext() abort
   setlocal modifiable
   if exists('b:help_fulltext_on')
     call s:Help.hide_fulltext()
@@ -35,21 +35,21 @@ fun! s:toggle_fulltext()
   setlocal nomodifiable
 endf
 
-fun! s:Help.show_brief()
+fun! s:Help.show_brief() abort
   let lines = split(b:help_brief, "\n")
   let b:help_brief_height = len(lines)
   call map(lines, "'# ' . v:val")
   call append(0 , lines)
 endf
 
-fun! s:Help.init_syntax()
+fun! s:Help.init_syntax() abort
 endf
 
-fun! s:Help.hide_brief()
+fun! s:Help.hide_brief() abort
   exec 'silent 1,'.b:help_brief_height.'delete _'
 endf
 
-fun! s:Help.show_fulltext()
+fun! s:Help.show_fulltext() abort
   let b:help_fulltext_on = 1
 
   if b:help_show_brief_on
@@ -63,7 +63,7 @@ fun! s:Help.show_fulltext()
   cal append(0, lines)
 endf
 
-fun! s:Help.hide_fulltext()
+fun! s:Help.hide_fulltext() abort
   unlet b:help_fulltext_on
   exec 'silent 1,'.b:help_fulltext_height.'delete _'
   if b:help_show_brief_on
@@ -71,7 +71,7 @@ fun! s:Help.hide_fulltext()
   endif
 endf
 
-fun! xcc#clz#helper#load()
+fun! xcc#clz#helper#load() abort
   if !exists('g:Help')
     let g:Help = copy(s:Help)
   endif

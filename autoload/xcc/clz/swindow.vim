@@ -3,7 +3,9 @@
 " Author: Larry Xu
 " Version: 0.5
 
-fun! s:echo(msg)
+scriptencoding utf-8
+
+fun! s:echo(msg) abort
   redraw
   echomsg a:msg
 endf
@@ -19,14 +21,14 @@ let s:swindow = {
 let s:swindow.loaded = 1
 let s:swindow.version = 0.5
 
-fun! s:swindow.open(pos, type, size)
+fun! s:swindow.open(pos, type, size) abort
   call self.split(a:pos, a:type, a:size)
 endf
 
-fun! s:swindow.split(position, type, size)
+fun! s:swindow.split(position, type, size) abort
   if !bufexists(self.buf_nr)
-    if a:type == 'split' | let act = 'new'
-    elseif a:type == 'vsplit' | let act = 'vnew'
+    if a:type ==# 'split' | let act = 'new'
+    elseif a:type ==# 'vsplit' | let act = 'vnew'
     else | let act = 'new' | endif
 
     let self.win_type = a:type
@@ -54,17 +56,17 @@ fun! s:swindow.split(position, type, size)
   endif
 endf
 
-fun! s:swindow.index()
+fun! s:swindow.index() abort
   return []
 endf
 
-fun! s:swindow.update()
+fun! s:swindow.update() abort
   call self.update_search()
   call self.update_highlight()
   startinsert
 endf
 
-fun! s:swindow.update_search()
+fun! s:swindow.update_search() abort
   let pattern = self.get_pattern()
   let lines = self.filter_result(pattern, self.predefined_index)
   if len(lines) > self.max_result
@@ -73,7 +75,7 @@ fun! s:swindow.update_search()
   call self.render(lines)
 endf
 
-fun! s:swindow.update_highlight()
+fun! s:swindow.update_highlight() abort
   let pattern = self.get_pattern()
   if strlen(pattern) > 0
     exec 'syn clear Search'
@@ -86,7 +88,7 @@ endf
 " start():
 " after a buffer is initialized , start() function will be called to
 " setup.
-fun! s:swindow.start()
+fun! s:swindow.start() abort
   call cursor(1, 1)
   startinsert
 endf
@@ -94,32 +96,32 @@ endf
 " buffer_reload_init()
 " will be triggered after search window opened and the
 " buffer is loaded back , which doesn't need to initiailize.
-fun! s:swindow.buffer_reload_init()
+fun! s:swindow.buffer_reload_init() abort
 endf
 
 " _init_buffer()
 " initialize newly created buffer for search window.
-fun! s:swindow._init_buffer()
+fun! s:swindow._init_buffer() abort
   setlocal noswapfile  buftype=nofile bufhidden=hide
   setlocal nobuflisted nowrap cursorline nonumber fdc=0
 endf
 
-fun! s:swindow.init_buffer()
+fun! s:swindow.init_buffer() abort
 endf
 
 " init_syntax()
 " setup the syntax for search window buffer
-fun! s:swindow.init_syntax()
+fun! s:swindow.init_syntax() abort
 endf
 
 " init_mapping()
 " define your mappings for search window buffer
-fun! s:swindow.init_mapping()
+fun! s:swindow.init_mapping() abort
 endf
 
 " init_base_mapping()
 " this defines default set mappings
-fun! s:swindow.init_basic_mapping()
+fun! s:swindow.init_basic_mapping() abort
   imap <buffer>     <Enter> <ESC>j<Enter>
   imap <buffer>     <C-a>   <Esc>0i
   imap <buffer>     <C-e>   <Esc>A
@@ -133,12 +135,12 @@ fun! s:swindow.init_basic_mapping()
   nnoremap <buffer> i ggA
 endf
 
-fun! s:swindow.filter_render(lines)
+fun! s:swindow.filter_render(lines) abort
 endf
 
 " clear current buffer except pattern line
 " re-render the result ( lines )
-fun! s:swindow.render(lines)
+fun! s:swindow.render(lines) abort
   cal self.filter_render(a:lines)
 
   let old = getpos('.')
@@ -151,17 +153,17 @@ fun! s:swindow.render(lines)
 endf
 
 " override this if your pattern is on different line
-fun! s:swindow.get_pattern()
+fun! s:swindow.get_pattern() abort
   return getline(1)
 endf
 
 " reder_result()
 " put list into buffer
-fun! s:swindow.filter_result(ptn, list)
+fun! s:swindow.filter_result(ptn, list) abort
   return filter(copy(a:list), 'v:val =~ "' . a:ptn . '"')
 endf
 
-fun! s:swindow.close()
+fun! s:swindow.close() abort
   " since we call buffer back , we dont need to remove buffername
   " silent 0f
   redraw
