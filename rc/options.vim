@@ -3,7 +3,7 @@
 
 let s:env = VimrcEnvironment()
 
-let mapleader = ","
+let mapleader = ','
 let maplocalleader = "\\"
 
 " Basic

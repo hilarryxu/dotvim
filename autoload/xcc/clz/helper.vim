@@ -13,7 +13,7 @@ fun! s:Help.reg(brief, fulltext, show_brief) abort
   let b:help_fulltext = "Press ? To Hide Help\n" . a:fulltext
   let b:help_fulltext_height = 0
 
-  nmap <buffer><script> ? :call <SID>toggle_fulltext()<CR>
+  nmap <buffer><script><silent> ? :call <SID>toggle_fulltext()<CR>
 
   if b:help_show_brief_on
     call s:Help.show_brief()

@@ -11,6 +11,7 @@ if s:env.has_python
   nnoremap <Leader>fr :<C-u>LeaderfMru<CR>
   nnoremap <Leader>fl :<C-u>LeaderfLine<CR>
   nnoremap <Leader>fL :<C-u>LeaderfLineAll<CR>
+  nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
 else
   " CtrlP {{{1
   let g:ctrlp_map = ''
@@ -52,4 +53,6 @@ let g:UltiSnipsEditSplit = 'vertical'
 nmap <Leader>dd <plug>(dirvish_up)
 
 " vim-lookup {{{1
-autocmd FileType vim nnoremap <buffer><silent> <CR> :call lookup#lookup()<CR>
+augroup vimrc_plugins
+  autocmd FileType vim nnoremap <buffer><silent> <CR> :call lookup#lookup()<CR>
+augroup END
