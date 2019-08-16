@@ -1,7 +1,7 @@
 " vimrc for windows.
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/08/07
+" Updated:  2019/08/16
 "
 " This file changes a lot.
 
@@ -41,7 +41,7 @@ let $VIMHOME = s:env.path.user
 let g:vimrc_env = s:env
 
 if s:env.nvim
-  set rtp+=$HOME/.vim
+  set runtimepath+=$HOME/.vim
 endif
 
 if has('gui_running') && s:env.is_win
@@ -69,6 +69,7 @@ call s:load_rc('plugins')
 call s:load_rc('commands')
 call s:load_rc('mappings')
 call s:load_rc('autocmds')
+call s:load_rc('abbr')
 
 if filereadable(s:env.path.local_vimrc)
   execute 'source ' . s:env.path.local_vimrc
