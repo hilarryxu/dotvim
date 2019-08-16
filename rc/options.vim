@@ -1,6 +1,3 @@
-"call s:mkdir_if_needed(s:env.path.tmp)
-"call s:mkdir_if_needed(s:env.path.undo)
-
 let s:env = VimrcEnvironment()
 
 let mapleader = ','
@@ -18,7 +15,7 @@ set shortmess+=c
 set belloff+=ctrlg
 
 " Statusline
-set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+" set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 
 " Window split
 set splitright
@@ -38,8 +35,8 @@ set completeopt-=preview
 set encoding=utf-8
 set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
 set fileencoding=utf-8
-set ffs=unix,dos,mac
-set ff=unix
+set fileformats=unix,dos,mac
+set fileformat=unix
 
 " Backup
 set nobackup

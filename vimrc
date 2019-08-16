@@ -63,6 +63,7 @@ endif
 
 call s:load_rc('sensible')
 call s:load_rc('options')
+call s:load_rc('statusline')
 call s:load_rc('completion')
 call s:load_rc('plugins')
 call s:load_rc('commands')

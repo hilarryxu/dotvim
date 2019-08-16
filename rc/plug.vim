@@ -2,7 +2,7 @@ let s:env = g:vimrc_env
 
 " Enhancement
 Plug 'thinca/vim-localrc'
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
@@ -16,6 +16,8 @@ Plug 'junegunn/vim-peekaboo'
 " Plug 'fisadev/FixedTaskList.vim'
 Plug 't9md/vim-quickhl'
 " Plug 'haya14busa/incsearch.vim'
+Plug 'mtth/scratch.vim'
+Plug 'terryma/vim-expand-region'
 
 " File finder
 if s:env.has_python
