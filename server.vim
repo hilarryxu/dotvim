@@ -101,6 +101,7 @@ inoremap <C-U> <C-G>u<C-U>
 " config {{{1
 let mapleader = ","
 let maplocalleader = "\\"
+set nomodeline
 nnoremap ; :
 
 set nonumber
@@ -128,7 +129,7 @@ set smartindent
 
 " fold
 set foldmethod=marker
-set foldlevelstart=0
+set foldlevelstart=99
 nnoremap z0 zCz0
 
 " search
@@ -283,7 +284,7 @@ function! V_cmd(cmd, ...) abort
   execute '%!' cmd
 endfunction
 
-fun! V_fuzzy(input, callback, prompt) abort
+function! V_fuzzy(input, callback, prompt) abort
   if empty(s:ff_bin)
     return
   endif
@@ -331,21 +332,26 @@ fun! V_fuzzy(input, callback, prompt) abort
    redraw!
    call s:get_ff_output(l:inpath, l:outpath, a:callback, -1, v:shell_error)
   endif
-endf
+endfunction
 
-fun! s:set_arglist(paths)
+function! s:set_arglist(paths) abort
   if empty(a:paths) | return | endif
   execute "args" join(map(a:paths, 'fnameescape(v:val)'))
-endf
+endfunction
 
-fun! V_arglist_fuzzy(input_cmd)
+function! V_arglist_fuzzy(input_cmd) abort
   call V_fuzzy(a:input_cmd, 's:set_arglist', 'Choose files')
-endf
+endfunction
 
-fun! V_findfile(...)
+function! V_findfile(...) abort
   let l:dir = (a:0 > 0 ? ' '.a:1 : ' .')
   call V_arglist_fuzzy(executable('rg') ? 'rg --files'.l:dir : 'find'.l:dir.' -type f')
-endf
+endfunction
+
+function! V_buffer_only() abort
+  let bl = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  execute (bufnr('') > bl[0] ? 'confirm '.bl[0].',.-bd' : '') (bufnr('') < bl[-1] ? '|confirm .+,$bd' : '')
+endfunction
 
 function! NilStripTrailingWhitespaces()
   let _s=@/
@@ -411,7 +417,7 @@ nnoremap <Leader>bn :bnext<CR>
 nnoremap <Leader>bf :bfirst<CR>
 nnoremap <Leader>bl :blast<CR>
 nnoremap <Leader>bd :bd<CR>
-nnoremap <Leader>bk :bw<CR>
+nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
 
 " toggle
 nnoremap <silent> <Leader>tp :call NilTogglePaste()<CR>
@@ -449,7 +455,15 @@ command! -nargs=? -complete=dir FindFile call V_findfile(<q-args>)
 command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
 
 " Section: autocmds {{{1
-autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+augroup vimrc_autocmds
+  autocmd!
+  autocmd BufWritePost $MYVIMRC source $MYVIMRC
+  autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
+        \   exe "normal! g`\"" |
+        \ endif
+augroup END
 
 augroup vimrc_filetype
   autocmd!
