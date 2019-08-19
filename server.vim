@@ -336,7 +336,8 @@ endfunction
 
 function! s:set_arglist(paths) abort
   if empty(a:paths) | return | endif
-  execute 'args' join(map(a:paths, 'fnameescape(v:val)'))
+  " execute 'args' join(map(a:paths, 'fnameescape(v:val)'))
+  execute 'edit' fnameescape(a:paths[0])
 endfunction
 
 function! V_arglist_fuzzy(input_cmd) abort
