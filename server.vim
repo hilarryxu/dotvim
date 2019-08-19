@@ -8,9 +8,9 @@
 " Section: prem {{{1
 scriptencoding utf-8
 
-if &compatible
-  set nocompatible
-endif
+" if &compatible
+"   set nocompatible
+" endif
 
 " Section: sensible {{{1
 if has('autocmd')
@@ -51,9 +51,9 @@ if !&sidescrolloff
 endif
 set display+=lastline
 
-if &encoding ==# 'latin1' && has('gui_running')
-  set encoding=utf-8
-endif
+" if &encoding ==# 'latin1' && has('gui_running')
+"   set encoding=utf-8
+" endif
 
 if &listchars ==# 'eol:$'
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
@@ -99,7 +99,7 @@ endif
 inoremap <C-U> <C-G>u<C-U>
 
 " config {{{1
-let mapleader = ","
+let mapleader = ','
 let maplocalleader = "\\"
 set nomodeline
 nnoremap ; :
@@ -268,7 +268,7 @@ function! V_vim_cmd(cmd) abort
   botright 10new
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
   call append(0, split(s:capture(a:cmd), "\n"))
-  normal gg
+  normal! gg
 endfunction
 
 function! V_cmd(cmd, ...) abort
@@ -276,7 +276,7 @@ function! V_cmd(cmd, ...) abort
   if !has_key(opt, 'cwd')
     let opt['cwd'] = fnameescape(expand('%:p:h'))
   endif
-  let cmd = join(map(a:cmd, 'v:val !~# "\\v^[%#<]" || expand(v:val) == "" ? v:val : shellescape(expand(v:val))'))
+  let cmd = join(map(a:cmd, 'v:val !~# "\\v^[%#<]" || expand(v:val) ==# "" ? v:val : shellescape(expand(v:val))'))
   execute get(opt, 'pos', 'botright') 'new'
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
   nnoremap <buffer> q <c-w>c
@@ -292,8 +292,8 @@ function! V_fuzzy(input, callback, prompt) abort
   let l:ff_cmds = {
         \ 'fzf':     "|fzf -m --height 15 --prompt '".a:prompt."> ' 2>/dev/tty",
         \ 'fzy':     "|fzy --lines=15 --prompt='".a:prompt."> ' 2>/dev/tty",
-        \ 'pick':    "|pick -X",
-        \ 'selecta': "|selecta 2>/dev/tty",
+        \ 'pick':    '|pick -X',
+        \ 'selecta': '|selecta 2>/dev/tty',
         \ 'sk':      "|sk -m --height 15 --prompt '".a:prompt."> '"
         \ }
 
@@ -311,21 +311,21 @@ function! V_fuzzy(input, callback, prompt) abort
   if !has('gui_running') && executable('tput') && filereadable('/dev/tty')
     let l:output = s:systemlist(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; ' . l:cmd, &lines))
     redraw!
-    silent! call delete(a:inpath)
+    silent! call delete(l:inpath)
     call function(a:callback)(l:output)
     return
   endif
 
   let l:outpath = tempname()
-  let l:cmd .= " >" . fnameescape(l:outpath)
+  let l:cmd .= ' >' . fnameescape(l:outpath)
 
   if has('terminal')
     botright 15split
     call term_start([&shell, &shellcmdflag, l:cmd], {
-          \ "term_name": a:prompt,
-          \ "curwin": 1,
-          \ "term_finish": "close",
-          \ "exit_cb": function('s:get_ff_output', [l:inpath, l:outpath, a:callback])
+          \ 'term_name': a:prompt,
+          \ 'curwin': 1,
+          \ 'term_finish': 'close',
+          \ 'exit_cb': function('s:get_ff_output', [l:inpath, l:outpath, a:callback])
           \ })
   else
    silent execute '!' . l:cmd
@@ -336,7 +336,7 @@ endfunction
 
 function! s:set_arglist(paths) abort
   if empty(a:paths) | return | endif
-  execute "args" join(map(a:paths, 'fnameescape(v:val)'))
+  execute 'args' join(map(a:paths, 'fnameescape(v:val)'))
 endfunction
 
 function! V_arglist_fuzzy(input_cmd) abort
@@ -355,8 +355,8 @@ endfunction
 
 function! NilStripTrailingWhitespaces()
   let _s=@/
-  let l = line(".")
-  let c = col(".")
+  let l = line('.')
+  let c = col('.')
   %s/\s\+$//e
   let @/=_s
   call cursor(l, c)
@@ -365,15 +365,15 @@ endfunction
 function! NilTogglePaste()
   if (&paste == 1)
     set nopaste
-    echo "Paste: nopaste"
+    echo 'Paste: nopaste'
   else
     set paste
-    echo "Paste: paste"
+    echo 'Paste: paste'
   endif
 endfunction
 
 function! NilToggleBackground()
-  if &background == "light"
+  if &background ==# 'light'
     set background=dark
   else
     set background=light
@@ -463,6 +463,7 @@ augroup vimrc_autocmds
         \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
         \   exe "normal! g`\"" |
         \ endif
+  autocmd ColorScheme * call matchadd('Todo', '\W\zs\(NOTICE\|WARNING\|DANGER\)')
 augroup END
 
 augroup vimrc_filetype
@@ -471,7 +472,6 @@ augroup vimrc_filetype
 augroup END
 
 " color {{{1
-autocmd ColorScheme * call matchadd('Todo', '\W\zs\(NOTICE\|WARNING\|DANGER\)')
 
 " Find out to which highlight-group a particular keyword/symbol belongs
 command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
