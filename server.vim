@@ -395,6 +395,8 @@ endfunction
 
 " find/filter
 nnoremap <silent> <Leader>ff :<C-u>FindFile<CR>
+nnoremap <Leader>fb :<C-u>ls<CR>:buffer<Space>
+nnoremap <silent> <Leader>fr :<C-u>call V_arglist_fuzzy(v:oldfiles)<CR>
 
 " tab
 nnoremap <Leader>an :tabn<CR>
