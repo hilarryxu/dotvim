@@ -353,6 +353,19 @@ function! V_buffer_only() abort
   execute (bufnr('') > bl[0] ? 'confirm '.bl[0].',.-bd' : '') (bufnr('') < bl[-1] ? '|confirm .+,$bd' : '')
 endfunction
 
+function! s:set_colorscheme(colors) abort
+  execute 'colorscheme' a:colors[0]
+endfunction
+
+let s:colors = []
+
+function! V_choose_colorscheme() abort
+  if empty(s:colors)
+    let s:colors = map(globpath(&runtimepath, "colors/*.vim", 0, 1) , 'fnamemodify(v:val, ":t:r")')
+  endif
+  call V_fuzzy(s:colors, 's:set_colorscheme', 'Choose colorscheme')
+endfunction
+
 function! NilStripTrailingWhitespaces()
   let _s=@/
   let l = line('.')
@@ -393,6 +406,7 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
+" <Tab>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>\<C-y>" : "\<Tab>"
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
@@ -419,17 +433,26 @@ nnoremap <Leader>bl :blast<CR>
 nnoremap <Leader>bd :bd<CR>
 nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
 
-" toggle
-nnoremap <silent> <Leader>tp :call NilTogglePaste()<CR>
-nnoremap <silent> <Leader>tb :call NilToggleBackground()<CR>
+" option
+nnoremap <silent> <Leader>op :call NilTogglePaste()<CR>
+nnoremap <silent> <Leader>ob :call NilToggleBackground()<CR>
+nnoremap <silent> <Leader>on :<C-u>setlocal number!<CR>
+
+" view
+nnoremap <silent> <Leader>vc :<C-u>call V_choose_colorscheme()<CR>
+nnoremap <silent> <Leader>vm :<C-u>marks<CR>
+nnoremap <silent> <Leader>vr :<C-u>registers<CR>
+nnoremap <silent> <Leader>vs :<C-u>let &laststatus=2-&laststatus<CR>
+nnoremap <silent> <Leader>vl :<C-u>botright lopen<CR>
+nnoremap <silent> <Leader>vq :<C-u>botright copen<CR>
 
 " stuff
 map <silent> <leader>ee :e $HOME/_vimrc<cr>
 nnoremap <silent> <Leader>ss :call NilStripTrailingWhitespaces()<CR>
 nnoremap <Leader>nh :nohlsearch<CR>
 " nmap ? /\<\><Left><Left>
-nnoremap <Leader>q :q<CR>
-nnoremap <Leader>Q :qa!<CR>
+" nnoremap <Leader>q :q<CR>
+" nnoremap <Leader>Q :qa!<CR>
 nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
 inoremap <C-g> <Esc>
 vnoremap < <gv
@@ -437,9 +460,9 @@ vnoremap > >gv
 noremap <C-g> 2<C-g>
 nnoremap gQ <Nop>
 
-noremap <silent> <Left> :bp<CR>
-noremap <silent> <Right> :bn<CR>
-noremap <silent> <Up> :bdelete<CR>
+" noremap <silent> <Left> :bp<CR>
+" noremap <silent> <Right> :bn<CR>
+" noremap <silent> <Up> :bdelete<CR>
 
 set pastetoggle=<F9>
 
@@ -455,7 +478,6 @@ command! -nargs=? -complete=dir FindFile call V_findfile(<q-args>)
 command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
 
 " Section: autocmds {{{1
-
 augroup vimrc_autocmds
   autocmd!
   autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -472,7 +494,6 @@ augroup vimrc_filetype
 augroup END
 
 " color {{{1
-
 " Find out to which highlight-group a particular keyword/symbol belongs
 command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
     \ "> trans<" . synIDattr(synID(line("."),col("."),0),"name") .
