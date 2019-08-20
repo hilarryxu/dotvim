@@ -279,7 +279,7 @@ function! V_cmd(cmd, ...) abort
   let cmd = join(map(a:cmd, 'v:val !~# "\\v^[%#<]" || expand(v:val) ==# "" ? v:val : shellescape(expand(v:val))'))
   execute get(opt, 'pos', 'botright') 'new'
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  nnoremap <buffer> q <c-w>c
+  nnoremap <buffer> q <C-w>c
   execute 'lcd' opt['cwd']
   execute '%!' cmd
 endfunction
@@ -362,7 +362,7 @@ let s:colors = []
 
 function! V_choose_colorscheme() abort
   if empty(s:colors)
-    let s:colors = map(globpath(&runtimepath, "colors/*.vim", 0, 1) , 'fnamemodify(v:val, ":t:r")')
+    let s:colors = map(globpath(&runtimepath, 'colors/*.vim', 0, 1) , 'fnamemodify(v:val, ":t:r")')
   endif
   call V_fuzzy(s:colors, 's:set_colorscheme', 'Choose colorscheme')
 endfunction
@@ -437,12 +437,12 @@ nnoremap <Leader>at :tabnew
 nnoremap <Leader>as :tab split<CR>
 
 " buffer
-nnoremap <Leader>bp :bprevious<CR>
-nnoremap <Leader>bn :bnext<CR>
-nnoremap <Leader>bf :bfirst<CR>
-nnoremap <Leader>bl :blast<CR>
-nnoremap <Leader>bd :bd<CR>
+nnoremap <silent> <Leader>bd :<C-u>bd<CR>
 nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
+nnoremap <silent> <Leader>bm :<C-u>VimCmd messages<CR>
+nnoremap <silent> <Leader>bn :<C-u>enew<CR>
+nnoremap <silent> <Leader>bs :<C-u>vnew +setlocal\ buftype=nofile\ bufhidden=wipe\ noswapfile<CR>
+nnoremap <silent> <Leader>br :<C-u>setlocal readonly!<CR>
 
 " square bracket
 nnoremap <silent> [<space> :<c-u>put!=repeat(nr2char(10),v:count1)<cr>']+1
@@ -463,6 +463,9 @@ nnoremap <silent> ]Q :<c-u>clast<cr>zz
 nnoremap <silent> [Q :<c-u>cfirst<cr>zz
 nnoremap <silent> ]t :<c-u><c-r>=v:count1<cr>tn<cr>
 nnoremap <silent> [t :<c-u><c-r>=v:count1<cr>tp<cr>
+
+" git
+nnoremap <silent> <Leader>gs :<C-u>call V_cmd(['git', 'status'])<CR>
 
 " option
 nnoremap <silent> <Leader>op :call NilTogglePaste()<CR>
