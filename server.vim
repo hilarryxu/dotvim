@@ -367,6 +367,16 @@ function! V_choose_colorscheme() abort
   call V_fuzzy(s:colors, 's:set_colorscheme', 'Choose colorscheme')
 endfunction
 
+function! V_tab_width(...) abort
+  if a:0 > 0
+    let twd = a:1 > 0 ? a:1 : 1
+    let &l:tabstop = twd
+    let &l:shiftwidth = twd
+    let &l:softtabstop = twd
+  endif
+  echo &l:tabstop
+endfunction
+
 function! NilStripTrailingWhitespaces()
   let _s=@/
   let l = line('.')
@@ -434,6 +444,26 @@ nnoremap <Leader>bl :blast<CR>
 nnoremap <Leader>bd :bd<CR>
 nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
 
+" square bracket
+nnoremap <silent> [<space> :<c-u>put!=repeat(nr2char(10),v:count1)<cr>']+1
+nnoremap <silent> ]<space> :<c-u>put=repeat(nr2char(10),v:count1)<cr>'[-1
+nnoremap <silent> [a :<c-u><c-r>=v:count1<cr>prev<cr>
+nnoremap <silent> ]a :<c-u><c-r>=v:count1<cr>next<cr>
+nnoremap <silent> ]b :<c-u><c-r>=v:count1<cr>bn<cr>
+nnoremap <silent> [b :<c-u><c-r>=v:count1<cr>bp<cr>
+nnoremap <silent> ]l :<c-u><c-r>=v:count1<cr>lnext<cr>zz
+nnoremap <silent> [l :<c-u><c-r>=v:count1<cr>lprevious<cr>zz
+nnoremap <silent> ]L :<c-u>llast<cr>zz
+nnoremap <silent> [L :<c-u>lfirst<cr>zz
+nnoremap <silent> ]n /\v^[<\|=>]{7}<cr>
+nnoremap <silent> [n ?\v^[<\|=>]{7}<cr>
+nnoremap <silent> ]q :<c-u><c-r>=v:count1<cr>cnext<cr>zz
+nnoremap <silent> [q :<c-u><c-r>=v:count1<cr>cprevious<cr>zz
+nnoremap <silent> ]Q :<c-u>clast<cr>zz
+nnoremap <silent> [Q :<c-u>cfirst<cr>zz
+nnoremap <silent> ]t :<c-u><c-r>=v:count1<cr>tn<cr>
+nnoremap <silent> [t :<c-u><c-r>=v:count1<cr>tp<cr>
+
 " option
 nnoremap <silent> <Leader>op :call NilTogglePaste()<CR>
 nnoremap <silent> <Leader>ob :call NilToggleBackground()<CR>
@@ -477,6 +507,8 @@ command! -nargs=* -complete=file Grep call V_grep(<q-args>)
 command! -nargs=? -complete=dir FindFile call V_findfile(<q-args>)
 
 command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
+
+command! -nargs=? TabWidth call V_tab_width(<args>)
 
 " Section: autocmds {{{1
 augroup vimrc_autocmds
