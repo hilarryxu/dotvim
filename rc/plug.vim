@@ -6,6 +6,7 @@ Plug 'thinca/vim-localrc'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-unimpaired'
 " Plug 'tpope/vim-eunuch'
 " Plug 'itchyny/vim-cursorword'
 " Plug 'mhinz/vim-signify'
@@ -57,6 +58,7 @@ Plug 'mhinz/vim-lookup', { 'for': 'vim' }
 
 " Python
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+Plug 'hilarryxu/vim-bundle-mako'
 
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }

@@ -58,5 +58,5 @@ augroup vimrc_plugins
 augroup END
 
 " vim-expand-region {{{1
-map K <Plug>(expand_region_expand)
-map J <Plug>(expand_region_shrink)
+" map K <Plug>(expand_region_expand)
+" map J <Plug>(expand_region_shrink)
