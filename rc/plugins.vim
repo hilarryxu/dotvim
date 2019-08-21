@@ -60,3 +60,8 @@ augroup END
 " vim-expand-region {{{1
 " map K <Plug>(expand_region_expand)
 " map J <Plug>(expand_region_shrink)
+
+" incsearch.vim {{{1
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
