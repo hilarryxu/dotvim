@@ -349,6 +349,14 @@ function! V_findfile(...) abort
   call V_arglist_fuzzy(executable('rg') ? 'rg --files'.l:dir : 'find'.l:dir.' -type f')
 endfunction
 
+function! V_buffer_close() abort
+  if winnr('$') > 1
+    close
+  else
+    bd
+  endif
+endfunction
+
 function! V_buffer_only() abort
   let bl = filter(range(1, bufnr('$')), 'buflisted(v:val)')
   execute (bufnr('') > bl[0] ? 'confirm '.bl[0].',.-bd' : '') (bufnr('') < bl[-1] ? '|confirm .+,$bd' : '')
@@ -438,6 +446,7 @@ nnoremap <Leader>as :tab split<CR>
 
 " buffer
 nnoremap <silent> <Leader>bd :<C-u>bd<CR>
+nnoremap <silent> <Leader>bc :<C-u>call V_buffer_close()<CR>
 nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
 nnoremap <silent> <Leader>bm :<C-u>VimCmd messages<CR>
 nnoremap <silent> <Leader>bn :<C-u>enew<CR>
