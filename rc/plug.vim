@@ -21,6 +21,7 @@ Plug 't9md/vim-quickhl'
 Plug 'haya14busa/incsearch.vim'
 Plug 'mtth/scratch.vim'
 Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-smooth-scroll'
 
 " File finder
 if s:env.has_python
