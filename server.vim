@@ -115,8 +115,8 @@ set wildmenu
 set complete-=i
 set completeopt=longest,menu
 let do_syntax_sel_menu=1
-set showtabline=2
-set cmdheight=2
+" set showtabline=2
+" set cmdheight=2
 
 " tab, indent
 set tabstop=2
@@ -480,6 +480,7 @@ function! s:my_cr_function()
 endfunction
 
 " find/filter
+nnoremap <silent> <C-p> :<C-u>FindFile<CR>
 nnoremap <silent> <Leader>ff :<C-u>FindFile<CR>
 nnoremap <Leader>fb :<C-u>ls<CR>:buffer<Space>
 nnoremap <silent> <Leader>fr :<C-u>call V_arglist_fuzzy(v:oldfiles)<CR>
@@ -622,6 +623,11 @@ command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
     \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
     \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
-colorscheme torte
+let s:local_vimrc = expand('~/.vim/.vimrc_local')
+if filereadable(s:local_vimrc)
+  execute 'source ' . s:local_vimrc
+else
+  colorscheme torte
+endif
 
 " vim:set et sw=2 ts=2 fdm=marker fdl=0:
