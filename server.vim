@@ -412,6 +412,35 @@ function! V_toggle_background()
   endif
 endfunction
 
+"
+" Find in quickfix/location list
+"
+function! s:jump_to_qf_entry(items) abort
+  execute 'crewind' matchstr(a:items[0], '^\s*\d\+', '')
+endfunction
+
+function! s:jump_to_loclist_entry(items) abort
+  execute 'lrewind' matchstr(a:items[0], '^\s*\d\+', '')
+endfunction
+
+function! s:find_in_qflist() abort
+  let qflist = getqflist()
+  if empty(qflist)
+    call s:warn('Quickfix list is empty')
+    return
+  endif
+  call V_fuzzy(split(execute('clist'), "\n"), 's:jump_to_qf_entry', 'Filter quickfix entry')
+endfunction
+
+function! s:find_in_loclist(winnr) abort
+  let loclist = getloclist(a:winnr)
+  if empty(loclist)
+    call s:warn('Location list is empty')
+    return
+  endif
+  call V_fuzzy(split(execute('llist'), "\n"), 's:jump_to_loclist_entry', 'Filter loclist entry')
+endfunction
+
 " git
 function! s:git(args, where) abort
   call V_cmd(['git'] + a:args, {'pos': a:where})
@@ -454,6 +483,8 @@ endfunction
 nnoremap <silent> <Leader>ff :<C-u>FindFile<CR>
 nnoremap <Leader>fb :<C-u>ls<CR>:buffer<Space>
 nnoremap <silent> <Leader>fr :<C-u>call V_arglist_fuzzy(v:oldfiles)<CR>
+nnoremap <silent> <Leader>fl :<C-u>call <SID>find_in_loclist(0)<CR>
+nnoremap <silent> <Leader>fq :<C-u>call <SID>find_in_qflist()<CR>
 
 " tab
 nnoremap <Leader>an :tabn<CR>
