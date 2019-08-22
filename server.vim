@@ -1,13 +1,11 @@
 " .vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/07/19
+" Updated:  2019/08/22
 "
 " This file changes a lot.
 
 " Section: prem {{{1
-scriptencoding utf-8
-
 " if &compatible
 "   set nocompatible
 " endif
@@ -117,6 +115,8 @@ set wildmenu
 set complete-=i
 set completeopt=longest,menu
 let do_syntax_sel_menu=1
+set showtabline=2
+set cmdheight=2
 
 " tab, indent
 set tabstop=2
@@ -153,6 +153,7 @@ set stl=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#
 " encoding
 set langmenu=zh_CN.UTF-8
 set encoding=utf-8
+scriptencoding utf-8
 set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
 set fileencoding=utf-8
 set ffs=unix,dos,mac
@@ -385,16 +386,15 @@ function! V_tab_width(...) abort
   echo &l:tabstop
 endfunction
 
-function! NilStripTrailingWhitespaces()
-  let _s=@/
-  let l = line('.')
-  let c = col('.')
-  %s/\s\+$//e
-  let @/=_s
-  call cursor(l, c)
+function! V_strip_trailing_whitespaces() abort
+  let winview = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(winview)
+  redraw
+  echomsg 'Trailing space removed!'
 endfunction
 
-function! NilTogglePaste()
+function! V_toggle_paste()
   if (&paste == 1)
     set nopaste
     echo 'Paste: nopaste'
@@ -404,7 +404,7 @@ function! NilTogglePaste()
   endif
 endfunction
 
-function! NilToggleBackground()
+function! V_toggle_background()
   if &background ==# 'light'
     set background=dark
   else
@@ -444,6 +444,18 @@ nnoremap <Leader>am :tabm
 nnoremap <Leader>at :tabnew
 nnoremap <Leader>as :tab split<CR>
 
+" window
+nnoremap <Leader>1 1<C-w>w
+nnoremap <Leader>2 2<C-w>w
+nnoremap <Leader>3 3<C-w>w
+nnoremap <Leader>4 4<C-w>w
+nnoremap <Leader>5 5<C-w>w
+nnoremap <Leader>6 6<C-w>w
+nnoremap <Leader>7 7<C-w>w
+nnoremap <Leader>8 8<C-w>w
+nnoremap <Leader>9 9<C-w>w
+nnoremap <Leader>0 10<C-w>w
+
 " buffer
 nnoremap <silent> <Leader>bd :<C-u>bd<CR>
 nnoremap <silent> <Leader>bc :<C-u>call V_buffer_close()<CR>
@@ -473,12 +485,22 @@ nnoremap <silent> [Q :<c-u>cfirst<cr>zz
 nnoremap <silent> ]t :<c-u><c-r>=v:count1<cr>tn<cr>
 nnoremap <silent> [t :<c-u><c-r>=v:count1<cr>tp<cr>
 
+" copy & paste
+nnoremap <Leader>y "xy
+vnoremap <Leader>y "xy
+nnoremap <Leader>Y "xY
+vnoremap <Leader>Y "xY
+nnoremap <Leader>p "xp
+vnoremap <Leader>p "xp
+nnoremap <Leader>P "xP
+vnoremap <Leader>P "xP
+
 " git
 nnoremap <silent> <Leader>gs :<C-u>call V_cmd(['git', 'status'])<CR>
 
 " option
-nnoremap <silent> <Leader>op :call NilTogglePaste()<CR>
-nnoremap <silent> <Leader>ob :call NilToggleBackground()<CR>
+nnoremap <silent> <Leader>op :call V_toggle_paste()<CR>
+nnoremap <silent> <Leader>ob :call V_toggle_background()<CR>
 nnoremap <silent> <Leader>on :<C-u>setlocal number!<CR>
 
 " view
@@ -489,25 +511,22 @@ nnoremap <silent> <Leader>vs :<C-u>let &laststatus=2-&laststatus<CR>
 nnoremap <silent> <Leader>vl :<C-u>botright lopen<CR>
 nnoremap <silent> <Leader>vq :<C-u>botright copen<CR>
 
+" edit
+nnoremap <silent> <Leader>ee :e $HOME/.vimrc<cr>
+nnoremap <silent> <Leader>es :call V_strip_trailing_whitespaces()<CR>
+
 " stuff
-map <silent> <leader>ee :e $HOME/_vimrc<cr>
-nnoremap <silent> <Leader>ss :call NilStripTrailingWhitespaces()<CR>
+set pastetoggle=<F9>
+nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
 nnoremap <Leader>nh :nohlsearch<CR>
 " nmap ? /\<\><Left><Left>
 " nnoremap <Leader>q :q<CR>
 " nnoremap <Leader>Q :qa!<CR>
-nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
 inoremap <C-g> <Esc>
 vnoremap < <gv
 vnoremap > >gv
 noremap <C-g> 2<C-g>
 nnoremap gQ <Nop>
-
-" noremap <silent> <Left> :bp<CR>
-" noremap <silent> <Right> :bn<CR>
-" noremap <silent> <Up> :bdelete<CR>
-
-set pastetoggle=<F9>
 
 " Section: commands {{{1
 if !(has('win32') || has('win64'))
