@@ -412,6 +412,24 @@ function! V_toggle_background()
   endif
 endfunction
 
+" git
+function! s:git(args, where) abort
+  call V_cmd(['git'] + a:args, {'pos': a:where})
+  setlocal nomodifiable
+endfunction
+
+function! s:git_diff() abort
+  let ft = getbufvar('%', '&ft')
+  let fn = expand('%:t')
+  call s:git(['show', 'HEAD:./'.fn], 'rightbelow vertical')
+  let &l:filetype = ft
+  execute 'silent file' fn '[HEAD]'
+  diffthis
+  autocmd BufWinLeave <buffer> diffoff!
+  wincmd p
+  diffthis
+endfunction
+
 " Section: mappings {{{1
 nnoremap <up> <nop>
 nnoremap <down> <nop>
@@ -496,6 +514,7 @@ nnoremap <Leader>P "xP
 vnoremap <Leader>P "xP
 
 " git
+nnoremap <silent> <Leader>gd :<C-u>call <SID>git_diff()<CR>
 nnoremap <silent> <Leader>gs :<C-u>call V_cmd(['git', 'status'])<CR>
 
 " option
