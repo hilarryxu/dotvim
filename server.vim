@@ -565,6 +565,14 @@ nnoremap <silent> <Leader>vq :<C-u>botright copen<CR>
 nnoremap <silent> <Leader>ee :e $HOME/.vimrc<cr>
 nnoremap <silent> <Leader>es :call V_strip_trailing_whitespaces()<CR>
 
+" insert pair
+inoremap <C-x>( ()<esc>i
+inoremap <C-x>[ []<esc>i
+inoremap <C-x>' ''<esc>i
+inoremap <C-x>" ""<esc>i
+inoremap <C-x>< <><esc>i
+inoremap <C-x>{ {<esc>o}<esc>ko
+
 " stuff
 set pastetoggle=<F9>
 nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
