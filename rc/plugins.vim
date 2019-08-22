@@ -75,3 +75,13 @@ noremap <silent> <C-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <C-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
 noremap <silent> <C-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
 noremap <silent> <C-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+
+" vim-python-syntax {{{1
+let g:python_highlight_builtins = 1
+let g:python_highlight_builtin_objs = 1
+let g:python_highlight_builtin_types = 1
+let g:python_highlight_builtin_funcs = 1
+
+" echodoc {{{1
+set noshowmode
+let g:echodoc#enable_at_startup = 1

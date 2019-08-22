@@ -23,6 +23,13 @@ Plug 'mtth/scratch.vim'
 Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-smooth-scroll'
 Plug 'rhysd/clever-f.vim'
+Plug 'kana/vim-textobj-user'
+" Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-function', { 'for': ['c', 'cpp', 'vim', 'java'] }
+Plug 'sgur/vim-textobj-parameter'
+Plug 'bps/vim-textobj-python', { 'for': 'python' }
+Plug 'jceb/vim-textobj-uri'
 
 " File finder
 if s:env.has_python
@@ -37,6 +44,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
 Plug 'sbdchd/neoformat'
 " Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+Plug 'Shougo/echodoc.vim'
 
 " Git
 if executable('git')
@@ -61,6 +69,7 @@ endif
 Plug 'mhinz/vim-lookup', { 'for': 'vim' }
 
 " Python
+Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'hilarryxu/vim-bundle-mako'
 
