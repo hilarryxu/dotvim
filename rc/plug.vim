@@ -45,6 +45,7 @@ Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
 Plug 'sbdchd/neoformat'
 " Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'Shougo/echodoc.vim'
+Plug 'hilarryxu/vim-dict'
 
 " Git
 if executable('git')
