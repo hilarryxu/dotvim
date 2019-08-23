@@ -341,6 +341,11 @@ function! V_fuzzy(input, callback, prompt) abort
         \ 'selecta': '|selecta 2>/dev/tty',
         \ 'sk':      "|sk -m --height 15 --prompt '".a:prompt."> '"
         \ }
+  if s:env.is_win
+    let l:ff_cmds = {
+          \ 'fzf': '|fzf -m '
+          \ }
+  endif
 
   let l:ff_cmd = l:ff_cmds[s:ff_bin]
 
@@ -365,7 +370,9 @@ function! V_fuzzy(input, callback, prompt) abort
   let l:cmd .= ' >' . fnameescape(l:outpath)
 
   if has('terminal')
-    botright 15split
+    if !s:env.is_win
+      botright 15split
+    endif
     call term_start([&shell, &shellcmdflag, l:cmd], {
           \ 'term_name': a:prompt,
           \ 'curwin': 1,
