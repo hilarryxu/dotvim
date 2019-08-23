@@ -6,9 +6,54 @@
 " This file changes a lot.
 
 " Section: prem {{{1
-" if &compatible
-"   set nocompatible
-" endif
+if &compatible
+  set nocompatible
+endif
+
+set encoding=utf-8
+scriptencoding utf-8
+
+function! VimrcEnvironment()
+  let env = {}
+  let env.is_mac = has('mac')
+  let env.is_linux = has('unix') && !has('macunix') && !has('win32unix')
+  let env.is_win = has('win32') || has('win64')
+
+  let env.nvim = has('nvim') && exists('*jobwait') && !env.is_win
+  let env.vim8 = exists('*job_start')
+  let env.timer = exists('*timer_start')
+  let env.tmux = !empty($TMUX)
+  let env.gui = has('gui_running')
+  let env.has_python = has('python') || has('python3')
+
+  let user_dir = env.is_win
+        \ ? expand('$VIM/vimfiles')
+        \ : expand('~/.vim')
+  let env.path = {
+        \   'user':        user_dir,
+        \   'plugins':     user_dir . '/plugins',
+        \   'data':        user_dir . '/data',
+        \   'local_vimrc': user_dir . '/.vimrc_local',
+        \   'tmp':         user_dir . '/tmp',
+        \   'undo':        user_dir . '/data/undo',
+        \   'plug_path':   user_dir . '/plugged',
+        \ }
+
+  return env
+endfunction
+
+let s:env = VimrcEnvironment()
+let $VIMHOME = s:env.path.user
+let g:vimrc_env = s:env
+
+if s:env.nvim
+  set runtimepath+=$HOME/.vim
+endif
+
+if has('gui_running') && s:env.is_win
+  let $LANG = 'en'
+  set langmenu=en
+endif
 
 " Section: sensible {{{1
 if has('autocmd')
@@ -151,9 +196,8 @@ set list listchars=tab:\|\ ,trail:.
 set stl=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 
 " encoding
-set langmenu=zh_CN.UTF-8
-set encoding=utf-8
-scriptencoding utf-8
+" set langmenu=zh_CN.UTF-8
+" set encoding=utf-8
 set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
 set fileencoding=utf-8
 set ffs=unix,dos,mac
@@ -623,11 +667,15 @@ command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
     \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
     \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
-let s:local_vimrc = expand('~/.vim/.vimrc_local')
-if filereadable(s:local_vimrc)
-  execute 'source ' . s:local_vimrc
+if filereadable(s:env.path.local_vimrc)
+  execute 'source ' . s:env.path.local_vimrc
 else
   colorscheme torte
+endif
+
+if has('gui_running') && s:env.is_win
+  source $VIMRUNTIME/delmenu.vim
+  source $VIMRUNTIME/menu.vim
 endif
 
 " vim:set et sw=2 ts=2 fdm=marker fdl=0:
