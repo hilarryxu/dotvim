@@ -529,6 +529,7 @@ endf
 
 
 fun! xcc#clz#treemenu#load()
+  return 1
 endf
 
 

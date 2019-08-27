@@ -71,9 +71,10 @@ fun! s:Help.hide_fulltext() abort
   endif
 endf
 
-fun! xcc#clz#helper#load() abort
+function! xcc#clz#helper#load() abort
   if !exists('g:Help')
     let g:Help = copy(s:Help)
   endif
-endf
+  return g:Help
+endfunction
 " }}}

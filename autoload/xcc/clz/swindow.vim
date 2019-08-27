@@ -169,6 +169,11 @@ fun! s:swindow.close() abort
   redraw
 endf
 
-let xcc#clz#swindow#class = s:swindow
+let g:xcc#clz#swindow#class = s:swindow
+
+function! xcc#clz#swindow#new() abort
+  let thiz = copy(g:xcc#clz#swindow#class)
+  return thiz
+endfunction
 
 " ==== Window Manager =========================================== }}}
