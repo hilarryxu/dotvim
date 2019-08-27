@@ -1,3 +1,13 @@
+augroup vimrc_autocmds
+  autocmd!
+  autocmd BufWritePost $MYVIMRC source $MYVIMRC
+  autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
+        \   exe "normal! g`\"" |
+        \ endif
+  autocmd ColorScheme * call matchadd('Todo', '\W\zs\(NOTICE\|WARNING\|DANGER\)')
+augroup END
+
 augroup vimrc_filetype
   autocmd!
   autocmd FileType vim setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker

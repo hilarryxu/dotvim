@@ -618,12 +618,13 @@ nnoremap <silent> <Leader>ee :e $HOME/.vimrc<cr>
 nnoremap <silent> <Leader>es :call V_strip_trailing_whitespaces()<CR>
 
 " insert pair
-inoremap <C-x>( ()<esc>i
-inoremap <C-x>[ []<esc>i
-inoremap <C-x>' ''<esc>i
-inoremap <C-x>" ""<esc>i
-inoremap <C-x>< <><esc>i
-inoremap <C-x>{ {<esc>o}<esc>ko
+inoremap <C-x>( ()<Esc>i
+inoremap <C-x>9 ()<Esc>i
+inoremap <C-x>[ []<Esc>i
+inoremap <C-x>' ''<Esc>i
+inoremap <C-x>" ""<Esc>i
+inoremap <C-x>< <><Esc>i
+inoremap <C-x>{ {<Esc>o}<Esc>ko
 
 " stuff
 set pastetoggle=<F9>

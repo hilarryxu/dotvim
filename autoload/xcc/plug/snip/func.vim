@@ -54,7 +54,7 @@ function! xcc#plug#snip#func#comment_block(repeat) abort
   call s:snip(complete)
 endfunction
 
-function! xcc#plug#snip#func#modeline(repeat) abort
+function! xcc#plug#snip#func#modeline() abort
   let text = '" vim: set '
   let text .= (&l:et)? 'et ' : 'noet '
   let text .= 'fenc='. (&l:fenc) . ' '
