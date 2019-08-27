@@ -116,7 +116,7 @@ endf
 fun! g:MenuBuffer.findWindow(switch)
   let win = bufwinnr( self.buf_nr )
   if win != -1 && a:switch
-    " exec (win-1) . 'wincmd w'
+    exec win . 'wincmd w'
   endif
   return win
 endf

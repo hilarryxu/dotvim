@@ -1,6 +1,3 @@
-" Author:   Cornelius
-" Version:  0.1
-
 call xcc#clz#helper#load()
 call xcc#clz#treemenu#load()
 
@@ -18,9 +15,9 @@ fun! s:OptionMenuBufferToggle()
   setlocal buftype=nofile noswapfile bufhidden=wipe
   setlocal nobuflisted nowrap cursorline nonumber fdc=0
 
-  cal g:Help.reg("Option Menu",join([
-        \" <Enter> - execute item",
-        \],"\n"),1)
+  cal g:Help.reg('Option Menu',join([
+        \' <Enter> - execute item',
+        \],"\n"),0)
 
   let m = g:MenuBuffer.create({ 'rootLabel': 'Option' , 'buf_nr': bufnr('%') })
   cal m.createChild({ 
@@ -65,4 +62,4 @@ endf
 
 com! OptionMenu  :cal s:OptionMenuBufferToggle()
 
-nmap <leader>o :OptionMenu<CR>
+nmap <Leader>om :OptionMenu<CR>
