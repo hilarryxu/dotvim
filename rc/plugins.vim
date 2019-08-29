@@ -85,3 +85,31 @@ let g:python_highlight_builtin_funcs = 1
 " echodoc {{{1
 set noshowmode
 let g:echodoc#enable_at_startup = 1
+
+" preview.vim {{{1
+noremap <silent><M-;> :PreviewTag<CR>
+noremap <silent><M-:> :PreviewClose<CR>
+noremap <silent><Tab>; :PreviewGoto edit<CR>
+noremap <silent><Tab>: :PreviewGoto tabe<CR>
+
+nnoremap <silent><M-a> :PreviewSignature<CR>
+inoremap <silent><M-a> <C-\><C-o>:PreviewSignature<CR>
+
+noremap <M-u> :PreviewScroll -1<CR>
+noremap <M-d> :PreviewScroll +1<CR>
+inoremap <M-u> <C-\><C-o>:PreviewScroll -1<CR>
+inoremap <M-d> <C-\><C-o>:PreviewScroll +1<CR>
+
+function! s:quickfix_keymap() abort
+  if &buftype !=# 'quickfix'
+    return
+  endif
+  nnoremap <silent><buffer> p :PreviewQuickfix<CR>
+  nnoremap <silent><buffer> P :PreviewClose<CR>
+  nnoremap <silent><buffer> q :close<CR>
+  setlocal nonumber
+endfunc
+
+augroup vimrc_plugins
+  autocmd FileType qf call s:quickfix_keymap()
+augroup END

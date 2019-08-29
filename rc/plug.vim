@@ -46,6 +46,7 @@ Plug 'sbdchd/neoformat'
 " Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'Shougo/echodoc.vim'
 Plug 'hilarryxu/vim-dict'
+Plug 'skywind3000/vim-preview'
 
 " Git
 if executable('git')
