@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/08/22
+" Updated:  2019/09/04
 "
 " This file changes a lot.
 
@@ -141,10 +141,10 @@ endif
 
 inoremap <C-U> <C-G>u<C-U>
 
-" config {{{1
+" Section: config {{{1
 let mapleader = ','
 let maplocalleader = "\\"
-set nomodeline
+set modeline
 nnoremap ; :
 
 set nonumber
@@ -492,7 +492,9 @@ function! s:find_in_loclist(winnr) abort
   call V_fuzzy(split(execute('llist'), "\n"), 's:jump_to_loclist_entry', 'Filter loclist entry')
 endfunction
 
+"
 " git
+"
 function! s:git(args, where) abort
   call V_cmd(['git'] + a:args, {'pos': a:where})
   setlocal nomodifiable
@@ -614,7 +616,7 @@ nnoremap <silent> <Leader>vl :<C-u>botright lopen<CR>
 nnoremap <silent> <Leader>vq :<C-u>botright copen<CR>
 
 " edit
-nnoremap <silent> <Leader>ee :e $HOME/.vimrc<cr>
+nnoremap <silent> <Leader>ee :e $HOME/.vimrc<CR>
 nnoremap <silent> <Leader>es :call V_strip_trailing_whitespaces()<CR>
 
 " insert pair
@@ -626,9 +628,9 @@ inoremap <C-x>" ""<Esc>i
 inoremap <C-x>< <><Esc>i
 inoremap <C-x>{ {<Esc>o}<Esc>ko
 
-" stuff
+" other stuff
 set pastetoggle=<F9>
-nnoremap <silent> cd :<c-u>cd %:h \| pwd<cr>
+nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
 nnoremap <Leader>nh :nohlsearch<CR>
 " nmap ? /\<\><Left><Left>
 " nnoremap <Leader>q :q<CR>
@@ -640,9 +642,15 @@ noremap <C-g> 2<C-g>
 nnoremap gQ <Nop>
 
 " Section: commands {{{1
-if !(has('win32') || has('win64'))
+if !s:env.is_win
   command! W w !sudo tee % > /dev/null
 endif
+
+" Find out to which highlight-group a particular keyword/symbol belongs
+command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
+    \ "> trans<" . synIDattr(synID(line("."),col("."),0),"name") .
+    \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
+    \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
 command! -nargs=1 Search call V_search_in_buffer(<q-args>)
 command! -nargs=* -complete=file Grep call V_grep(<q-args>)
@@ -655,7 +663,6 @@ command! -nargs=? TabWidth call V_tab_width(<args>)
 " Section: autocmds {{{1
 augroup vimrc_autocmds
   autocmd!
-  autocmd BufWritePost $MYVIMRC source $MYVIMRC
   autocmd BufReadPost *
         \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
         \   exe "normal! g`\"" |
@@ -668,13 +675,7 @@ augroup vimrc_filetype
   autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab omnifunc=
 augroup END
 
-" color {{{1
-" Find out to which highlight-group a particular keyword/symbol belongs
-command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
-    \ "> trans<" . synIDattr(synID(line("."),col("."),0),"name") .
-    \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
-    \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
-
+" Section: local_vimrc {{{1
 if filereadable(s:env.path.local_vimrc)
   execute 'source ' . s:env.path.local_vimrc
 else
