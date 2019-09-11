@@ -1,5 +1,11 @@
 let s:env = g:vimrc_env
 
+" Coc {{{1
+" CocInstall coc-lists
+" CocInstall coc-json
+" CocInstall coc-python
+" CocInstall coc-ultisnips
+
 if s:env.has_python
   " LeaderF {{{1
   let g:Lf_UseVersionControlTool = 0

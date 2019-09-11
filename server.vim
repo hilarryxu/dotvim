@@ -145,7 +145,6 @@ inoremap <C-U> <C-G>u<C-U>
 let mapleader = ','
 let maplocalleader = "\\"
 set modeline
-nnoremap ; :
 
 set nonumber
 set backspace=indent,eol,start

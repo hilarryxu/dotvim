@@ -54,7 +54,9 @@ if executable('git')
 endif
 
 " Completion
-if s:env.has_python
+if s:env.nvim
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+elseif s:env.has_python
   Plug 'maralla/completor.vim'
   " Plug 'Shougo/neco-vim' | Plug 'maralla/completor-necovim'
 endif

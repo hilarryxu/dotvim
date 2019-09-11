@@ -2,5 +2,6 @@ bundle/
 plugged/
 tmp/
 data/
+sessions/
 
 .vimrc_local
