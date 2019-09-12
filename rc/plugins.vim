@@ -1,12 +1,69 @@
 let s:env = g:vimrc_env
 
 " Coc {{{1
-" CocInstall coc-lists
-" CocInstall coc-json
-" CocInstall coc-python
-" CocInstall coc-snippets
-" CocInstall coc-bookmark
 if HasPlug('coc.nvim')
+  let g:coc_global_extensions = [
+        \ 'coc-lists',
+        \ 'coc-json',
+        \ 'coc-snippets',
+        \ 'coc-python',
+        \ 'coc-bookmark',
+        \ 'coc-yank',
+        \ 'coc-git'
+        \ ]
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+
+  function! s:show_documentation() abort
+    if &filetype ==# 'vim'
+      execute 'h '.expand('<cword>')
+    else
+      call CocAction('doHover')
+    endif
+  endfunction
+
+  imap <C-j> <Plug>(coc-snippets-expand-jump)
+  inoremap <silent><expr> <Tab>
+        \ pumvisible() ? "\<C-n>" :
+        \ <SID>check_back_space() ? "\<Tab>" :
+        \ coc#refresh()
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+  nmap <Leader>rn <Plug>(coc-rename)
+
+  nmap [g <Plug>(coc-git-prevchunk)
+  nmap ]g <Plug>(coc-git-nextchunk)
+  nmap gs <Plug>(coc-git-chunkinfo)
+  nmap gb <Plug>(coc-git-commit)
+  nmap <silent> [c <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]c <Plug>(coc-diagnostic-next)
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gy <Plug>(coc-type-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
+  nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+  nnoremap <silent> <Space>h  :<C-u>CocList helptags<cr>
+  nnoremap <silent> <Space>g  :<C-u>CocList gstatus<CR>
+  nnoremap <silent> <Space>b  :<C-u>CocList buffers<cr>
+  nnoremap <silent> <Space>y  :<C-u>CocList yank<cr>
+  nnoremap <silent> <Space>u  :<C-u>CocList snippets<cr>
+  nnoremap <silent> <Space>w  :execute 'CocList -A -I --normal --input='.expand('<cword>').' words -w'<CR>
+  nnoremap <silent> <Space>l  :<C-u>CocList locationlist<CR>
+  nnoremap <silent> <Space>q  :<C-u>CocList quickfix<CR>
+  nnoremap <silent> <Space>a  :<C-u>CocList diagnostics<cr>
+  nnoremap <silent> <Space>e  :<C-u>CocList extensions<cr>
+  nnoremap <silent> <Space>c  :<C-u>CocList commands<cr>
+  nnoremap <silent> <Space>o  :<C-u>CocList outline<cr>
+  nnoremap <silent> <Space>s  :<C-u>CocList symbols<cr>
+  nnoremap <silent> <Space>r  :<C-u>CocList mru<cr>
+  nnoremap <silent> <Space>f  :<C-u>CocList files<cr>
+  nnoremap <silent> <Space>j  :<C-u>CocNext<CR>
+  nnoremap <silent> <Space>k  :<C-u>CocPrev<CR>
+  nnoremap <silent> <Space>z  :<C-u>CocListResume<CR>
 endif
 
 " LeaderF {{{1
