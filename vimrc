@@ -49,8 +49,12 @@ if has('gui_running') && s:env.is_win
   set langmenu=en
 endif
 
-function! s:load_rc(name)
+function! s:load_rc(name) abort
   execute 'source ' . s:env.path.user . '/rc/' . a:name . '.vim'
+endfunction
+
+function! HasPlug(name) abort
+  return index(g:plugs_order, a:name) >= 0
 endfunction
 
 if s:env.is_win

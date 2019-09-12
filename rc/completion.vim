@@ -17,11 +17,17 @@ if s:env.nvim
   " let g:completor_auto_trigger = 0
   " inoremap <expr> <Tab> Tab_Or_Complete()
   "
-  inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  function! s:my_cr_function()
-    return pumvisible() ? "\<C-y>" : "\<CR>"
-  endfunction
+
+  if HasPlug('coc.nvim')
+  endif
+
+  if HasPlug('completor.vim')
+    inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    function! s:my_cr_function()
+      return pumvisible() ? "\<C-y>" : "\<CR>"
+    endfunction
+  endif
 elseif s:env.is_win
   let g:neocomplete#enable_at_startup = 1
   let g:neocomplete#enable_smart_case = 1

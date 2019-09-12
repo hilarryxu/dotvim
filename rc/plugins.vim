@@ -6,9 +6,11 @@ let s:env = g:vimrc_env
 " CocInstall coc-python
 " CocInstall coc-snippets
 " CocInstall coc-bookmark
+if HasPlug('coc.nvim')
+endif
 
-if s:env.has_python
-  " LeaderF {{{1
+" LeaderF {{{1
+if HasPlug('LeaderF')
   let g:Lf_UseVersionControlTool = 0
   let g:Lf_DefaultExternalTool = 'rg'
 
@@ -19,30 +21,7 @@ if s:env.has_python
   nnoremap <Leader>fl :<C-u>LeaderfLine<CR>
   nnoremap <Leader>fL :<C-u>LeaderfLineAll<CR>
   nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
-else
-  " CtrlP {{{1
-  let g:ctrlp_map = ''
 endif
-
-" Airline {{{1
-" let g:airline_powerline_fonts = 1
-" let g:airline_theme = 'iceberg'
-" 
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#buffer_idx_mode = 1
-" let g:airline#extensions#tabline#fnamemod = ':t'
-" let g:airline#extensions#tabline#left_sep = ' '
-" let g:airline#extensions#tabline#left_alt_sep = '|'
-
-" nmap <Space>1 <Plug>AirlineSelectTab1
-" nmap <Space>2 <Plug>AirlineSelectTab2
-" nmap <Space>3 <Plug>AirlineSelectTab3
-" nmap <Space>4 <Plug>AirlineSelectTab4
-" nmap <Space>5 <Plug>AirlineSelectTab5
-" nmap <Space>6 <Plug>AirlineSelectTab6
-" nmap <Space>7 <Plug>AirlineSelectTab7
-" nmap <Space>8 <Plug>AirlineSelectTab8
-" nmap <Space>9 <Plug>AirlineSelectTab9
 
 " Neomake {{{1
 call neomake#configure#automake('rw', 1000)
@@ -50,7 +29,7 @@ let g:neomake_python_enabled_makers = ['flake8']
 " let g:neomake_open_list = 2
 
 " Ultisnips {{{1
-if 0
+if HasPlug('ultisnips')
   let g:UltiSnipsNoPythonWarning = 1
   let g:UltiSnipsExpandTrigger = '<C-j>'
   let g:UltiSnipsJumpForwardTrigger = '<C-j>'

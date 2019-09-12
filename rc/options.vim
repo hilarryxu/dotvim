@@ -1,4 +1,4 @@
-let s:env = VimrcEnvironment()
+let s:env = g:vimrc_env
 
 let mapleader = ','
 let maplocalleader = "\\"
