@@ -4,7 +4,8 @@ let s:env = g:vimrc_env
 " CocInstall coc-lists
 " CocInstall coc-json
 " CocInstall coc-python
-" CocInstall coc-ultisnips
+" CocInstall coc-snippets
+" CocInstall coc-bookmark
 
 if s:env.has_python
   " LeaderF {{{1
@@ -49,11 +50,13 @@ let g:neomake_python_enabled_makers = ['flake8']
 " let g:neomake_open_list = 2
 
 " Ultisnips {{{1
-let g:UltiSnipsNoPythonWarning = 1
-let g:UltiSnipsExpandTrigger = '<C-j>'
-let g:UltiSnipsJumpForwardTrigger = '<C-j>'
-let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
-let g:UltiSnipsEditSplit = 'vertical'
+if 0
+  let g:UltiSnipsNoPythonWarning = 1
+  let g:UltiSnipsExpandTrigger = '<C-j>'
+  let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+  let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+  let g:UltiSnipsEditSplit = 'vertical'
+endif
 
 " Dirvish {{{1
 nmap <Leader>dd <plug>(dirvish_up)

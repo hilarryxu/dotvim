@@ -63,7 +63,8 @@ endif
 
 " Snippet
 if s:env.has_python
-  Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+  " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+  Plug 'honza/vim-snippets'
 else
   Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'

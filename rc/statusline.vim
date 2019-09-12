@@ -3,7 +3,7 @@ scriptencoding utf-8
 function! MyStatusLine()
   return s:GetPaste()
         \. '%4*%{MyStatusGit()}%*'
-        \. '%5*%{MyStatusGitChanges()}%* %{MyStatusAsyncrun()} '
+        \. '%5*%{MyStatusGitChanges()}%* %{MyStatusCoc()} '
         \. "%6*%{get(b:, 'coc_current_function', '')}%*"
         \. ' %f %{MyStatusModifySymbol()}'
         \. ' %{MyStatusReadonly()}'
@@ -28,6 +28,13 @@ endfunction
 function! MyStatusReadonly()
   if !&readonly | return '' | endif
   return '  '
+endfunction
+
+function! MyStatusCoc()
+  if get(g:, 'did_coc_loaded', 0)
+    return coc#status()
+  endif
+  return ''
 endfunction
 
 function! MyStatusAsyncrun()
