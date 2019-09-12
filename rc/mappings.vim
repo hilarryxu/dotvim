@@ -25,6 +25,7 @@ cnoremap <C-e> <End>
 cnoremap <C-f> <C-d>
 cnoremap <C-b> <Left>
 cnoremap <C-_> <C-k>
+cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR>
 
 " Window move
 " nnoremap <C-l> <C-w>l
@@ -33,9 +34,17 @@ cnoremap <C-_> <C-k>
 " nnoremap <C-k> <C-w>k
 
 " Buffer
-nnoremap H :bp<CR>
-nnoremap L :bn<CR>
 nnoremap <Leader>bq :bp <BAR> bd #<CR>
+
+" Tab
+nmap <Leader>1 1gt
+nmap <Leader>2 2gt
+nmap <Leader>3 3gt
+nmap <Leader>4 4gt
+nmap <Leader>5 5gt
+nmap <Leader>6 6gt
+nmap <Leader>7 7gt
+nmap <Leader>8 8gt
 
 " Inser pairs
 inoremap <C-x>( ()<Esc>i

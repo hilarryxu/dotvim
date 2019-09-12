@@ -5,6 +5,13 @@ command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
       \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
 command! -complete=file -nargs=* Nrun :call s:Terminal(<q-args>)
+command! -nargs=0 Save :call s:do_save()
+command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 Q :qa!
+command! -nargs=0 Cd :call s:git_cd()
+command! -nargs=0 Commits :CocList commits
+command! -nargs=+ -complete=custom,s:grep_args Rg :exe 'CocList grep ' . <q-args>
+
 
 function! s:Terminal(cmd)
   execute 'belowright 5new'
@@ -21,4 +28,21 @@ function! s:OnExit(job_id, status, event) dict
   if a:status == 0
     execute 'silent! bd! '.self.buffer_nr
   endif
+endfunction
+
+function! s:do_save() abort
+  let file = $HOME . '/tmp.log'
+  let content = getline(1, '$')
+  call writefile(content, file)
+endfunction
+
+function! s:git_cd() abort
+  if empty(get(b:, 'git_dir', '')) | return | endif
+  execute 'cd ' . fnamemodify(b:git_dir, ':h')
+endfunction
+
+function! s:grep_args(...) abort
+  let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+        \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+  return join(list, "\n")
 endfunction
