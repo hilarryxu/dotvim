@@ -46,24 +46,24 @@ if HasPlug('coc.nvim')
   nmap <silent> gr <Plug>(coc-references)
   nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-  nnoremap <silent> <Space>h  :<C-u>CocList helptags<cr>
-  nnoremap <silent> <Space>g  :<C-u>CocList gstatus<CR>
-  nnoremap <silent> <Space>b  :<C-u>CocList buffers<cr>
-  nnoremap <silent> <Space>y  :<C-u>CocList yank<cr>
-  nnoremap <silent> <Space>u  :<C-u>CocList snippets<cr>
-  nnoremap <silent> <Space>w  :execute 'CocList -A -I --normal --input='.expand('<cword>').' words -w'<CR>
-  nnoremap <silent> <Space>l  :<C-u>CocList locationlist<CR>
-  nnoremap <silent> <Space>q  :<C-u>CocList quickfix<CR>
-  nnoremap <silent> <Space>a  :<C-u>CocList diagnostics<cr>
-  nnoremap <silent> <Space>e  :<C-u>CocList extensions<cr>
-  nnoremap <silent> <Space>c  :<C-u>CocList commands<cr>
-  nnoremap <silent> <Space>o  :<C-u>CocList outline<cr>
-  nnoremap <silent> <Space>s  :<C-u>CocList symbols<cr>
-  nnoremap <silent> <Space>r  :<C-u>CocList mru<cr>
-  nnoremap <silent> <Space>f  :<C-u>CocList files<cr>
-  nnoremap <silent> <Space>j  :<C-u>CocNext<CR>
-  nnoremap <silent> <Space>k  :<C-u>CocPrev<CR>
-  nnoremap <silent> <Space>z  :<C-u>CocListResume<CR>
+  nnoremap <silent> <Leader>ch  :<C-u>CocList helptags<cr>
+  nnoremap <silent> <Leader>cg  :<C-u>CocList gstatus<CR>
+  nnoremap <silent> <Leader>cb  :<C-u>CocList buffers<cr>
+  nnoremap <silent> <Leader>cy  :<C-u>CocList yank<cr>
+  nnoremap <silent> <Leader>cu  :<C-u>CocList snippets<cr>
+  nnoremap <silent> <Leader>cw  :execute 'CocList -A -I --normal --input='.expand('<cword>').' words -w'<CR>
+  nnoremap <silent> <Leader>cl  :<C-u>CocList locationlist<CR>
+  nnoremap <silent> <Leader>cq  :<C-u>CocList quickfix<CR>
+  nnoremap <silent> <Leader>ca  :<C-u>CocList diagnostics<cr>
+  nnoremap <silent> <Leader>ce  :<C-u>CocList extensions<cr>
+  nnoremap <silent> <Leader>cc  :<C-u>CocList commands<cr>
+  nnoremap <silent> <Leader>co  :<C-u>CocList outline<cr>
+  nnoremap <silent> <Leader>cs  :<C-u>CocList symbols<cr>
+  nnoremap <silent> <Leader>cr  :<C-u>CocList mru<cr>
+  nnoremap <silent> <Leader>cf  :<C-u>CocList files<cr>
+  nnoremap <silent> <Leader>cj  :<C-u>CocNext<CR>
+  nnoremap <silent> <Leader>ck  :<C-u>CocPrev<CR>
+  nnoremap <silent> <Leader>cz  :<C-u>CocListResume<CR>
 endif
 
 " LeaderF {{{1

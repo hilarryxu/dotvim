@@ -1,6 +1,6 @@
 let s:env = g:vimrc_env
 
-let mapleader = ','
+let mapleader = "\<Space>"
 let maplocalleader = "\\"
 
 " Basic
