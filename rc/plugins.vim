@@ -78,6 +78,7 @@ if HasPlug('LeaderF')
   nnoremap <Leader>fl :<C-u>LeaderfLine<CR>
   nnoremap <Leader>fL :<C-u>LeaderfLineAll<CR>
   nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
+  nnoremap <Leader>ft :<C-u>LeaderfBufTag<CR>
 endif
 
 " Neomake {{{1
