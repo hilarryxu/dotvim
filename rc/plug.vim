@@ -93,6 +93,11 @@ Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'hilarryxu/vim-bundle-mako'
 
+" Nim
+if s:env.nvim
+  Plug 'alaviss/nim.nvim'
+endif
+
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'docunext/closetag.vim', { 'for': 'html' }
