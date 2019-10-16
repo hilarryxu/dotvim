@@ -85,6 +85,9 @@ endif
 " Snippet
 Plug 'honza/vim-snippets'
 
+" txt
+Plug 'markabe/vim-txt'
+
 " Vim
 Plug 'mhinz/vim-lookup', { 'for': 'vim' }
 
@@ -103,6 +106,11 @@ Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'docunext/closetag.vim', { 'for': 'html' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
+
+" gdb
+if s:env.nvim
+  Plug 'cpiger/NeoDebug'
+endif
 
 " Colorscheme
 " Plug 'cocopon/iceberg.vim'
