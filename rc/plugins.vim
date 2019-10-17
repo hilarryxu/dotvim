@@ -9,6 +9,7 @@ if HasPlug('coc.nvim')
         \ 'coc-python',
         \ 'coc-bookmark',
         \ 'coc-yank',
+        \ 'coc-explorer',
         \ 'coc-git'
         \ ]
 
@@ -64,6 +65,9 @@ if HasPlug('coc.nvim')
   nnoremap <silent> <Leader>cj  :<C-u>CocNext<CR>
   nnoremap <silent> <Leader>ck  :<C-u>CocPrev<CR>
   nnoremap <silent> <Leader>cz  :<C-u>CocListResume<CR>
+
+  " coc-explorer
+  nmap ge :<C-u>CocCommand explorer<CR>
 endif
 
 " LeaderF {{{1
