@@ -11,7 +11,7 @@ command! -nargs=0 Q :qa!
 command! -nargs=0 Cd :call s:git_cd()
 command! -nargs=0 Commits :CocList commits
 command! -nargs=+ -complete=custom,s:grep_args Rg :exe 'CocList grep ' . <q-args>
-
+command! -nargs=0 BufOnly :call s:buffer_only()
 
 function! s:Terminal(cmd)
   execute 'belowright 5new'
@@ -45,4 +45,9 @@ function! s:grep_args(...) abort
   let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
         \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
   return join(list, "\n")
+endfunction
+
+function! s:buffer_only() abort
+  let bl = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  execute (bufnr('') > bl[0] ? 'confirm '.bl[0].',.-bd' : '') (bufnr('') < bl[-1] ? '|confirm .+,$bd' : '')
 endfunction

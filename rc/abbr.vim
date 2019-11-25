@@ -10,3 +10,4 @@ endfunction
 call SetupCommandAbbrs('Gs', 'Gstatus')
 call SetupCommandAbbrs('U', 'UltiSnipsEdit')
 call SetupCommandAbbrs('T', 'tabe')
+call SetupCommandAbbrs('F', 'Neoformat')
