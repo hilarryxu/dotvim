@@ -36,14 +36,14 @@ Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
-Plug 'junegunn/vim-slash'
+" Plug 'junegunn/vim-slash'
 Plug 't9md/vim-quickhl'
-Plug 'haya14busa/incsearch.vim'
+" Plug 'haya14busa/incsearch.vim'
 " Plug 'mtth/scratch.vim'
 Plug 'itchyny/vim-parenmatch'
 Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-smooth-scroll'
-Plug 'rhysd/clever-f.vim'
+" Plug 'rhysd/clever-f.vim'
 Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
@@ -86,7 +86,7 @@ endif
 Plug 'honza/vim-snippets'
 
 " txt
-Plug 'markabe/vim-txt'
+" Plug 'markabe/vim-txt'
 
 " Vim
 Plug 'mhinz/vim-lookup', { 'for': 'vim' }
