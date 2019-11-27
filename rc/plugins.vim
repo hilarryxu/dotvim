@@ -85,6 +85,11 @@ if HasPlug('LeaderF')
   nnoremap <Leader>ft :<C-u>LeaderfBufTag<CR>
 endif
 
+" vim-calp {{{1
+if HasPlug('vim-clap')
+  nnoremap <Leader>fF :<C-u>Clap gfiles<CR>
+endif
+
 " Neomake {{{1
 call neomake#configure#automake('rw', 1000)
 let g:neomake_python_enabled_makers = ['flake8']
@@ -112,9 +117,11 @@ augroup END
 " map J <Plug>(expand_region_shrink)
 
 " incsearch.vim {{{1
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
+if HasPlug('incsearch.vim')
+  map /  <Plug>(incsearch-forward)
+  map ?  <Plug>(incsearch-backward)
+  map g/ <Plug>(incsearch-stay)
+endif
 
 " vim-easy-align {{{1
 xmap ga <Plug>(EasyAlign)
