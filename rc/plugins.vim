@@ -81,7 +81,11 @@ if HasPlug('LeaderF')
   nnoremap <Leader>fr :<C-u>LeaderfMru<CR>
   nnoremap <Leader>fl :<C-u>LeaderfLine<CR>
   nnoremap <Leader>fL :<C-u>LeaderfLineAll<CR>
-  nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
+  if HasPlug('coc.nvim')
+    nnoremap <Leader>fg :<C-U><C-R>=printf('CocList --normal grep %s', expand('<cword>'))<CR>
+  else
+    nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
+  endif
   nnoremap <Leader>ft :<C-u>LeaderfBufTag<CR>
 endif
 
@@ -128,10 +132,10 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " vim-smooth-scroll {{{1
-noremap <silent> <C-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <C-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <C-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <C-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+" noremap <silent> <C-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+" noremap <silent> <C-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+" noremap <silent> <C-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+" noremap <silent> <C-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 
 " vim-python-syntax {{{1
 let g:python_highlight_builtins = 1

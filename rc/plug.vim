@@ -42,7 +42,7 @@ Plug 't9md/vim-quickhl'
 " Plug 'mtth/scratch.vim'
 Plug 'itchyny/vim-parenmatch'
 Plug 'terryma/vim-expand-region'
-Plug 'terryma/vim-smooth-scroll'
+" Plug 'terryma/vim-smooth-scroll'
 " Plug 'rhysd/clever-f.vim'
 Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent'
@@ -53,7 +53,7 @@ Plug 'bps/vim-textobj-python', { 'for': 'python' }
 Plug 'jceb/vim-textobj-uri'
 
 " File finder
-if s:env.nvim
+if s:env.nvim || has('patch-8.1.2114')
   Plug 'liuchengxu/vim-clap'
 endif
 if s:env.has_python
@@ -103,15 +103,15 @@ endif
 
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }
-Plug 'docunext/closetag.vim', { 'for': 'html' }
+Plug 'docunext/closetag.vim'
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
 
 " gdb
-if s:env.nvim
+if 0 && s:env.nvim
   Plug 'cpiger/NeoDebug'
 endif
 
 " Colorscheme
 " Plug 'cocopon/iceberg.vim'
-Plug 'junegunn/seoul256.vim'
+" Plug 'junegunn/seoul256.vim'
