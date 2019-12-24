@@ -4,6 +4,7 @@ command! Wcolor echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
       \ "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") .
       \ "> fg:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
 
+command! W w !sudo tee % > /dev/null
 command! -complete=file -nargs=* Nrun :call s:Terminal(<q-args>)
 command! -nargs=0 Save :call s:do_save()
 command! -nargs=0 Format :call CocAction('format')
@@ -12,6 +13,8 @@ command! -nargs=0 Cd :call s:git_cd()
 command! -nargs=0 Commits :CocList commits
 command! -nargs=+ -complete=custom,s:grep_args Rg :exe 'CocList grep ' . <q-args>
 command! -nargs=0 BufOnly :call s:buffer_only()
+command! -complete=command -nargs=+ VimCmd call V_vim_cmd(<q-args>)
+command! -nargs=? TabWidth call V_tab_width(<args>)
 
 function! s:Terminal(cmd)
   execute 'belowright 5new'

@@ -35,6 +35,10 @@ cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR>
 
 " Buffer
 nnoremap <Leader>bq :bp <BAR> bd #<CR>
+nnoremap <silent> <Leader>bc :<C-u>call V_buffer_close()<CR>
+nnoremap <silent> <Leader>bo :<C-u>call V_buffer_only()<CR>
+nnoremap <silent> <Leader>bm :<C-u>VimCmd messages<CR>
+nnoremap <silent> <Leader>bs :<C-u>vnew +setlocal\ buftype=nofile\ bufhidden=wipe\ noswapfile<CR>
 
 " Tab
 nmap <Leader>1 1gt
@@ -56,6 +60,7 @@ inoremap <C-x>< <><Esc>i
 inoremap <C-x>{ {<Esc>o}<Esc>ko
 
 " Leader stuff
+nnoremap <silent> <Leader>es :call V_strip_trailing_whitespaces()<CR>
 nnoremap <silent> <Leader>ma :<C-u>update<CR>:silent make<BAR>redraw!<BAR>bo cwindow<CR>
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
@@ -69,4 +74,4 @@ noremap <C-g> 2<C-g>
 set pastetoggle=<F9>
 nnoremap gQ <Nop>
 nnoremap <silent> cd :<C-u>cd %:h \| pwd<CR>
-nnoremap gf :edit <cfile><CR>
+" nnoremap gf :edit <cfile><CR>
