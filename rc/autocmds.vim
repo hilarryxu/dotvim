@@ -20,4 +20,5 @@ augroup vimrc_filetype
   autocmd FileType mako setlocal shiftwidth=2 tabstop=2 softtabstop=2
   autocmd FileType vue setlocal shiftwidth=2 tabstop=2 softtabstop=2
   autocmd FileType sql setlocal omnifunc=
+  autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 softtabstop=2
 augroup END

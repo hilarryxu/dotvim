@@ -27,11 +27,11 @@ let g:vimsyn_embed             = 1 "$VIMRUNTIME/syntax/vim.vim
 " Enhancement
 Plug 'thinca/vim-localrc'
 Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch'
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'junegunn/vim-easy-align'
@@ -89,12 +89,12 @@ Plug 'honza/vim-snippets'
 " Plug 'markabe/vim-txt'
 
 " Vim
-Plug 'mhinz/vim-lookup', { 'for': 'vim' }
+" Plug 'mhinz/vim-lookup', { 'for': 'vim' }
 
 " Python
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-Plug 'hilarryxu/vim-bundle-mako'
+Plug 'hilarryxu/vim-bundle-mako', { 'for': 'mako' }
 
 " Nim
 if s:env.nvim
@@ -103,9 +103,10 @@ endif
 
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }
-Plug 'docunext/closetag.vim'
+Plug 'docunext/closetag.vim', { 'for': ['html', 'javascript'] }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
+Plug 'hilarryxu/vim-coffeescript', { 'for': 'coffee' }
 
 " gdb
 if 0 && s:env.nvim

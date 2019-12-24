@@ -1,0 +1,26 @@
+snippet comp "preact component" b
+import { Component } from 'preact'
+import blacklist from 'blacklist'
+import classNames from 'classnames'
+
+export default class extends Component {
+  static defaultProps = {}
+
+  render() {
+    const { _ } = this.props
+    const componentClass = classNames(
+      this.props.className
+    )
+    const props = blacklist(
+      this.props,
+      'className'
+    )
+
+    return (
+      <Element className={componentClass} {...props}>
+        {this.props.children}
+      </Element>
+    )
+  }
+}
+endsnippet
