@@ -50,7 +50,7 @@ Plug 'kana/vim-textobj-syntax'
 Plug 'kana/vim-textobj-function', { 'for': ['c', 'cpp', 'vim', 'java'] }
 Plug 'sgur/vim-textobj-parameter'
 Plug 'bps/vim-textobj-python', { 'for': 'python' }
-Plug 'jceb/vim-textobj-uri'
+" Plug 'jceb/vim-textobj-uri'
 
 " File finder
 if s:env.nvim || has('patch-8.1.2114')

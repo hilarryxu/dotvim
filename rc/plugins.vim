@@ -93,6 +93,20 @@ if HasPlug('LeaderF')
     nnoremap <Leader>fg :<C-U><C-R>=printf('Leaderf! rg -F -e %s', expand('<cword>'))<CR>
   endif
   nnoremap <Leader>ft :<C-u>LeaderfBufTag<CR>
+
+  noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR>
+  noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
+  xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
+  noremap go :<C-U>Leaderf! rg --recall<CR>
+
+  " should use `Leaderf gtags --update` first
+  let g:Lf_GtagsAutoGenerate = 0
+  let g:Lf_Gtagslabel = 'native-pygments'
+  noremap <Leader>gr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+  noremap <Leader>gd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+  noremap <Leader>go :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+  noremap <Leader>gn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+  noremap <Leader>gp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 endif
 
 " vim-calp {{{1
