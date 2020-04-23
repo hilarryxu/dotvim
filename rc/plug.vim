@@ -44,6 +44,8 @@ Plug 'itchyny/vim-parenmatch'
 Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-smooth-scroll'
 " Plug 'rhysd/clever-f.vim'
+
+" Textobj
 Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
@@ -53,9 +55,9 @@ Plug 'bps/vim-textobj-python', { 'for': 'python' }
 " Plug 'jceb/vim-textobj-uri'
 
 " File finder
-if s:env.nvim || has('patch-8.1.2114')
-  Plug 'liuchengxu/vim-clap'
-endif
+" if s:env.nvim || has('patch-8.1.2114')
+"   Plug 'liuchengxu/vim-clap'
+" endif
 if s:env.has_python
   Plug 'Yggdroot/LeaderF'
 endif
@@ -97,7 +99,7 @@ Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'hilarryxu/vim-bundle-mako', { 'for': 'mako' }
 
 " Nim
-if s:env.nvim
+if 0 && s:env.nvim
   Plug 'alaviss/nim.nvim'
 endif
 

@@ -1,0 +1,9 @@
+constructor
+
+Component
+componentDidMount
+componentWillUnmount
+getDerivedStateFromProps
+shouldComponentUpdate
+getSnapshotBeforeUpdate
+componentDidUpdate
