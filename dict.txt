@@ -1,9 +1,4 @@
 constructor
+component
 
-Component
-componentDidMount
-componentWillUnmount
-getDerivedStateFromProps
-shouldComponentUpdate
-getSnapshotBeforeUpdate
-componentDidUpdate
+onTableEvent
