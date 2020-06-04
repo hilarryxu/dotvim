@@ -9,7 +9,6 @@ if HasPlug('coc.nvim')
         \ 'coc-python',
         \ 'coc-bookmark',
         \ 'coc-yank',
-        \ 'coc-explorer',
         \ 'coc-git'
         \ ]
 
@@ -62,6 +61,7 @@ if HasPlug('coc.nvim')
   nnoremap <silent> <Leader>cs  :<C-u>CocList symbols<cr>
   nnoremap <silent> <Leader>cr  :<C-u>CocList mru<cr>
   nnoremap <silent> <Leader>cf  :<C-u>CocList files<cr>
+  nnoremap <silent> <Leader>cm  :<C-u>CocList marks<cr>
   nnoremap <silent> <Leader>cj  :<C-u>CocNext<CR>
   nnoremap <silent> <Leader>ck  :<C-u>CocPrev<CR>
   nnoremap <silent> <Leader>cz  :<C-u>CocListResume<CR>
