@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/09/04
+" Updated:  2020/07/08
 "
 " This file changes a lot.
 
@@ -18,6 +18,7 @@ function! VimrcEnvironment()
   let env.is_mac = has('mac')
   let env.is_linux = has('unix') && !has('macunix') && !has('win32unix')
   let env.is_win = has('win32') || has('win64')
+  let env.is_cygwin = !empty($MINTTY_SHORTCUT)
 
   let env.nvim = has('nvim') && exists('*jobwait') && !env.is_win
   let env.vim8 = exists('*job_start')
@@ -26,7 +27,7 @@ function! VimrcEnvironment()
   let env.gui = has('gui_running')
   let env.has_python = has('python') || has('python3')
 
-  let user_dir = env.is_win
+  let user_dir = (env.is_win && !env.is_cygwin)
         \ ? expand('$VIM/vimfiles')
         \ : expand('~/.vim')
   let env.path = {
@@ -340,7 +341,7 @@ function! V_fuzzy(input, callback, prompt) abort
         \ 'selecta': '|selecta 2>/dev/tty',
         \ 'sk':      "|sk -m --height 15 --prompt '".a:prompt."> '"
         \ }
-  if s:env.is_win
+  if s:env.is_win || s:env.is_cygwin
     let l:ff_cmds = {
           \ 'fzf': '|fzf -m '
           \ }
@@ -357,7 +358,7 @@ function! V_fuzzy(input, callback, prompt) abort
     let l:cmd  = 'cat '.fnameescape(l:inpath) . l:ff_cmd
   endif
 
-  if !has('gui_running') && executable('tput') && filereadable('/dev/tty')
+  if !has('gui_running') && !s:env.is_cygwin && executable('tput') && filereadable('/dev/tty')
     let l:output = s:systemlist(printf('tput cup %d >/dev/tty; tput cnorm >/dev/tty; ' . l:cmd, &lines))
     redraw!
     silent! call delete(l:inpath)
@@ -369,7 +370,7 @@ function! V_fuzzy(input, callback, prompt) abort
   let l:cmd .= ' >' . fnameescape(l:outpath)
 
   if has('terminal')
-    if !s:env.is_win
+    if !s:env.is_win && !s:env.is_cygwin
       botright 15split
     endif
     call term_start([&shell, &shellcmdflag, l:cmd], {
