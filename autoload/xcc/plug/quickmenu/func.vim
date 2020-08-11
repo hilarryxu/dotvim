@@ -31,7 +31,7 @@ fun! s:render() abort
       let key = nr2char(index - 10 + 97)
     endif
 
-    let item_name = key . ') ' . cmd['name']
+    let item_name = key . ') ' . get(cmd, 'name', name)
     cal append(line('$') , item_name)
 
     " echo item_name
@@ -42,6 +42,10 @@ fun! s:render() abort
   " nnoremap <buffer><script> <CR> :call <SID>get_command_name()<CR>
   nnoremap <buffer><script> <CR> :call <SID>run_command()<CR>
 endf
+
+if exists('g:quickmenu_cmds')
+  let s:cmds = extend(s:cmds, g:quickmenu_cmds)
+endif
 
 fun! xcc#plug#quickmenu#func#add(cmd, config) abort
   let config = a:config

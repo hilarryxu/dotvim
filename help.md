@@ -2,9 +2,10 @@
 
 | 快捷键       | 说明                                 |
 | -------      | -----                                |
-| `,`          | Leader Key                           |
-| `<leader>ff` | 搜索当前目录下的文件                 |
-| `<leader>fg` | 全工程下查找光标下单词               |
+| `<SPACE>`    | Leader Key                           |
+| `<F12>`      | 右侧显示 quickmenu 窗口              |
+| `<Leader>ff` | 搜索当前目录下的文件                 |
+| `<Leader>fg` | 全工程下查找光标下单词               |
 | `gcc`        | 注释代码                             |
 
 
