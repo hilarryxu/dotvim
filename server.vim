@@ -343,7 +343,8 @@ function! V_fuzzy(input, callback, prompt) abort
         \ }
   if s:env.is_win || s:env.is_cygwin
     let l:ff_cmds = {
-          \ 'fzf': '|fzf -m '
+          \ 'fzf': '|fzf -m ',
+          \ 'fzy':  "|fzy --lines=15 --prompt='".a:prompt."> ' 2>/dev/tty",
           \ }
   endif
 

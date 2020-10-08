@@ -103,6 +103,9 @@ if 0 && s:env.nvim
   Plug 'alaviss/nim.nvim'
 endif
 
+" mirscript
+Plug 'hilarryxu/vim-mirscript'
+
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'docunext/closetag.vim', { 'for': ['html', 'javascript'] }
