@@ -61,6 +61,7 @@ Plug 'bps/vim-textobj-python', { 'for': 'python' }
 if s:env.has_python
   Plug 'Yggdroot/LeaderF'
 endif
+Plug 'lifepillar/vim-zeef'
 
 " Coding
 Plug 'tpope/vim-commentary'
@@ -104,14 +105,14 @@ if 0 && s:env.nvim
 endif
 
 " mirscript
-Plug 'hilarryxu/vim-mirscript'
+" Plug 'hilarryxu/vim-mirscript'
 
 " Web
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'docunext/closetag.vim', { 'for': ['html', 'javascript'] }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'posva/vim-vue', { 'for': 'vue' }
-Plug 'hilarryxu/vim-coffeescript', { 'for': 'coffee' }
+" Plug 'hilarryxu/vim-coffeescript', { 'for': 'coffee' }
 
 " gdb
 if 0 && s:env.nvim
