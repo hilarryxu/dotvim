@@ -181,6 +181,12 @@ noremap <M-d> :PreviewScroll +1<CR>
 inoremap <M-u> <C-\><C-o>:PreviewScroll -1<CR>
 inoremap <M-d> <C-\><C-o>:PreviewScroll +1<CR>
 
+" fzy {{{1
+if !HasPlug('LeaderF')
+  nnoremap <silent> <C-p> :call xcc#fzy#files()<CR>
+endif
+
+" others {{{1
 function! s:quickfix_keymap() abort
   if &buftype !=# 'quickfix'
     return
