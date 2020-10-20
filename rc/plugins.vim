@@ -186,7 +186,20 @@ if !HasPlug('LeaderF')
   nnoremap <silent> <C-p> :call xcc#fzy#files()<CR>
 endif
 
+" vim-sneak {{{
+nmap <Space>s <Plug>Sneak_s
+nmap <Space>S <Plug>Sneak_S
+
+" vim-operator-surround {{{
+map <silent>sa <Plug>(operator-surround-append)
+map <silent>sd <Plug>(operator-surround-delete)
+map <silent>sr <Plug>(operator-surround-replace)
+
+nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
+nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
+
 " others {{{1
+
 function! s:quickfix_keymap() abort
   if &buftype !=# 'quickfix'
     return

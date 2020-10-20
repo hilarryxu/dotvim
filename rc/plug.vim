@@ -27,7 +27,7 @@ let g:vimsyn_embed             = 1 "$VIMRUNTIME/syntax/vim.vim
 " Enhancement
 Plug 'thinca/vim-localrc'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-endwise'
@@ -45,8 +45,12 @@ Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-smooth-scroll'
 " Plug 'rhysd/clever-f.vim'
 
-" Textobj
+" Operator and Textobj
+Plug 'kana/vim-operator-user'
+Plug 'rhysd/vim-operator-surround'
+
 Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-textobj-anyblock'
 " Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
 Plug 'kana/vim-textobj-function', { 'for': ['c', 'cpp', 'vim', 'java'] }
@@ -86,7 +90,9 @@ elseif s:env.has_python
 endif
 
 " Snippet
-Plug 'honza/vim-snippets'
+if s:env.nvim
+  Plug 'honza/vim-snippets'
+endif
 
 " txt
 " Plug 'markabe/vim-txt'
