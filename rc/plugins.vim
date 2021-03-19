@@ -173,8 +173,10 @@ noremap <silent><M-:> :PreviewClose<CR>
 noremap <silent><Tab>; :PreviewGoto edit<CR>
 noremap <silent><Tab>: :PreviewGoto tabe<CR>
 
-nnoremap <silent><M-a> :PreviewSignature<CR>
-inoremap <silent><M-a> <C-\><C-o>:PreviewSignature<CR>
+" nnoremap <silent><M-a> :PreviewSignature<CR>
+" inoremap <silent><M-a> <C-\><C-o>:PreviewSignature<CR>
+nnoremap <silent><M-.> :PreviewSignature<CR>
+inoremap <silent><M-.> <C-\><C-o>:PreviewSignature<CR>
 
 noremap <M-u> :PreviewScroll -1<CR>
 noremap <M-d> :PreviewScroll +1<CR>
@@ -187,8 +189,10 @@ if !HasPlug('LeaderF')
 endif
 
 " vim-sneak {{{
-nmap <Space>s <Plug>Sneak_s
-nmap <Space>S <Plug>Sneak_S
+nmap <c-s> <plug>Sneak_s
+nmap gs <plug>Sneak_S
+let g:sneak#label = 1
+" let g:sneak#use_ic_scs = 1
 
 " vim-operator-surround {{{
 map <silent>sa <Plug>(operator-surround-append)
