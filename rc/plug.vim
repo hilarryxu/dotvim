@@ -80,6 +80,7 @@ Plug 'skywind3000/vim-preview'
 " Git
 if executable('git')
   Plug 'tpope/vim-fugitive' | Plug 'junegunn/gv.vim'
+  Plug 'rhysd/git-messenger.vim'
 endif
 
 " Completion
