@@ -76,6 +76,7 @@ Plug 'sbdchd/neoformat'
 Plug 'Shougo/echodoc.vim'
 Plug 'hilarryxu/vim-dict'
 Plug 'skywind3000/vim-preview'
+Plug 'ludovicchabant/vim-gutentags'
 
 " Git
 if executable('git')
@@ -105,6 +106,9 @@ endif
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'hilarryxu/vim-bundle-mako', { 'for': 'mako' }
+
+" Go
+Plug 'fatih/vim-go'
 
 " Nim
 if 0 && s:env.nvim

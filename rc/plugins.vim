@@ -83,6 +83,9 @@ if HasPlug('LeaderF')
 
   let g:Lf_ShortcutF = '<C-p>'
   let g:Lf_ShortcutB = '<Leader>fb'
+  noremap <m-p> :LeaderfFunction!<cr>
+  noremap <m-n> :LeaderfBuffer<cr>
+  noremap <m-m> :LeaderfTag<cr>
   nnoremap <Leader>ff :<C-u>LeaderfFile<CR>
   nnoremap <Leader>fr :<C-u>LeaderfMru<CR>
   nnoremap <Leader>fl :<C-u>LeaderfLine<CR>
@@ -109,7 +112,7 @@ if HasPlug('LeaderF')
   noremap <Leader>gp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 endif
 
-" vim-calp {{{1
+" vim-clap {{{1
 if HasPlug('vim-clap')
   nnoremap <Leader>fF :<C-u>Clap gfiles<CR>
 endif
@@ -188,13 +191,13 @@ if !HasPlug('LeaderF')
   nnoremap <silent> <C-p> :call xcc#fzy#files()<CR>
 endif
 
-" vim-sneak {{{
+" vim-sneak {{{1
 nmap <c-s> <plug>Sneak_s
 nmap gs <plug>Sneak_S
 let g:sneak#label = 1
 " let g:sneak#use_ic_scs = 1
 
-" vim-operator-surround {{{
+" vim-operator-surround {{{1
 map <silent>sa <Plug>(operator-surround-append)
 map <silent>sd <Plug>(operator-surround-delete)
 map <silent>sr <Plug>(operator-surround-replace)
@@ -202,8 +205,20 @@ map <silent>sr <Plug>(operator-surround-replace)
 nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
 nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
 
-" others {{{1
+"vim-gutentags {{{1
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_ctags_tagfile = '.tags'
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+if !isdirectory(s:vim_tags)
+  silent! call mkdir(s:vim_tags, 'p')
+endif
 
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+" others {{{1
 function! s:quickfix_keymap() abort
   if &buftype !=# 'quickfix'
     return
