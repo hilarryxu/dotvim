@@ -7,7 +7,6 @@ if HasPlug('coc.nvim')
         \ 'coc-json',
         \ 'coc-snippets',
         \ 'coc-python',
-        \ 'coc-bookmark',
         \ 'coc-yank',
         \ 'coc-git'
         \ ]
