@@ -59,9 +59,6 @@ Plug 'bps/vim-textobj-python', { 'for': 'python' }
 " Plug 'jceb/vim-textobj-uri'
 
 " File finder
-" if s:env.nvim || has('patch-8.1.2114')
-"   Plug 'liuchengxu/vim-clap'
-" endif
 if s:env.has_python
   Plug 'Yggdroot/LeaderF'
 endif
@@ -70,18 +67,18 @@ Plug 'lifepillar/vim-zeef'
 " Coding
 Plug 'tpope/vim-commentary'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'neomake/neomake' | Plug 'tracyone/neomake-multiprocess'
+Plug 'neomake/neomake'
 Plug 'sbdchd/neoformat'
 " Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'Shougo/echodoc.vim'
-Plug 'hilarryxu/vim-dict'
-Plug 'skywind3000/vim-preview'
+" Plug 'hilarryxu/vim-dict'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/vim-preview'
 
 " Git
 if executable('git')
   Plug 'tpope/vim-fugitive' | Plug 'junegunn/gv.vim'
-  Plug 'rhysd/git-messenger.vim'
+  " Plug 'rhysd/git-messenger.vim'
 endif
 
 " Completion
@@ -105,7 +102,7 @@ endif
 " Python
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-Plug 'hilarryxu/vim-bundle-mako', { 'for': 'mako' }
+" Plug 'hilarryxu/vim-bundle-mako', { 'for': 'mako' }
 
 " Go
 Plug 'fatih/vim-go'

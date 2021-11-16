@@ -66,7 +66,7 @@ if HasPlug('coc.nvim')
   nnoremap <silent> <Leader>cz  :<C-u>CocListResume<CR>
 
   " coc-explorer
-  nmap ge :<C-u>CocCommand explorer<CR>
+  " nmap ge :<C-u>CocCommand explorer<CR>
 endif
 
 " LeaderF {{{1
@@ -111,11 +111,6 @@ if HasPlug('LeaderF')
   noremap <Leader>gp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 endif
 
-" vim-clap {{{1
-if HasPlug('vim-clap')
-  nnoremap <Leader>fF :<C-u>Clap gfiles<CR>
-endif
-
 " Neomake {{{1
 call neomake#configure#automake('rw', 1000)
 let g:neomake_python_enabled_makers = ['flake8']
@@ -131,12 +126,9 @@ if HasPlug('ultisnips')
 endif
 
 " Dirvish {{{1
-nmap <Leader>dd <plug>(dirvish_up)
-
-" vim-lookup {{{1
-augroup vimrc_plugins
-  autocmd FileType vim nnoremap <buffer><silent> <CR> :call lookup#lookup()<CR>
-augroup END
+if HasPlug('vim-dirvish')
+  nmap <Leader>dd <plug>(dirvish_up)
+endif
 
 " vim-expand-region {{{1
 " map K <Plug>(expand_region_expand)
@@ -150,8 +142,10 @@ if HasPlug('incsearch.vim')
 endif
 
 " vim-easy-align {{{1
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+if HasPlug('vim-easy-align')
+  xmap ga <Plug>(EasyAlign)
+  nmap ga <Plug>(EasyAlign)
+endif
 
 " vim-smooth-scroll {{{1
 " noremap <silent> <C-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
@@ -165,52 +159,62 @@ let g:python_highlight_builtin_objs = 1
 let g:python_highlight_builtin_types = 1
 let g:python_highlight_builtin_funcs = 1
 
-" echodoc {{{1
-set noshowmode
-let g:echodoc#enable_at_startup = 1
+" echodoc.vim {{{1
+if HasPlug('echodoc.vim')
+  set noshowmode
+  let g:echodoc#enable_at_startup = 1
+endif
 
-" preview.vim {{{1
-noremap <silent><M-;> :PreviewTag<CR>
-noremap <silent><M-:> :PreviewClose<CR>
-noremap <silent><Tab>; :PreviewGoto edit<CR>
-noremap <silent><Tab>: :PreviewGoto tabe<CR>
+" vim-preview {{{1
+if HasPlug('vim-preview')
+  noremap <silent><M-;> :PreviewTag<CR>
+  noremap <silent><M-:> :PreviewClose<CR>
+  noremap <silent><Tab>; :PreviewGoto edit<CR>
+  noremap <silent><Tab>: :PreviewGoto tabe<CR>
 
-" nnoremap <silent><M-a> :PreviewSignature<CR>
-" inoremap <silent><M-a> <C-\><C-o>:PreviewSignature<CR>
-nnoremap <silent><M-.> :PreviewSignature<CR>
-inoremap <silent><M-.> <C-\><C-o>:PreviewSignature<CR>
+  " nnoremap <silent><M-a> :PreviewSignature<CR>
+  " inoremap <silent><M-a> <C-\><C-o>:PreviewSignature<CR>
+  nnoremap <silent><M-.> :PreviewSignature<CR>
+  inoremap <silent><M-.> <C-\><C-o>:PreviewSignature<CR>
 
-noremap <M-u> :PreviewScroll -1<CR>
-noremap <M-d> :PreviewScroll +1<CR>
-inoremap <M-u> <C-\><C-o>:PreviewScroll -1<CR>
-inoremap <M-d> <C-\><C-o>:PreviewScroll +1<CR>
+  noremap <M-u> :PreviewScroll -1<CR>
+  noremap <M-d> :PreviewScroll +1<CR>
+  inoremap <M-u> <C-\><C-o>:PreviewScroll -1<CR>
+  inoremap <M-d> <C-\><C-o>:PreviewScroll +1<CR>
+endif
 
-" fzy {{{1
+" xcc#fzy {{{1
 if !HasPlug('LeaderF')
   nnoremap <silent> <C-p> :call xcc#fzy#files()<CR>
 endif
 
 " vim-sneak {{{1
-nmap <c-s> <plug>Sneak_s
-nmap gs <plug>Sneak_S
-let g:sneak#label = 1
-" let g:sneak#use_ic_scs = 1
+if HasPlug('vim-sneak')
+  nmap <c-s> <plug>Sneak_s
+  nmap gs <plug>Sneak_S
+  let g:sneak#label = 1
+  " let g:sneak#use_ic_scs = 1
+endif
 
 " vim-operator-surround {{{1
-map <silent>sa <Plug>(operator-surround-append)
-map <silent>sd <Plug>(operator-surround-delete)
-map <silent>sr <Plug>(operator-surround-replace)
+if HasPlug('vim-operator-surround')
+  map <silent>sa <Plug>(operator-surround-append)
+  map <silent>sd <Plug>(operator-surround-delete)
+  map <silent>sr <Plug>(operator-surround-replace)
 
-nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
-nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
+  nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
+  nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
+endif
 
-"vim-gutentags {{{1
-let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
-let g:gutentags_ctags_tagfile = '.tags'
-let s:vim_tags = expand('~/.cache/tags')
-let g:gutentags_cache_dir = s:vim_tags
-if !isdirectory(s:vim_tags)
-  silent! call mkdir(s:vim_tags, 'p')
+" vim-gutentags {{{1
+if HasPlug('vim-gutentags')
+  let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+  let g:gutentags_ctags_tagfile = '.tags'
+  let s:vim_tags = expand('~/.cache/tags')
+  let g:gutentags_cache_dir = s:vim_tags
+  if !isdirectory(s:vim_tags)
+    silent! call mkdir(s:vim_tags, 'p')
+  endif
 endif
 
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
