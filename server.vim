@@ -6,9 +6,9 @@
 " This file changes a lot.
 
 " Section: prem {{{1
-if &compatible
-  set nocompatible
-endif
+" if &compatible
+"   set nocompatible
+" endif
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -136,7 +136,7 @@ if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 endif
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
 
@@ -193,15 +193,15 @@ set noswapfile
 " statusline
 set laststatus=2
 set list listchars=tab:\|\ ,trail:.
-set stl=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+set statusline=%t\ %m\ %r\ [%{&fileencoding},%{&ff}%Y]\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 
 " encoding
 " set langmenu=zh_CN.UTF-8
 " set encoding=utf-8
 set fileencodings=utf-8,gbk,chinese,cp936,gb18030,utf-16le,utf-16,big5,euc-jp,euc-kr,latin-1
 set fileencoding=utf-8
-set ffs=unix,dos,mac
-set ff=unix
+set fileformats=unix,dos,mac
+set fileformat=unix
 
 " wrap
 set nowrap
@@ -439,11 +439,13 @@ function! V_tab_width(...) abort
 endfunction
 
 function! V_strip_trailing_whitespaces() abort
+  " vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
   let winview = winsaveview()
   keeppatterns %s/\s\+$//e
   call winrestview(winview)
   redraw
   echomsg 'Trailing space removed!'
+  " vint: +ProhibitCommandWithUnintendedSideEffect +ProhibitCommandRelyOnUser
 endfunction
 
 function! V_toggle_paste()
@@ -508,7 +510,9 @@ function! s:git_diff() abort
   let &l:filetype = ft
   execute 'silent file' fn '[HEAD]'
   diffthis
+  " vint: -ProhibitAutocmdWithNoGroup
   autocmd BufWinLeave <buffer> diffoff!
+  " vint: +ProhibitAutocmdWithNoGroup
   wincmd p
   diffthis
 endfunction

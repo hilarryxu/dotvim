@@ -1,7 +1,7 @@
-" vimrc for windows.
+" vimrc
 "
 " Author:   Larry Xu <hilarryxu@gmail.com>
-" Updated:  2019/08/16
+" Updated:  2021/11/16
 "
 " This file changes a lot.
 
@@ -23,13 +23,17 @@ function! VimrcEnvironment()
   let user_dir = env.is_win
         \ ? expand('$VIM/vimfiles')
         \ : expand('~/.vim')
+  let undo_dir_name = env.nvim
+        \ ? 'nvim_undo'
+        \ : 'undo'
+
   let env.path = {
         \   'user':        user_dir,
         \   'plugins':     user_dir . '/plugins',
         \   'data':        user_dir . '/data',
         \   'local_vimrc': user_dir . '/.vimrc_local',
         \   'tmp':         user_dir . '/tmp',
-        \   'undo':        user_dir . '/data/undo',
+        \   'undo':        user_dir . '/data/' . undo_dir_name,
         \   'plug_path':   user_dir . '/plugged',
         \ }
 

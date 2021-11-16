@@ -133,3 +133,4 @@ endif
 " Colorscheme
 " Plug 'cocopon/iceberg.vim'
 " Plug 'junegunn/seoul256.vim'
+Plug 'aesophor/base16-faded'
