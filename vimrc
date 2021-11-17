@@ -61,9 +61,7 @@ function! HasPlug(name) abort
   return index(g:plugs_order, a:name) >= 0
 endfunction
 
-if s:env.is_win
-  execute pathogen#infect()
-else
+if !s:env.is_win
   silent! call plug#begin(s:env.path.plug_path)
   call s:load_rc('plug')
   call plug#end()
