@@ -24,6 +24,9 @@ let g:loaded_zip               = 1 "$VIMRUNTIME/autoload/zip.vim
 let g:loaded_zipPlugin         = 1 "$VIMRUNTIME/plugin/zipPlugin.vim
 let g:vimsyn_embed             = 1 "$VIMRUNTIME/syntax/vim.vim
 
+" Mine
+Plug 'hilarryxu/xcc.vim'
+
 " Enhancement
 Plug 'thinca/vim-localrc'
 Plug 'tpope/vim-repeat'

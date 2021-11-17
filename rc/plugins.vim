@@ -222,6 +222,10 @@ let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
 " others {{{1
+if HasPlug('coc.nvim') && !HasPlug('LeaderF')
+  noremap <m-n> :<C-u>CocList buffers<CR>
+endif
+
 function! s:quickfix_keymap() abort
   if &buftype !=# 'quickfix'
     return
