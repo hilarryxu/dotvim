@@ -2,11 +2,11 @@ let s:env = g:vimrc_env
 
 " Coc {{{1
 if HasPlug('coc.nvim')
+  " coc-pyright
   let g:coc_global_extensions = [
         \ 'coc-lists',
         \ 'coc-json',
         \ 'coc-snippets',
-        \ 'coc-python',
         \ 'coc-yank',
         \ 'coc-git'
         \ ]
@@ -64,9 +64,6 @@ if HasPlug('coc.nvim')
   nnoremap <silent> <Leader>cj  :<C-u>CocNext<CR>
   nnoremap <silent> <Leader>ck  :<C-u>CocPrev<CR>
   nnoremap <silent> <Leader>cz  :<C-u>CocListResume<CR>
-
-  " coc-explorer
-  " nmap ge :<C-u>CocCommand explorer<CR>
 endif
 
 " LeaderF {{{1
@@ -222,8 +219,8 @@ let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
 " others {{{1
-if HasPlug('coc.nvim') && !HasPlug('LeaderF')
-  noremap <m-n> :<C-u>CocList buffers<CR>
+if HasPlug('coc.nvim')
+  noremap - :<C-u>CocList buffers<CR>
 endif
 
 function! s:quickfix_keymap() abort
