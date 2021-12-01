@@ -1,8 +1,0 @@
-constructor
-component
-
-computed
-mounted
-
-onTableEvent
-onTreeEvent
