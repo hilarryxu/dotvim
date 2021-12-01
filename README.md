@@ -1,0 +1,1 @@
+# dotvim for msys2
